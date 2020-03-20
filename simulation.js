@@ -14,3 +14,6 @@ class Simulation {
         this.days_per_sec = 1.0 // Days per second in the simulation
     }
 }
+
+// TODO: Person class that represents a single individuum that can be infected
+// TODO: Potential class that represents the underlying potential and potential wells
