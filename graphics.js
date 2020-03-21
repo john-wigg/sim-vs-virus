@@ -6,6 +6,7 @@
     const COLOR_RECOVERED = 0x00F214;
     const COLOR_DEAD = 0x555555;
     const COLOR_BOX = 0xaaaaaa;
+    const COLOR_HIDDEN = 0x000000;
 
     class SimulationView extends HTMLElement {
         constructor(persons) {
@@ -18,7 +19,9 @@
             this.simulation = new Simulation(8, 6, persons);
 
             this.simulation.boxes.push(new IsolationBox(1, 4, 1, 4));
-            this.simulation.initialize()
+            this.simulation.initialize();
+
+            this.filters = ["Normal", "Doctor", "Risk"]
 
             for (var i = 0; i < this.simulation.boxes.length; i++) {
                 var box = this.simulation.boxes[i];
@@ -72,32 +75,37 @@
                 this.containers[i].y = persons[i].position.y * 100;
 
                 //console.log("State: " + persons[i].state + " " + i);
-                if (persons[i].state != persons[i].old_state) {
-                    switch (persons[i].state) {
-                        case "infected":
-                            this.updateCircle(this.containers[i], COLOR_INFECTED);
-                            break;
-                        case "recovered":
-                            this.updateCircle(this.containers[i], COLOR_RECOVERED);
-                            break;
-                        case "deceased":
-                            this.updateCircle(this.containers[i], COLOR_DEAD);
-                            break;
-                        default:
-                            this.updateCircle(this.containers[i], COLOR_HEALTHY);
-                            break;
-                    }
+                if (this.filters.includes(persons[i].group.name)) {
+                    if (persons[i].state != persons[i].old_state) {
+                        switch (persons[i].state) {
+                            case "infected":
+                                this.updateCircle(this.containers[i], COLOR_INFECTED);
+                                break;
+                            case "recovered":
+                                this.updateCircle(this.containers[i], COLOR_RECOVERED);
+                                break;
+                            case "deceased":
+                                this.updateCircle(this.containers[i], COLOR_DEAD);
+                                break;
+                            default:
+                                this.updateCircle(this.containers[i], COLOR_HEALTHY);
+                                break;
+                        }
 
+                    }
+                }
+                else {
+                    this.updateCircle(this.containers[i], COLOR_HIDDEN, 0.15);
                 }
             }
         }
 
-        updateCircle(container, color) {
+        updateCircle(container, color, alpha = 1.0) {
             console.log("updateCircle()");
             for (var i = 0; i < container.children.length; i++) {
                 container.children[i].clear();
                 container.children[i].lineStyle(0);
-                container.children[i].beginFill(color, 1);
+                container.children[i].beginFill(color, alpha);
                 container.children[i].drawCircle(0, 0, 6, 6);
                 container.children[i].endFill();
             }
@@ -184,7 +192,9 @@
         var divMain = document.createElement("div");
         var divCurves = document.createElement("div");
 
-        divMain.appendChild(new SimulationView(200));
+        var simulation_view = new SimulationView(200);
+        simulation_view.filters = ["Normal"];
+        divMain.appendChild(simulation_view);
         divCurves.appendChild(new Curve());
 
         document.body.appendChild(divMain);
