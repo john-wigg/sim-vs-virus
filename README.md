@@ -24,14 +24,15 @@ And open ```index.html``` in your browser!
 
 * [PixiJS](https://www.pixijs.com/) - Used for building the simulations
 
-## Contributers
+## Contributors
 
-* **Alex Seltmann** - *Coordination - [aseltmann](https://github.com/aseltmann)
+* **Alex Seltmann** - *Coordination* - [aseltmann](https://github.com/aseltmann)
 * **Francesco Reina** - *Research* - [FReina](https://github.com/FReina)
 * **Gorb Rade** - *Programming* - [Gorb98](https://github.com/Grob98)
 * **Johanna W** - *Research*
 * **John Wigg** - *Programming* - [john-wigg](https://github.com/john-wigg)
 * **nk1006** - *Programming*
+* **Sascha Greiliger** - *Research / Graphics*
 * **Vanessa Juergensen** - *Research*
 
 See also the list of [contributors](https://github.com/john-wigg/sim-vs-virus/contributors) who participated in this project.
