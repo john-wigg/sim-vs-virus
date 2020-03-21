@@ -24,6 +24,10 @@ class Simulation {
             this.people[i].position.x = Math.random() * width;
             this.people[i].position.y = Math.random() * height;
             this.people[i].velocity = 0.01
+            let dir = new Vector2()
+            dir.x = Math.random() * 2.0 - 1.0
+            dir.y = Math.random() * 2.0 - 1.0
+            this.people[i].direction = dir.normalized()
         }
     }
 
@@ -84,6 +88,7 @@ class Vector2 {
         var len = this.length();
         res.x = this.x / len;
         res.y = this.y / len;
+        return res;
     }
 
     // Distance to another vector if they represent points in space
@@ -97,7 +102,7 @@ class Vector2 {
 class Person {
     constructor() {
         this.velocity = 1.0;
-        this.direction = new Vector2(1.0, 0.0);
+        this.direction = new Vector2(0.0, 0.0);
         this.position = new Vector2(0.0, 0.0);
     }
 
