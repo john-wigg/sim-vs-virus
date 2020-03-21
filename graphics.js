@@ -126,7 +126,7 @@
         var divCurves = document.createElement("div");
 
         divMain.appendChild(new SimulationView(200));
-        divCurves.appendChild(curve = new Curve(200));
+        //divCurves.appendChild(curve = new Curve(200));
         
         document.body.appendChild(divMain);
         document.body.appendChild(divCurves);
