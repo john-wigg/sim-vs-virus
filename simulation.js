@@ -19,6 +19,7 @@ class Simulation {
         this.frac_population_risk = 0.1;
 
         this.people = [];// Array mit personen
+        this.boxes = [];
 
         this.width = width;
         this.height = height;
@@ -35,6 +36,10 @@ class Simulation {
             this.people[i].direction = dir.normalized()
         }
         this.people[0].state = "infected"
+    }
+
+    add_box(min_x, max_x, min_y, max_y) {
+        this.boxes.push(new Box(min_x, max_y, min_y, max_y));
     }
 
     update(delta) {
@@ -67,6 +72,16 @@ class Simulation {
         return Math.exp(-0.693147 * (dist - 0.1) / this.infection_distance); // TODO: Not very pretty
     }
 }
+
+class IsolationBox {
+    constructor(min_x, max_x, min_y, max_y) {
+        this.min_x = min_x;
+        this.max_x = max_x;
+        this.min_y = min_y;
+        this.max_y = max_y;
+    }
+}
+
 class Group {
     constructor() {
         // TODO
@@ -161,6 +176,10 @@ class Person {
         this.next_position = new Vector2(0.0, 0.0)
     }
 
+    is_in_box(box) {
+        return (this.position.x < box.max_x && this.position.x > box.min_x && this.position.y < box.max_y && this.position.y > box.min_y)
+    }
+
     calculate_step(delta, simulation) {
         this.old_state = this.state;
         if (this.state != "deceased") {
@@ -196,6 +215,20 @@ class Person {
             }
             if (this.position.y > simulation.height || this.position.y < 0) {
                 this.direction.y = -this.direction.y;
+            }
+
+            // Check if going through walls of a box
+            // TODO: Es sollten nicht alle Punkte in der Box doppelt rechnen müssen
+            for (var i = 0; i < simulation.boxes.length; i++) {
+                if (this.is_in_box(simulation.boxes[i])) {
+                    let next_position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * simulation.days_per_sec));
+                    if (next_position.x > simulation.boxes[i].max_x || next_position.x < simulation.boxes[i].min_x) {
+                        this.direction.x = -this.direction.x;
+                    }
+                    if (next_position.y > simulation.boxes[i].max_y || next_position.y < simulation.boxes[i].min_y) {
+                        this.direction.y = -this.direction.y;
+                    }
+                }
             }
 
             this.next_position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * simulation.days_per_sec));
