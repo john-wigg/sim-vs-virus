@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 440 75" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(1,0,0,1,-2942.98,-56.1481)">
+        <g transform="matrix(1,0,0,1,2622.9,0)">
+            <g transform="matrix(1.06829,0,0,1.06829,59.2273,-55.2)">
+                <text x="243.136px" y="161.287px" style="font-family:'LemonMilkbold', 'Lemon/Milk', sans-serif;font-weight:700;font-size:72px;fill:rgb(139,202,255);">sim</text>
+                <text x="374.972px" y="173.287px" style="font-family:'LemonMilkbold', 'Lemon/Milk', sans-serif;font-weight:700;font-size:40px;fill:rgb(115,115,115);">V</text>
+                <text x="407.277px" y="173.287px" style="font-family:'LemonMilkbold', 'Lemon/Milk', sans-serif;font-weight:700;font-size:40px;fill:rgb(115,115,115);">S</text>
+                <text x="423.437px" y="161.287px" style="font-family:'LemonMilkbold', 'Lemon/Milk', sans-serif;font-weight:700;font-size:72px;fill:rgb(255,100,111);">virus</text>
+            </g>
+        </g>
+    </g>
+</svg>
