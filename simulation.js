@@ -36,7 +36,7 @@ class Simulation {
         // TODO
         // Should return array of structs
         for (var i = 0; i < this.people.length; i++) {
-            this.people[i].step(delta, this.people, this.minimum_distance)
+            this.people[i].step(delta, this.people, this.minimum_distance, this.days_per_sec)
         }
         return this.people;
     }
@@ -105,9 +105,10 @@ class Person {
         this.direction = new Vector2(0.0, 0.0);
         this.position = new Vector2(0.0, 0.0);
         this.state = "healthy" // states are "healthy", "infected"
+        this.days_since_infection
     }
 
-    step(delta, people, minimum_distance) {
+    step(delta, people, minimum_distance, days_per_sec) {
         // Naive way of people bouncing off each other
         // get closest person
         // TODO: Predict collisions
@@ -123,10 +124,18 @@ class Person {
         }
         if (min_idx != -1) // "collision has occured"
         {
-            this.state = "infected"
-            this.directon = this.position.sub(people[min_idx].position).normalized() // set new direction
+            if (people[i].state == "infected" && this.state == "healthy") {
+                this.days_since_infection = 0.0;
+                this.state = "infected";
+            }
+            this.directon = this.position.sub(people[min_idx].position).normalized(); // set new direction
         }
         this.position = this.position.add(this.direction.multiply(delta * this.velocity));
+
+        // Update days since infection
+        if (this.state == "infected") {
+            this.days_since_infection += delta * days_per_sec / 1000.0;
+        }
     }
 }
 
