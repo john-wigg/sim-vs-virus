@@ -38,27 +38,42 @@ class Simulation {
         for (var i = 0; i < this.people.length; i++) {
             // Start all inside a box
             var box = this.boxes[0];
-            this.people[i].position.x = box.min_x + Math.random() * (box.max_x - box.min_x);
-            this.people[i].position.y = box.min_y + Math.random() * (box.max_y - box.min_y);
-            //this.people[i].position.x = Math.random() * width;
-            //this.people[i].position.y = Math.random() * height;
             this.people[i].velocity = this.velocity
             let dir = new Vector2()
-            dir.x = Math.random() * 2.0 - 1.0
-            dir.y = Math.random() * 2.0 - 1.0
+            dir.x = Math.sin(Math.random() * 2 * Math.PI);
+            dir.y = Math.cos(Math.random() * 2 * Math.PI);
             this.people[i].direction = dir.normalized()
 
             if (i < this.frac_population_normal * this.people.length) {
                 this.people[i].group = this.group_normal;
+                for (var j = 0; j < 5; j++) {
+                    if (i < 10 + j * 10) {
+                        this.people[i].position.x = this.boxes[j].min_x + Math.random() * (this.boxes[j].max_x - this.boxes[j].min_x);
+                        this.people[i].position.y = this.boxes[j].min_y + Math.random() * (this.boxes[j].max_y - this.boxes[j].min_y);
+                        break;
+                    }
+                }
+                if (50 <= i && i < 110) {
+                    this.people[i].position.x = 2.0 + Math.random() * (this.width - 2.0);
+                    this.people[i].position.y = Math.random() * this.height;
+                }
             }
             else if (i < (this.frac_population_normal + this.frac_population_doctors) * this.people.length) {
                 this.people[i].group = this.group_doctor;
+                this.people[i].position.x = 2.0 + Math.random() * (this.width - 2.0);
+                this.people[i].position.y = Math.random() * this.height;
             }
             else {
                 this.people[i].group = this.group_risk;
+                this.people[i].position.x = 2.0 + Math.random() * (this.width - 2.0);
+                this.people[i].position.y = Math.random() * this.height;
             }
         }
         this.people[0].state = "infected"
+        this.people[10].state = "infected"
+        this.people[20].state = "infected"
+        this.people[30].state = "infected"
+        this.people[40].state = "infected"
     }
 
     update(delta) {
@@ -255,15 +270,17 @@ class Person {
 
             for (var i = 0; i < simulation.boxes.length; i++) {
                 if (!this.is_in_box(simulation.boxes[i])) {
-                    // People 
-                    if (Math.random() >= simulation.boxes[i].area_entry[this.group.name]) {
-                        if (next_position.x > simulation.boxes[i].min_x && next_position.x < simulation.boxes[i].max_x) {
-                            this.direction.x = -this.direction.x;
-                            direction_changed = true
-                        }
-                        if (next_position.y > simulation.boxes[i].min_y && next_position.y < simulation.boxes[i].max_y) {
-                            this.direction.y = -this.direction.y;
-                            direction_changed = true
+                    if (next_position.x > simulation.boxes[i].min_x && next_position.x < simulation.boxes[i].max_x && next_position.y > simulation.boxes[i].min_y && next_position.y < simulation.boxes[i].max_y) {
+                        // People 
+                        if (Math.random() >= simulation.boxes[i].area_entry[this.group.name]) {
+                            if (this.position.x > simulation.boxes[i].max_x || this.position.x < simulation.boxes[i].min_x) {
+                                this.direction.x = -this.direction.x;
+                                direction_changed = true
+                            }
+                            if (this.position.y > simulation.boxes[i].max_y || this.position.y < simulation.boxes[i].min_y) {
+                                this.direction.y = -this.direction.y;
+                                direction_changed = true
+                            }
                         }
                     }
                 }

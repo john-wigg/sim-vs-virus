@@ -18,17 +18,14 @@
             });
             this.appendChild(this.app.view);
 
-            var sim_height = 6;
-            var sim_width = 8;
+            let area_entry = { "Normal": 0.0, "Doctor": 0.0, "Risk": 0.0 };
+            let area_escape = { "Normal": 0.1, "Doctor": 0.0, "Risk": 0.0 };
 
-            let area_entry = { "Normal": 1.0, "Doctor": 0.0, "Risk": 0.0 };
-            let area_escape = { "Normal": 0.5, "Doctor": 1.0, "Risk": 1.0 };
-
-            var box1 = new IsolationBox(0.5, 1.5, 0.5, 1.25, area_entry, area_escape);
-            var box2 = new IsolationBox(0.5, 1.5, 1.5, 2.25, area_entry, area_escape);
-            var box3 = new IsolationBox(0.5, 1.5, 2.5, 3.25, area_entry, area_escape);
-            var box4 = new IsolationBox(0.5, 1.5, 3.5, 4.25, area_entry, area_escape);
-            var box5 = new IsolationBox(0.5, 1.5, 4.5, 5.25, area_entry, area_escape);
+            var box1 = new IsolationBox(0.5, 1.5, 0.5, 1.25, area_escape, area_entry);
+            var box2 = new IsolationBox(0.5, 1.5, 1.5, 2.25, area_escape, area_entry);
+            var box3 = new IsolationBox(0.5, 1.5, 2.5, 3.25, area_escape, area_entry);
+            var box4 = new IsolationBox(0.5, 1.5, 3.5, 4.25, area_escape, area_entry);
+            var box5 = new IsolationBox(0.5, 1.5, 4.5, 5.25, area_escape, area_entry);
 
             this.simulation.boxes.push(box1);
             this.simulation.boxes.push(box2);
@@ -36,6 +33,7 @@
             this.simulation.boxes.push(box4);
             this.simulation.boxes.push(box5);
 
+            this.simulation.velocity = 1.2;
             this.simulation.initialize();
 
             this.filter = ["Normal", "Doctor", "Risk"];
