@@ -206,7 +206,7 @@ class Person {
                     }
                     else {
                         this.old_state = this.state;
-                        this.state == "recovered";
+                        this.state = "recovered";
                     }
                 }
             }
