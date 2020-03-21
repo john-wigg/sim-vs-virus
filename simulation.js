@@ -11,7 +11,7 @@ class Simulation {
         this.infectiveness = 0.9; // Probability of getting infected when someone already carries the virus (e.g. on his hands, should be affected by personal hygiene)
 
         this.population = 500; // Number of people to simulate
-        this.velocity = 0.1 // Velocity of the people
+        this.velocity = 0.5 // Velocity of the people
         this.days_per_sec = 1.0; // Days per second in the simulation
 
         this.frac_population_normal = 0.8;
@@ -42,7 +42,10 @@ class Simulation {
         // TODO
         // Should return array of structs
         for (var i = 0; i < this.people.length; i++) {
-            this.people[i].step(delta, this)
+            this.people[i].calculate_step(delta, this);
+        }
+        for (var i = 0; i < this.people.length; i++) {
+            this.people[i].move();
         }
         return this.people;
     }
@@ -153,9 +156,11 @@ class Person {
         this.old_state = "healthy"
         this.days_since_infection
         this.group = new Group()
+
+        this.next_position = new Vector2(0.0, 0.0)
     }
 
-    step(delta, simulation) {
+    calculate_step(delta, simulation) {
         this.old_state = this.state;
         if (this.state != "deceased") {
             // Naive way of people bouncing off each other
@@ -183,7 +188,7 @@ class Person {
                 }
                 let new_direction = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction#
                 this.direction = new_direction;
-                simulation.people[min_idx].direction = new_direction.multiply(-1.0);
+                //simulation.people[min_idx].direction = new_direction.multiply(-1.0);
             }
 
             // Bounce from walls
@@ -194,7 +199,7 @@ class Person {
                 this.direction.y = -this.direction.y;
             }
 
-            this.position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * simulation.days_per_sec));
+            this.next_position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * simulation.days_per_sec));
 
             // Update days since infection
             if (this.state == "infected") {
@@ -209,6 +214,10 @@ class Person {
                 }
             }
         }
+    }
+
+    move() {
+        this.position = this.next_position;
     }
 }
 
