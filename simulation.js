@@ -24,6 +24,10 @@ class Simulation {
         this.width = width;
         this.height = height;
 
+        this.group_normal = new Group("Normal", 0.1, 0.9);
+        this.group_doctor = new Group("Doctors", 0.1, 0.9);
+        this.group_risk = new Group("Risk", 0.1, 0.9)
+
         // randomly initialize Person positions
         for (var i = 0; i < num_people; i++) {
             this.people.push(new Person())
@@ -34,6 +38,16 @@ class Simulation {
             dir.x = Math.random() * 2.0 - 1.0
             dir.y = Math.random() * 2.0 - 1.0
             this.people[i].direction = dir.normalized()
+
+            if (i < this.frac_population_normal * num_people) {
+                this.people[i].group = this.group_normal;
+            }
+            else if (i < (this.frac_population_normal + this.frac_population_doctors) * num_people) {
+                this.people[i].group = this.group_doctor;
+            }
+            else {
+                this.people[i].group = this.group_risk;
+            }
         }
         this.people[0].state = "infected"
     }
@@ -86,26 +100,10 @@ class IsolationBox {
 }
 
 class Group {
-    constructor() {
-        // TODO
-    }
-}
-
-class NormalGroup extends Group {
-    constructor() {
-        // TODO
-    }
-}
-
-class DoctorGroup extends Group {
-    constructor() {
-        // TODO
-    }
-}
-
-class RiskGroup extends Group {
-    constructor() {
-        // TODO
+    constructor(name, minimum_distance, infectivity) {
+        this.name = name;
+        this.minimum_distance = minimum_distance;
+        this.infectivity = infectivity;
     }
 }
 
