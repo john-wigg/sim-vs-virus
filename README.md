@@ -27,7 +27,7 @@ And open ```index.html``` in your browser!
 ## Contributers
 
 * **Alex Seltmann** - *Coordination - [aseltmann](https://github.com/aseltmann)
-* **FReina** - *Research*
+* **Francesco Reina** - *Research* - [FReina](https://github.com/FReina)
 * **Gorb Rade** - *Programming* - [Gorb98](https://github.com/Grob98)
 * **Johanna W** - *Research*
 * **John Wigg** - *Programming* - [john-wigg](https://github.com/john-wigg)
