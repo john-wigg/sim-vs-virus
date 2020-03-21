@@ -46,6 +46,20 @@ class Simulation {
         }
         return this.people;
     }
+
+    get_frac(state) {
+        let count = 0;
+        for (var i = 0; i < this.people.length; i++) {
+            if (this.people[i].state == state) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+
+function infection_prob(dist) {
+    return Math.exp(-dist);
 }
 
 class Group {
