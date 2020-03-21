@@ -4,8 +4,8 @@
     const COLOR_HEALTHY = 0x3E8EFF;
     const COLOR_INFECTED = 0xE71E3A;
     const COLOR_RECOVERED = 0x00F214;
-
-    var curve;
+    const COLOR_DEAD = 0x555555;
+    const COLOR_BOX = 0xaaaaaa;
     
     class SimulationView extends HTMLElement {
         constructor(persons) {
@@ -16,6 +16,21 @@
             this.appendChild(this.app.view);
             
             this.simulation = new Simulation(8, 6, persons);
+
+            this.boxes = new Array();
+            this.boxes.push(new IsolationBox(1,4,1,4));
+
+            for(var i=0; i<this.boxes.length; i++){
+                var box = this.boxes[i];
+
+                const graphics = new PIXI.Graphics();
+                
+                graphics.lineStyle(0);
+                graphics.beginFill(COLOR_BOX, 1);
+                graphics.drawRect(box.min_x*100,box.min_y*100,(box.max_x-box.min_x)*100,(box.max_y-box.min_y)*100);
+                graphics.endFill();
+                this.app.stage.addChild(graphics);
+            }
             
             this.containers = new Array();
             for (var i = 0; i < persons; i++) {
@@ -31,6 +46,7 @@
                 this.containers.push(container)
                 this.app.stage.addChild(container);                
             }
+
 
             this.app.ticker.add(() => {this.onTickerUpdate()});
         }
@@ -51,16 +67,15 @@
                         case "recovered":
                             this.updateCircle(this.containers[i], COLOR_RECOVERED);
                             break;
+                        case "deceased":
+                            this.updateCircle(this.containers[i], COLOR_DEAD);
+                            break;
                         default:
                             this.updateCircle(this.containers[i], COLOR_HEALTHY);
                             break;
                     }
 
                 }
-            }
-
-            if (curve != null) {
-                curve.addDataPoint(0, this.simulation.get_count("infected"));
             }
         }
 
@@ -77,41 +92,47 @@
     }
 
     class Curve extends HTMLElement {
-        constructor(persons) {
+        constructor() {
             super();
 
-            this.persons = persons;
-            this.width = 800;
-            this.height = 200;
-
             this.app = new PIXI.Application({
-                width: this.width, height: this.height, backgroundColor: 0xdddddd, antialias: true
+                width: 800, height: 200, backgroundColor: 0xdddddd, antialias: true
             });       
             this.appendChild(this.app.view);
 
             this.data = new Array();
 
-            this.graphics = new PIXI.Graphics();
-            this.graphics.lineStyle(10, 0xff0000);
-            this.app.stage.addChild(this.graphics);
         }
 
-        addDataPoint(time, infected) {
-            //this.graphics.clear();
-            this.data.push(infected);
-     
-            this.graphics.moveTo(0, 0);
-            //this.graphics.lineTo(200, 150);
+        /*drawCurve(){
+            var width = 800/this.data.length;
+            var height = 200;
+            var people = 200;
+            for(var i=0; i<this.data.length; i++){
+                drawPoint(data[i],width*i);
+            }
+        }
 
-            for (var i = 0; i < this.data.length; i++) {
-                var x = 100 / this.data.length * i;
-                var y = 100 / this.persons * 100;
+        drawPoint(dataPoint,x) {
+            drawBar
+        }*/
+    }
 
-                this.graphics.lineTo(x, y);
-                //console.log("X: " + x + "  Y: " + y);
-            }    
+    class IsolationBox {
+        constructor(min_x, max_x, min_y, max_y) {
+            this.min_x = min_x;
+            this.max_x = max_x;
+            this.min_y = min_y;
+            this.max_y = max_y;
+        }
+    }
 
-           
+    class DataPoint {
+        constructor(h,i,r,d) {
+            this.healthy = h;
+            this.infected = i;
+            this.recovered = r;
+            this.deceased = d;
         }
     }
 
@@ -126,7 +147,7 @@
         var divCurves = document.createElement("div");
 
         divMain.appendChild(new SimulationView(200));
-        //divCurves.appendChild(curve = new Curve(200));
+        divCurves.appendChild(new Curve());
         
         document.body.appendChild(divMain);
         document.body.appendChild(divCurves);
