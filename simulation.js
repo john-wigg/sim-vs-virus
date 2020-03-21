@@ -23,7 +23,7 @@ class Simulation {
             this.people.push(new Person())
             this.people[i].position.x = Math.random() * width;
             this.people[i].position.y = Math.random() * height;
-            this.people[i].velocity = 0.01
+            this.people[i].velocity = 0.0001
             let dir = new Vector2()
             dir.x = Math.random() * 2.0 - 1.0
             dir.y = Math.random() * 2.0 - 1.0
@@ -95,7 +95,7 @@ class Vector2 {
     dist(b_vec) {
         let x_dist = b_vec.x - this.x;
         let y_dist = b_vec.y - this.y;
-        return x_dist * x_dist + y_dist * y_dist;
+        return Math.sqrt(x_dist * x_dist + y_dist * y_dist);
     }
 }
 
@@ -112,11 +112,12 @@ class Person {
         // Naive way of people bouncing off each other
         // get closest person
         // TODO: Predict collisions
-        var min_dist = simulation.minimum_distance; // people should only affect each other if at minimum distance
+        var min_dist = 0.1; // people should only affect each other if at minimum distance
         var min_idx = -1;
         for (var i = 0; i < simulation.people.length; i++) {
+            if (simulation.people[i] === this) continue;
             // get closest person within minimum distance
-            let dist = this.position.dist(simulation.people[i].position)
+            let dist = this.position.dist(simulation.people[i].position);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_idx = i;
@@ -128,7 +129,7 @@ class Person {
                 this.days_since_infection = 0.0;
                 this.state = "infected";
             }
-            this.directon = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction
+            this.direction = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction
         }
         this.position = this.position.add(this.direction.multiply(delta * this.velocity));
 

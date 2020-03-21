@@ -8,7 +8,7 @@
         });       
         document.body.appendChild(app.view);
         
-        var simulation = new Simulation(800, 600, 200);
+        var simulation = new Simulation(8, 6, 100);
         /*const container = new PIXI.Container();     
         app.stage.addChild(container);*/
             
@@ -31,7 +31,7 @@
                 const graphics = new PIXI.Graphics();
                 graphics.lineStyle(0);
                 graphics.beginFill(0xFF3F7D, 1);
-                graphics.drawCircle(person.position.x - 3, person.position.y - 3, 6, 6);
+                graphics.drawCircle(person.position.x * 100 - 3, person.position.y * 100 - 3, 6, 6);
                 graphics.endFill();
 
                 app.stage.addChild(graphics);
