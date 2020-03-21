@@ -4,6 +4,8 @@
     const COLOR_HEALTHY = 0x3E8EFF;
     const COLOR_INFECTED = 0xE71E3A;
     const COLOR_RECOVERED = 0x00F214;
+
+    var curve;
     
     class SimulationView extends HTMLElement {
         constructor(persons) {
@@ -56,6 +58,10 @@
 
                 }
             }
+
+            if (curve != null) {
+                curve.addDataPoint(0, this.simulation.get_count("infected"));
+            }
         }
 
         updateCircle(container, color) {
@@ -71,13 +77,41 @@
     }
 
     class Curve extends HTMLElement {
-        constructor() {
+        constructor(persons) {
             super();
 
+            this.persons = persons;
+            this.width = 800;
+            this.height = 200;
+
             this.app = new PIXI.Application({
-                width: 800, height: 200, backgroundColor: 0xdddddd, antialias: true
+                width: this.width, height: this.height, backgroundColor: 0xdddddd, antialias: true
             });       
             this.appendChild(this.app.view);
+
+            this.data = new Array();
+
+            this.graphics = new PIXI.Graphics();
+            this.graphics.lineStyle(10, 0xff0000);
+            this.app.stage.addChild(this.graphics);
+        }
+
+        addDataPoint(time, infected) {
+            //this.graphics.clear();
+            this.data.push(infected);
+     
+            this.graphics.moveTo(0, 0);
+            //this.graphics.lineTo(200, 150);
+
+            for (var i = 0; i < this.data.length; i++) {
+                var x = 100 / this.data.length * i;
+                var y = 100 / this.persons * 100;
+
+                this.graphics.lineTo(x, y);
+                //console.log("X: " + x + "  Y: " + y);
+            }    
+
+           
         }
     }
 
@@ -92,7 +126,7 @@
         var divCurves = document.createElement("div");
 
         divMain.appendChild(new SimulationView(200));
-        divCurves.appendChild(new Curve());
+        divCurves.appendChild(curve = new Curve(200));
         
         document.body.appendChild(divMain);
         document.body.appendChild(divCurves);
