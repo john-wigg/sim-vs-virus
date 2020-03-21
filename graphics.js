@@ -18,6 +18,7 @@
             this.simulation = new Simulation(8, 6, persons);
 
             this.simulation.boxes.push(new IsolationBox(1, 4, 1, 4));
+            this.simulation.initialize()
 
             for (var i = 0; i < this.simulation.boxes.length; i++) {
                 var box = this.simulation.boxes[i];
