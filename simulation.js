@@ -32,7 +32,7 @@ class Simulation {
         // TODO
         // Should return array of structs
         for (var i = 0; i < this.people.length; i++) {
-            this.people[i].step(delta)
+            this.people[i].step(delta, this.people, this.minimum_distance)
         }
         return this.people;
     }
@@ -60,6 +60,14 @@ class Vector2 {
         return res
     }
 
+    // Subtract vector from this vector
+    sub(b_vec) {
+        var res = new Vector2()
+        res.x = this.x - b_vec.x;
+        res.y = this.y - b_vec.y;
+        return res;
+    }
+
     // Dot product with another vector
     dot(b_vec) {
         return this.x * b_vec.x + this.y * b_vec.y;
@@ -70,10 +78,18 @@ class Vector2 {
         return this.x * this.x + this.y * this.y;
     }
 
+    // Return normalized vector
+    normalized() {
+        var res = new Vector2();
+        var len = this.length();
+        res.x = this.x / len;
+        res.y = this.y / len;
+    }
+
     // Distance to another vector if they represent points in space
     dist(b_vec) {
-        x_dist = b_vec.x - this.x;
-        y_dist = b_vec.y - this.y;
+        let x_dist = b_vec.x - this.x;
+        let y_dist = b_vec.y - this.y;
         return x_dist * x_dist + y_dist * y_dist;
     }
 }
@@ -81,12 +97,28 @@ class Vector2 {
 class Person {
     constructor() {
         this.velocity = 1.0;
-        this.directon = new Vector2(1.0, 0.0);
+        this.direction = new Vector2(1.0, 0.0);
         this.position = new Vector2(0.0, 0.0);
     }
 
-    step(delta) {
-        this.position = this.position.add(this.directon.multiply(delta * this.velocity))
+    step(delta, people, minimum_distance) {
+        // Naive way of people bouncing off each other
+        // get closest person
+        var min_dist = minimum_distance; // people should only affect each other if at minimum distance
+        var min_idx = -1;
+        for (var i = 0; i < people.length; i++) {
+            // get closest person within minimum distance
+            let dist = this.position.dist(people[i].position)
+            if (dist < min_dist) {
+                min_dist = dist;
+                min_idx = i;
+            }
+        }
+        if (min_idx != -1) // "collision has occured"
+        {
+            this.directon = this.position.sub(people[min_idx].position).normalized() // set new direction
+        }
+        this.position = this.position.add(this.direction.multiply(delta * this.velocity));
     }
 }
 
