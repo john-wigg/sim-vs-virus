@@ -44,8 +44,8 @@ class Simulation {
 
 class Vector2 {
     constructor(x, y) {
-        this.x = (x === undefined) ? 0 : x;
-        this.y = (y === undefined) ? 0 : y;
+        this.x = (x === undefined) ? 0.0 : x;
+        this.y = (y === undefined) ? 0.0 : y;
     }
 
     // Multiply vector with a scalar
@@ -104,11 +104,13 @@ class Person {
         this.velocity = 1.0;
         this.direction = new Vector2(0.0, 0.0);
         this.position = new Vector2(0.0, 0.0);
+        this.state = "healthy" // states are "healthy", "infected"
     }
 
     step(delta, people, minimum_distance) {
         // Naive way of people bouncing off each other
         // get closest person
+        // TODO: Predict collisions
         var min_dist = minimum_distance; // people should only affect each other if at minimum distance
         var min_idx = -1;
         for (var i = 0; i < people.length; i++) {
@@ -121,6 +123,7 @@ class Person {
         }
         if (min_idx != -1) // "collision has occured"
         {
+            this.state = "infected"
             this.directon = this.position.sub(people[min_idx].position).normalized() // set new direction
         }
         this.position = this.position.add(this.direction.multiply(delta * this.velocity));
