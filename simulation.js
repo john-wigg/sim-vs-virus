@@ -64,7 +64,7 @@ class Simulation {
     // Infection probability as a function of distance
     // Adjusted so that infectivity reaches 0.5 at infection_distance
     infection_prob(dist) {
-        return Math.exp(-0.693147 * dist / this.infection_distance);
+        return Math.exp(-0.693147 * (dist - 0.1) / this.infection_distance); // TODO: Not very pretty
     }
 }
 class Group {
