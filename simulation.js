@@ -31,6 +31,9 @@ class Simulation {
         // delta in milliseconds
         // TODO
         // Should return array of structs
+        for (var i = 0; i < this.people.length; i++) {
+            this.people[i].step(delta)
+        }
         return this.people;
     }
 }
@@ -43,7 +46,7 @@ class Vector2 {
 
     // Multiply vector with a scalar
     multiply(a) {
-        res = new Vector2()
+        var res = new Vector2()
         res.x = this.x * a;
         res.y = this.y * a;
         return res
@@ -51,7 +54,7 @@ class Vector2 {
 
     // Add vector to another vector
     add(b_vec) {
-        res = new Vector2()
+        var res = new Vector2()
         res.x = this.x + b_vec.x;
         res.y = this.y + b_vec.y;
         return res
