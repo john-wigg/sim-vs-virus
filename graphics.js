@@ -18,7 +18,7 @@
 
                 graphics.lineStyle(0);
                 graphics.beginFill(0xFF3F7D, 1);
-                graphics.drawCircle(person.position.x * 100 - 3, person.position.y * 100 - 3, 6, 6);
+                graphics.drawCircle(0, 0, 6, 6);
                 graphics.endFill();
                 container.addChild(graphics);
 
@@ -26,21 +26,7 @@
                 this.app.stage.addChild(container);
                 
             }
-            
-            /*this.app.ticker.add((delta) => {
-                var persons = simulation.update(app.ticker.deltaMS);                
-    
-                persons.forEach(function(person) {
-    
-                    
-                    graphics.lineStyle(0);
-                    graphics.beginFill(0xFF3F7D, 1);
-                    graphics.drawCircle(person.position.x - 3, person.position.y - 3, 6, 6);
-                    graphics.endFill();
-    
-                    
-                });           
-            });*/
+
             this.app.ticker.add(() => {this.onTickerUpdate()});
         }
 
@@ -48,10 +34,20 @@
             var persons = this.simulation.update(this.app.ticker.deltaMS);
             
             for (var i = 0; i < persons.length; i++) {
-                console.log(this.containers[i]);
-                this.containers[i].x = persons[i].position.x;
-                this.containers[i].y = persons[i].position.y;
+                this.containers[i].x = persons[i].position.x * 100;
+                this.containers[i].y = persons[i].position.y * 100;
             }
+        }
+    }
+
+    class Curve extends HTMLElement {
+        constructor() {
+            super();
+
+            this.app = new PIXI.Application({
+                width: 800, height: 200, backgroundColor: 0xdddddd, antialias: true
+            });       
+            this.appendChild(this.app.view);
         }
     }
 
@@ -60,8 +56,16 @@
     function onLoad() {
         console.log("onLoad()");
         customElements.define("sim-view", SimulationView);
+        customElements.define("curve-view", Curve);
         
-        document.body.appendChild(new SimulationView(200))
+        var divMain = document.createElement("div");
+        var divCurves = document.createElement("div");
+
+        divMain.appendChild(new SimulationView(200));
+        divCurves.appendChild(new Curve());
+        
+        document.body.appendChild(divMain);
+        document.body.appendChild(divCurves);
     }
 
     window.addEventListener("load", onLoad);
