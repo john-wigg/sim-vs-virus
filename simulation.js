@@ -74,11 +74,14 @@ class Simulation {
 }
 
 class IsolationBox {
-    constructor(min_x, max_x, min_y, max_y) {
+    constructor(min_x, max_x, min_y, max_y, perm_in = 1.0, perm_out = 0.0) {
         this.min_x = min_x;
         this.max_x = max_x;
         this.min_y = min_y;
         this.max_y = max_y;
+
+        this.perm_in = perm_in;
+        this.perm_out = perm_out;
     }
 }
 
@@ -219,19 +222,44 @@ class Person {
 
             // Check if going through walls of a box
             // TODO: Es sollten nicht alle Punkte in der Box doppelt rechnen müssen
+            var next_position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * simulation.days_per_sec));
+            var direction_changed = false;
             for (var i = 0; i < simulation.boxes.length; i++) {
                 if (this.is_in_box(simulation.boxes[i])) {
-                    let next_position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * simulation.days_per_sec));
-                    if (next_position.x > simulation.boxes[i].max_x || next_position.x < simulation.boxes[i].min_x) {
-                        this.direction.x = -this.direction.x;
-                    }
-                    if (next_position.y > simulation.boxes[i].max_y || next_position.y < simulation.boxes[i].min_y) {
-                        this.direction.y = -this.direction.y;
+                    if (Math.random() >= simulation.boxes[i].perm_out) { // If person can't get out
+                        if (next_position.x > simulation.boxes[i].max_x || next_position.x < simulation.boxes[i].min_x) {
+                            this.direction.x = -this.direction.x;
+                            direction_changed = true
+                        }
+                        if (next_position.y > simulation.boxes[i].max_y || next_position.y < simulation.boxes[i].min_y) {
+                            this.direction.y = -this.direction.y;
+                            direction_changed = true
+                        }
                     }
                 }
             }
 
-            this.next_position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * simulation.days_per_sec));
+            for (var i = 0; i < simulation.boxes.length; i++) {
+                if (!this.is_in_box(simulation.boxes[i])) {
+                    if (Math.random() >= simulation.boxes[i].perm_in) { // If person can't get in
+                        if (next_position.x > simulation.boxes[i].min_x && next_position.x < simulation.boxes[i].max_x) {
+                            this.direction.x = -this.direction.x;
+                            direction_changed = true
+                        }
+                        if (next_position.y > simulation.boxes[i].min_y && next_position.y < simulation.boxes[i].max_y) {
+                            this.direction.y = -this.direction.y;
+                            direction_changed = true
+                        }
+                    }
+                }
+            }
+
+            if (direction_changed) {
+                this.next_position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * simulation.days_per_sec));
+            }
+            else {
+                this.next_position = next_position;
+            }
 
             // Update days since infection
             if (this.state == "infected") {
