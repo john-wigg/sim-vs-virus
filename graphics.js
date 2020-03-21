@@ -18,6 +18,7 @@
             this.simulation = new Simulation(8, 6, persons);
 
             this.simulation.boxes.push(new IsolationBox(1, 4, 1, 4));
+            this.simulation.initialize()
 
             for (var i = 0; i < this.simulation.boxes.length; i++) {
                 var box = this.simulation.boxes[i];
@@ -99,22 +100,56 @@
             });
             this.appendChild(this.app.view);
 
+            this.height = 200;
+            this.people = 200;
+
             this.data = new Array();
+            this.data.push(new DataPoint(199,1,0,0));
+            this.data.push(new DataPoint(195,5,0,0));
+            this.data.push(new DataPoint(170,30,0,0));
+            this.data.push(new DataPoint(134,60,5,1));
+            this.data.push(new DataPoint(58,130,10,2));
+            this.data.push(new DataPoint(18,170,10,2));
+            this.data.push(new DataPoint(3,180,15,2));
+            this.data.push(new DataPoint(2,160,33,5));
+            this.data.push(new DataPoint(1,150,33,16));
+            this.data.push(new DataPoint(0,130,45,25));
+            this.data.push(new DataPoint(0,100,60,40));
+            this.data.push(new DataPoint(0,80,77,43));
+            this.data.push(new DataPoint(0,50,100,50));
+            this.data.push(new DataPoint(0,30,110,60));
+            this.data.push(new DataPoint(0,10,126,64));
+            this.data.push(new DataPoint(0,0,136,64));
+            this.drawCurve();
 
         }
 
-        /*drawCurve(){
+        drawCurve(){
             var width = 800/this.data.length;
-            var height = 200;
-            var people = 200;
             for(var i=0; i<this.data.length; i++){
-                drawPoint(data[i],width*i);
+                this.drawPoint(this.data[i],width*i,width*(i+1));
             }
         }
 
-        drawPoint(dataPoint,x) {
-            drawBar
-        }*/
+        drawPoint(dataPoint,x,x1) {
+            var y1 = dataPoint.deceased/this.people*this.height;
+            var y2 = dataPoint.recovered/this.people*this.height + y1;
+            var y3 = dataPoint.healthy/this.people*this.height + y2;
+            this.drawBar(x,x1,0,y1,COLOR_DEAD);
+            this.drawBar(x,x1,y1,y2,COLOR_RECOVERED);
+            this.drawBar(x,x1,y2,y3,COLOR_HEALTHY);
+            this.drawBar(x,x1,y3,this.height,COLOR_INFECTED);
+        }
+
+        drawBar(x1,x2,y1,y2,color) {
+            const graphics = new PIXI.Graphics();
+
+            graphics.lineStyle(0);
+            graphics.beginFill(color, 1);
+            graphics.drawRect(x1,y1,x2,y2);
+            graphics.endFill();
+            this.app.stage.addChild(graphics);
+        }
     }
 
     class DataPoint {
