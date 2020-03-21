@@ -58,10 +58,6 @@ class Simulation {
         this.people[0].state = "infected"
     }
 
-    add_box(min_x, max_x, min_y, max_y) {
-        this.boxes.push(new Box(min_x, max_y, min_y, max_y));
-    }
-
     update(delta) {
         // delta in milliseconds
         // TODO
@@ -94,14 +90,11 @@ class Simulation {
 }
 
 class IsolationBox {
-    constructor(min_x, max_x, min_y, max_y, perm_in = 1.0, perm_out = 0.0) {
+    constructor(min_x, max_x, min_y, max_y) {
         this.min_x = min_x;
         this.max_x = max_x;
         this.min_y = min_y;
         this.max_y = max_y;
-
-        this.perm_in = perm_in;
-        this.perm_out = perm_out;
     }
 }
 
