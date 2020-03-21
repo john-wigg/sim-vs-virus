@@ -131,6 +131,15 @@ class Person {
             }
             this.direction = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction
         }
+
+        // Bounce from walls
+        if (this.position.x > simulation.width || this.position.x < 0) {
+            this.direction.x = -this.direction.x;
+        }
+        if (this.position.y > simulation.height || this.position.y < 0) {
+            this.direction.y = -this.direction.y;
+        }
+
         this.position = this.position.add(this.direction.multiply(delta * this.velocity));
 
         // Update days since infection
