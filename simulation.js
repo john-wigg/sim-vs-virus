@@ -47,7 +47,7 @@ class Simulation {
         return this.people;
     }
 
-    get_frac(state) {
+    get_count(state) {
         let count = 0;
         for (var i = 0; i < this.people.length; i++) {
             if (this.people[i].state == state) {
