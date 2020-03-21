@@ -36,7 +36,7 @@ class Simulation {
         // TODO
         // Should return array of structs
         for (var i = 0; i < this.people.length; i++) {
-            this.people[i].step(delta, this.people, this.minimum_distance, this.days_per_sec)
+            this.people[i].step(delta, this)
         }
         return this.people;
     }
@@ -108,33 +108,33 @@ class Person {
         this.days_since_infection
     }
 
-    step(delta, people, minimum_distance, days_per_sec) {
+    step(delta, simulation) {
         // Naive way of people bouncing off each other
         // get closest person
         // TODO: Predict collisions
-        var min_dist = minimum_distance; // people should only affect each other if at minimum distance
+        var min_dist = simulation.minimum_distance; // people should only affect each other if at minimum distance
         var min_idx = -1;
-        for (var i = 0; i < people.length; i++) {
+        for (var i = 0; i < simulation.people.length; i++) {
             // get closest person within minimum distance
-            let dist = this.position.dist(people[i].position)
+            let dist = this.position.dist(simulation.people[i].position)
             if (dist < min_dist) {
                 min_dist = dist;
                 min_idx = i;
             }
         }
-        if (min_idx != -1) // "collision has occured"
+        if (min_idx != -1) // "collision" has occured
         {
-            if (people[i].state == "infected" && this.state == "healthy") {
+            if (simulation.people[min_idx].state == "infected" && this.state == "healthy") {
                 this.days_since_infection = 0.0;
                 this.state = "infected";
             }
-            this.directon = this.position.sub(people[min_idx].position).normalized(); // set new direction
+            this.directon = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction
         }
         this.position = this.position.add(this.direction.multiply(delta * this.velocity));
 
         // Update days since infection
         if (this.state == "infected") {
-            this.days_since_infection += delta * days_per_sec / 1000.0;
+            this.days_since_infection += delta * simulation.days_per_sec / 1000.0;
         }
     }
 }
