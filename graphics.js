@@ -21,7 +21,8 @@
             this.simulation.boxes.push(new IsolationBox(1, 4, 1, 4));
             this.simulation.initialize();
 
-            this.filters = ["Normal", "Doctor", "Risk"]
+            this.filter = ["Normal", "Doctor", "Risk"];
+            this.old_filter = ["Normal", "Doctor", "Risk"];
 
             for (var i = 0; i < this.simulation.boxes.length; i++) {
                 var box = this.simulation.boxes[i];
@@ -75,8 +76,8 @@
                 this.containers[i].y = persons[i].position.y * 100;
 
                 //console.log("State: " + persons[i].state + " " + i);
-                if (this.filters.includes(persons[i].group.name)) {
-                    if (persons[i].state != persons[i].old_state) {
+                if (this.filter.includes(persons[i].group.name)) {
+                    if (persons[i].state != persons[i].old_state || this.old_filter != this.filter) {
                         switch (persons[i].state) {
                             case "infected":
                                 this.updateCircle(this.containers[i], COLOR_INFECTED);
@@ -98,6 +99,7 @@
                     this.updateCircle(this.containers[i], COLOR_HIDDEN, 0.15);
                 }
             }
+            this.old_filter = this.filter;
         }
 
         updateCircle(container, color, alpha = 1.0) {
@@ -193,7 +195,7 @@
         var divCurves = document.createElement("div");
 
         var simulation_view = new SimulationView(200);
-        simulation_view.filters = ["Normal"];
+        simulation_view.filter = ["Normal"];
         divMain.appendChild(simulation_view);
         divCurves.appendChild(new Curve());
 
