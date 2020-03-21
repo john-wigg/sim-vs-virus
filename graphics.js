@@ -9,14 +9,14 @@
     const COLOR_HIDDEN = 0x000000;
 
     class SimulationView extends HTMLElement {
-        constructor(persons) {
+        constructor(simulation) {
             super();
+
+            this.simulation = simulation;
             this.app = new PIXI.Application({
                 width: 800, height: 600, backgroundColor: 0xdddddd, antialias: true
             });
-            this.appendChild(this.app.view);
-
-            this.simulation = new Simulation(8, 6, persons);
+            this.appendChild(this.app.view);           
 
             this.simulation.boxes.push(new IsolationBox(1, 4, 1, 4));
             this.simulation.initialize();
@@ -37,7 +37,7 @@
             }
 
             this.containers = new Array();
-            for (var i = 0; i < persons; i++) {
+            for (var i = 0; i < this.simulation.people.length; i++) {
                 const container = new PIXI.Container();
                 const graphics = new PIXI.Graphics();
 
@@ -69,16 +69,15 @@
         }
 
         onTickerUpdate() {
-            var persons = this.simulation.update(this.app.ticker.deltaMS);
+            var people = this.simulation.update(this.app.ticker.deltaMS);
 
-            for (var i = 0; i < persons.length; i++) {
-                this.containers[i].x = persons[i].position.x * 100;
-                this.containers[i].y = persons[i].position.y * 100;
-
-                //console.log("State: " + persons[i].state + " " + i);
-                if (this.filter.includes(persons[i].group.name)) {
-                    if (persons[i].state != persons[i].old_state || this.old_filter != this.filter) {
-                        switch (persons[i].state) {
+            for (var i = 0; i < people.length; i++) {
+                this.containers[i].x = people[i].position.x * 100;
+                this.containers[i].y = people[i].position.y * 100;
+                
+                if (people[i].state != people[i].old_state || this.old_filter != this.filter) {
+                    if (this.filter.includes(people[i].group.name)) {
+                        switch (people[i].state) {
                             case "infected":
                                 this.updateCircle(this.containers[i], COLOR_INFECTED);
                                 break;
@@ -92,12 +91,10 @@
                                 this.updateCircle(this.containers[i], COLOR_HEALTHY);
                                 break;
                         }
-
+                    }else {
+                        this.updateCircle(this.containers[i], COLOR_HIDDEN, 0.15);
                     }
-                }
-                else {
-                    this.updateCircle(this.containers[i], COLOR_HIDDEN, 0.15);
-                }
+                }                             
             }
             this.old_filter = this.filter;
         }
@@ -116,7 +113,9 @@
 
     class Curve extends HTMLElement {
         constructor() {
-            super();
+            super(simulation);
+
+            this.simulation = simulation;
 
             this.app = new PIXI.Application({
                 width: 800, height: 200, backgroundColor: 0xdddddd, antialias: true
@@ -124,13 +123,13 @@
             this.appendChild(this.app.view);
 
             this.height = 200;
-            this.people = 200;
+            this.people = this.simulation.people.length;
 
             this.data = new Array();
             this.data.push(new DataPoint(199, 1, 0, 0));
             this.data.push(new DataPoint(195, 5, 0, 0));
             this.data.push(new DataPoint(170, 30, 0, 0));
-            this.data.push(new DataPoint(134, 60, 5, 1));
+            /*this.data.push(new DataPoint(134, 60, 5, 1));
             this.data.push(new DataPoint(58, 130, 10, 2));
             this.data.push(new DataPoint(18, 170, 10, 2));
             this.data.push(new DataPoint(3, 180, 15, 2));
@@ -142,8 +141,14 @@
             this.data.push(new DataPoint(0, 50, 100, 50));
             this.data.push(new DataPoint(0, 30, 110, 60));
             this.data.push(new DataPoint(0, 10, 126, 64));
-            this.data.push(new DataPoint(0, 0, 136, 64));
+            this.data.push(new DataPoint(0, 0, 136, 64));*/
+            this.app.ticker.add(() => { this.onTickerUpdate() });
+
             this.drawCurve();
+
+        }
+
+        onTickerUpdate() {
 
         }
 
@@ -194,10 +199,12 @@
         var divMain = document.createElement("div");
         var divCurves = document.createElement("div");
 
-        var simulation_view = new SimulationView(200);
-        simulation_view.filter = ["Normal"];
+        this.simulation = new Simulation(8, 6, 200);
+
+        var simulation_view = new SimulationView(this.simulation);
+        simulation_view.filter = ["Doctor"];
         divMain.appendChild(simulation_view);
-        divCurves.appendChild(new Curve());
+        divCurves.appendChild(new Curve(this.simulation));
 
         document.body.appendChild(divMain);
         document.body.appendChild(divCurves);
