@@ -155,12 +155,8 @@ class Person {
         this.group = new Group()
     }
 
-    set_new_state(state) {
-        this.old_state = this.state;
-        this.state = state;
-    }
-
     step(delta, simulation) {
+        this.old_state = this.state;
         if (this.state != "deceased") {
             // Naive way of people bouncing off each other
             // get closest person
@@ -183,7 +179,7 @@ class Person {
                         //TODO: Calculate infection probability
                         this.days_since_infection = 0.0;
                     }
-                    this.set_new_state("infected");
+                    this.state = "infected";
                 }
                 let new_direction = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction#
                 this.direction = new_direction;
@@ -205,10 +201,10 @@ class Person {
                 this.days_since_infection += delta * simulation.days_per_sec / 1000.0;
                 if (this.days_since_infection > simulation.infection_duration) {
                     if (Math.random() < simulation.mortality) {
-                        this.set_new_state("deceased");
+                        this.state = "deceased";
                     }
                     else {
-                        this.set_new_state("recovered")
+                        this.state = "recovered"
                     }
                 }
             }
