@@ -21,9 +21,9 @@ class Simulation {
         this.width = width;
         this.height = height;
 
-        this.group_normal = new Group("Normal", 0.5, 0.01, 0.1, 1.0, { "Normal": 0.1, "Doctor": 0.2, "Risk": 0.1 });
-        this.group_doctor = new Group("Doctor", 0.1, 0.01, 0.5, 1.0, { "Normal": 0.2, "Doctor": 0.2, "Risk": 0.1 });
-        this.group_risk = new Group("Risk", 0.9, 0.1, 0.2, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Normal": 0.2 });
+        this.group_normal = new Group("Normal", 0.5, 0.01, 1.0, { "Normal": 0.1, "Doctor": 0.2, "Risk": 0.1 });
+        this.group_doctor = new Group("Doctor", 0.1, 0.01, 1.0, { "Normal": 0.2, "Doctor": 0.2, "Risk": 0.1 });
+        this.group_risk = new Group("Risk", 0.9, 0.1, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Normal": 0.2 });
 
         for (var i = 0; i < num_people; i++) {
             this.people.push(new Person())
@@ -90,20 +90,21 @@ class Simulation {
 }
 
 class IsolationBox {
-    constructor(min_x, max_x, min_y, max_y) {
+    constructor(min_x, max_x, min_y, max_y, area_escape, area_entry) {
         this.min_x = min_x;
         this.max_x = max_x;
         this.min_y = min_y;
         this.max_y = max_y;
+        this.area_escape = area_escape;
+        this.area_entry = area_entry;
     }
 }
 
 class Group {
-    constructor(name, infectivity, mortality, area_escape, velocity_multiplicator, distance_to) {
+    constructor(name, infectivity, mortality, velocity_multiplicator, distance_to) {
         this.name = name;
         this.infectivity = infectivity;
         this.mortality = mortality;
-        this.area_escape = area_escape;
         this.velocity_multiplicator = velocity_multiplicator
         this.distance_to = distance_to;
     }
@@ -236,7 +237,7 @@ class Person {
             var direction_changed = false;
             for (var i = 0; i < simulation.boxes.length; i++) {
                 if (this.is_in_box(simulation.boxes[i])) {
-                    if (Math.random() >= this.group.area_escape) { // If person can't get out
+                    if (Math.random() >= simulation.boxes[i].area_escape[this.group.name]) { // If person can't get out
                         if (next_position.x > simulation.boxes[i].max_x || next_position.x < simulation.boxes[i].min_x) {
                             this.direction.x = -this.direction.x;
                             direction_changed = true
@@ -249,21 +250,22 @@ class Person {
                 }
             }
 
-            /*
             for (var i = 0; i < simulation.boxes.length; i++) {
                 if (!this.is_in_box(simulation.boxes[i])) {
                     // People 
-                    if (next_position.x > simulation.boxes[i].min_x && next_position.x < simulation.boxes[i].max_x) {
-                        this.direction.x = -this.direction.x;
-                        direction_changed = true
-                    }
-                    if (next_position.y > simulation.boxes[i].min_y && next_position.y < simulation.boxes[i].max_y) {
-                        this.direction.y = -this.direction.y;
-                        direction_changed = true
+                    if (Math.random() >= simulation.boxes[i].area_entry[this.group.name]) {
+                        if (next_position.x > simulation.boxes[i].min_x && next_position.x < simulation.boxes[i].max_x) {
+                            this.direction.x = -this.direction.x;
+                            direction_changed = true
+                        }
+                        if (next_position.y > simulation.boxes[i].min_y && next_position.y < simulation.boxes[i].max_y) {
+                            this.direction.y = -this.direction.y;
+                            direction_changed = true
+                        }
                     }
                 }
             }
-            */
+
 
             if (direction_changed) {
                 this.next_position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * this.group.velocity_multiplicator * simulation.days_per_sec));
