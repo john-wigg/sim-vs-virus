@@ -106,6 +106,7 @@ class Person {
         this.direction = new Vector2(0.0, 0.0);
         this.position = new Vector2(0.0, 0.0);
         this.state = "healthy" // states are "healthy", "infected"
+        this.old_state = "healthy"
         this.days_since_infection
     }
 
@@ -131,6 +132,7 @@ class Person {
                     //TODO: Calculate infection probability
                     this.days_since_infection = 0.0;
                 }
+                this.old_state = this.state;
                 this.state = "infected";
             }
             let new_direction = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction#
@@ -151,6 +153,16 @@ class Person {
         // Update days since infection
         if (this.state == "infected") {
             this.days_since_infection += delta * simulation.days_per_sec / 1000.0;
+            if (this.days_since_infection > simulation.infection_duration) {
+                if (Math.random() < simulation.mortality) {
+                    this.old_state = this.state;
+                    this.state = "deceased";
+                }
+                else {
+                    this.old_state = this.state;
+                    this.state == "healthy";
+                }
+            }
         }
     }
 }
