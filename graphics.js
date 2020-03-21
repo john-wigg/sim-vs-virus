@@ -104,7 +104,7 @@
         }
 
         updateCircle(container, color, alpha = 1.0) {
-            console.log("updateCircle()");
+            //console.log("updateCircle()");
             for (var i = 0; i < container.children.length; i++) {
                 container.children[i].clear();
                 container.children[i].lineStyle(0);
@@ -130,10 +130,11 @@
             this.people = this.simulation.people.length;
 
             this.data = new Array();
-            this.data.push(new DataPoint(199, 1, 0, 0));
+            this.maxData = 130;
+            /*this.data.push(new DataPoint(199, 1, 0, 0));
             this.data.push(new DataPoint(195, 5, 0, 0));
             this.data.push(new DataPoint(170, 30, 0, 0));
-            /*this.data.push(new DataPoint(134, 60, 5, 1));
+            this.data.push(new DataPoint(134, 60, 5, 1));
             this.data.push(new DataPoint(58, 130, 10, 2));
             this.data.push(new DataPoint(18, 170, 10, 2));
             this.data.push(new DataPoint(3, 180, 15, 2));
@@ -146,16 +147,29 @@
             this.data.push(new DataPoint(0, 30, 110, 60));
             this.data.push(new DataPoint(0, 10, 126, 64));
             this.data.push(new DataPoint(0, 0, 136, 64));*/
-            this.app.ticker.add(() => { this.onTickerUpdate() });
+            this.app.ticker.maxFPS = 1;
+            this.app.ticker.add((delta) => { 
+                this.onTickerUpdate();
+            });
 
-            this.drawCurve();
-
+            //this.drawCurve();
+            this.lastData = Date.now();
         }
 
         onTickerUpdate() {
-            var people = this.simulation.people;
-            for(var i = 0; i < people.length; i++) {
+            //var people = this.simulation.people;
+            var now = Date.now();
+            if (now - this.lastData > 250) {
+                this.lastData = now;
+                console.log("länge: " + this.data.length);
 
+                this.data.push(new DataPoint(this.simulation.get_count("healthy"), this.simulation.get_count("infected"), this.simulation.get_count("recovered"), this.simulation.get_count("deceased")));
+
+                if (this.data.length > this.maxData) {
+                    this.data.shift();
+                }
+                //this.data.push(new DataPoint(, 0, 0, 0));
+                this.drawCurve();
             }
         }
 
@@ -184,6 +198,11 @@
             graphics.drawRect(x1, y1, x2, y2);
             graphics.endFill();
             this.app.stage.addChild(graphics);
+
+            if (this.app.stage.children.length > this.maxData * 4) {
+                this.app.stage.children.shift();
+                //console.log("children: " + this.app.stage.children.length);
+            }
         }
     }
 
