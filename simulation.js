@@ -14,6 +14,10 @@ class Simulation {
         this.velocity = 0.1 // Velocity of the people
         this.days_per_sec = 1.0; // Days per second in the simulation
 
+        this.frac_population_normal = 0.8;
+        this.frac_population_doctors = 0.1;
+        this.frac_population_risk = 0.1;
+
         this.people = [];// Array mit personen
 
         this.width = width;
@@ -40,6 +44,30 @@ class Simulation {
             this.people[i].step(delta, this)
         }
         return this.people;
+    }
+}
+
+class Group {
+    constructor() {
+        // TODO
+    }
+}
+
+class NormalGroup extends Group {
+    constructor() {
+        // TODO
+    }
+}
+
+class DoctorGroup extends Group {
+    constructor() {
+        // TODO
+    }
+}
+
+class RiskGroup extends Group {
+    constructor() {
+        // TODO
     }
 }
 
@@ -108,64 +136,67 @@ class Person {
         this.state = "healthy" // states are "healthy", "infected"
         this.old_state = "healthy"
         this.days_since_infection
+        this.group = new Group()
     }
 
     step(delta, simulation) {
-        // Naive way of people bouncing off each other
-        // get closest person
-        // TODO: Predict collisions
-        var min_dist = 0.1 * simulation.minimum_distance; // people should only affect each other if at minimum distance
-        var min_idx = -1;
-        for (var i = 0; i < simulation.people.length; i++) {
-            if (simulation.people[i] === this) continue;
-            // get closest person within minimum distance
-            let dist = this.position.dist(simulation.people[i].position);
-            if (dist < min_dist) {
-                min_dist = dist;
-                min_idx = i;
-            }
-        }
-        if (min_idx != -1) // "collision" has occured
-        {
-            if (simulation.people[min_idx].state == "infected" && this.state == "healthy") {
-                if (Math.random() < simulation.infectiveness) {
-                    //TODO: Calculate infection probability
-                    this.days_since_infection = 0.0;
+        if (this.state != "deceased") {
+            // Naive way of people bouncing off each other
+            // get closest person
+            // TODO: Predict collisions
+            var min_dist = 0.1 * simulation.minimum_distance; // people should only affect each other if at minimum distance
+            var min_idx = -1;
+            for (var i = 0; i < simulation.people.length; i++) {
+                if (simulation.people[i] === this) continue;
+                // get closest person within minimum distance
+                let dist = this.position.dist(simulation.people[i].position);
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    min_idx = i;
                 }
-                this.old_state = this.state;
-                this.state = "infected";
             }
-            let new_direction = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction#
-            this.direction = new_direction;
-            simulation.people[min_idx].direction = new_direction.multiply(-1.0);
-        }
-
-        // Bounce from walls
-        if (this.position.x > simulation.width || this.position.x < 0) {
-            this.direction.x = -this.direction.x;
-        }
-        if (this.position.y > simulation.height || this.position.y < 0) {
-            this.direction.y = -this.direction.y;
-        }
-
-        this.position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity));
-
-        // Update days since infection
-        if (this.state == "infected") {
-            this.days_since_infection += delta * simulation.days_per_sec / 1000.0;
-            if (this.days_since_infection > simulation.infection_duration) {
-                if (Math.random() < simulation.mortality) {
+            if (min_idx != -1) // "collision" has occured
+            {
+                if (simulation.people[min_idx].state == "infected" && this.state == "healthy") {
+                    if (Math.random() < simulation.infectiveness) {
+                        //TODO: Calculate infection probability
+                        this.days_since_infection = 0.0;
+                    }
                     this.old_state = this.state;
-                    this.state = "deceased";
-                    this.velocity = 0.0;
+                    this.state = "infected";
                 }
-                else {
-                    this.old_state = this.state;
-                    this.state == "recovered";
+                let new_direction = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction#
+                this.direction = new_direction;
+                simulation.people[min_idx].direction = new_direction.multiply(-1.0);
+            }
+
+            // Bounce from walls
+            if (this.position.x > simulation.width || this.position.x < 0) {
+                this.direction.x = -this.direction.x;
+            }
+            if (this.position.y > simulation.height || this.position.y < 0) {
+                this.direction.y = -this.direction.y;
+            }
+
+            this.position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity));
+
+            // Update days since infection
+            if (this.state == "infected") {
+                this.days_since_infection += delta * simulation.days_per_sec / 1000.0;
+                if (this.days_since_infection > simulation.infection_duration) {
+                    if (Math.random() < simulation.mortality) {
+                        this.old_state = this.state;
+                        this.state = "deceased";
+                    }
+                    else {
+                        this.old_state = this.state;
+                        this.state == "recovered";
+                    }
                 }
             }
         }
     }
 }
 
+// TODO: Add groups with different behaviour
 // TODO: Potential class that represents the underlying potential and potential wells
