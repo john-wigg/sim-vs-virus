@@ -47,6 +47,7 @@ class Simulation {
         return this.people;
     }
 
+    // Returns count of people in state
     get_count(state) {
         let count = 0;
         for (var i = 0; i < this.people.length; i++) {
@@ -193,7 +194,7 @@ class Person {
                 this.direction.y = -this.direction.y;
             }
 
-            this.position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity));
+            this.position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * simulation.days_per_sec));
 
             // Update days since infection
             if (this.state == "infected") {
