@@ -28,7 +28,6 @@ class Simulation {
             dir.x = Math.random() * 2.0 - 1.0
             dir.y = Math.random() * 2.0 - 1.0
             this.people[i].direction = dir.normalized()
-            console.log(dir.normalized().length())
         }
     }
 
