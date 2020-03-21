@@ -155,5 +155,4 @@ class Person {
     }
 }
 
-// TODO: Person class that represents a single individuum that can be infected
 // TODO: Potential class that represents the underlying potential and potential wells
