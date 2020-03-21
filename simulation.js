@@ -11,9 +11,9 @@ class Simulation {
         this.velocity = 0.5 // Velocity of the people
         this.days_per_sec = 1.0; // Days per second in the simulation
 
-        this.frac_population_normal = 1.0;
-        this.frac_population_doctors = 0.0;
-        this.frac_population_risk = 0.0;
+        this.frac_population_normal = 0.8;
+        this.frac_population_doctors = 0.1;
+        this.frac_population_risk = 0.1;
 
         this.people = [];// Array mit personen
         this.boxes = [];
@@ -21,9 +21,9 @@ class Simulation {
         this.width = width;
         this.height = height;
 
-        this.group_normal = new Group("Normal", 0.1, 0.9, 0.02, 0.1);
-        this.group_doctor = new Group("Doctors", 0.1, 0.9);
-        this.group_risk = new Group("Risk", 0.1, 0.9)
+        this.group_normal = new Group("Normal", 0.1, 0.5, 0.01, 0.1, 1.0);
+        this.group_doctor = new Group("Doctor", 0.15, 0.1, 0.01, 0.5, 1.0);
+        this.group_risk = new Group("Risk", 0.2, 0.9, 0.1, 0.2, 1.0);
 
         for (var i = 0; i < num_people; i++) {
             this.people.push(new Person())
@@ -99,12 +99,13 @@ class IsolationBox {
 }
 
 class Group {
-    constructor(name, minimum_distance, infectivity, mortality, area_escape) {
+    constructor(name, minimum_distance, infectivity, mortality, area_escape, velocity_multiplicator) {
         this.name = name;
         this.minimum_distance = minimum_distance;
         this.infectivity = infectivity;
         this.mortality = mortality;
         this.area_escape = area_escape;
+        this.velocity_multiplicator = velocity_multiplicator
     }
 }
 
@@ -230,7 +231,7 @@ class Person {
 
             // Check if going through walls of a box
             // TODO: Es sollten nicht alle Punkte in der Box doppelt rechnen müssen
-            var next_position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * simulation.days_per_sec));
+            var next_position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * this.group.velocity_multiplicator * simulation.days_per_sec));
             var direction_changed = false;
             for (var i = 0; i < simulation.boxes.length; i++) {
                 if (this.is_in_box(simulation.boxes[i])) {
@@ -264,7 +265,7 @@ class Person {
             */
 
             if (direction_changed) {
-                this.next_position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * simulation.days_per_sec));
+                this.next_position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity * this.group.velocity_multiplicator * simulation.days_per_sec));
             }
             else {
                 this.next_position = next_position;
