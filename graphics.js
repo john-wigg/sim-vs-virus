@@ -26,14 +26,24 @@
             var box3 = new IsolationBox(0.5, 1.5, 2.5, 3.25, area_escape, area_entry);
             var box4 = new IsolationBox(0.5, 1.5, 3.5, 4.25, area_escape, area_entry);
             var box5 = new IsolationBox(0.5, 1.5, 4.5, 5.25, area_escape, area_entry);
+            var box6 = new IsolationBox(4.5, 5.5, 0.5, 1.25, area_escape, area_entry);
+            var box7 = new IsolationBox(4.5, 5.5, 1.5, 2.25, area_escape, area_entry);
+            var box8 = new IsolationBox(4.5, 5.5, 2.5, 3.25, area_escape, area_entry);
+            var box9 = new IsolationBox(4.5, 5.5, 3.5, 4.25, area_escape, area_entry);
+            var box10 = new IsolationBox(4.5, 5.5, 4.5, 5.25, area_escape, area_entry);
 
             this.simulation.boxes.push(box1);
             this.simulation.boxes.push(box2);
             this.simulation.boxes.push(box3);
             this.simulation.boxes.push(box4);
             this.simulation.boxes.push(box5);
+            this.simulation.boxes.push(box6);
+            this.simulation.boxes.push(box7);
+            this.simulation.boxes.push(box8);
+            this.simulation.boxes.push(box9);
+            this.simulation.boxes.push(box10);
 
-            this.simulation.velocity = 1.2;
+            this.simulation.velocity = 1.0;
             this.simulation.group_normal.velocity_multiplicator = 0.2;
             this.simulation.initialize();
 

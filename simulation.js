@@ -15,8 +15,10 @@ class Simulation {
         this.mortality_multiplier = 10.0;
 
         this.frac_population_normal = 0.8;
-        this.frac_population_doctors = 0.1;
-        this.frac_population_risk = 0.1;
+        this.frac_population_doctors = 0.0;
+        this.frac_population_risk = 0.2;
+
+        this.count_infected = 4;
 
         this.people = [];// Array mit personen
         this.boxes = [];
@@ -24,9 +26,9 @@ class Simulation {
         this.width = width;
         this.height = height;
 
-        this.group_normal = new Group("Normal", 0.5, 0.01, 1.0, { "Normal": 0.1, "Doctor": 0.2, "Risk": 0.1 });
-        this.group_doctor = new Group("Doctor", 0.1, 0.01, 1.0, { "Normal": 0.2, "Doctor": 0.2, "Risk": 0.1 });
-        this.group_risk = new Group("Risk", 0.9, 0.1, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Risk": 0.2 });
+        this.group_normal = new Group("Normal", 0.5, 0.01, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Risk": 0.1 });
+        this.group_doctor = new Group("Doctor", 0.1, 0.01, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Risk": 0.1 });
+        this.group_risk = new Group("Risk", 0.9, 0.1, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Risk": 0.1 });
 
         for (var i = 0; i < num_people; i++) {
             this.people.push(new Person())
@@ -37,43 +39,32 @@ class Simulation {
         // randomly initialize Person positions
         for (var i = 0; i < this.people.length; i++) {
             // Start all inside a box
-            var box = this.boxes[0];
             this.people[i].velocity = this.velocity
             let dir = new Vector2()
             dir.x = Math.sin(Math.random() * 2 * Math.PI);
             dir.y = Math.cos(Math.random() * 2 * Math.PI);
             this.people[i].direction = dir.normalized()
 
-            if (i < this.frac_population_normal * this.people.length) {
+            if (Math.random() < this.frac_population_normal) {
                 this.people[i].group = this.group_normal;
-                for (var j = 0; j < 5; j++) {
-                    if (i < 10 + j * 10) {
-                        this.people[i].position.x = this.boxes[j].min_x + Math.random() * (this.boxes[j].max_x - this.boxes[j].min_x);
-                        this.people[i].position.y = this.boxes[j].min_y + Math.random() * (this.boxes[j].max_y - this.boxes[j].min_y);
-                        break;
-                    }
-                }
-                if (50 <= i && i < 110) {
-                    this.people[i].position.x = 2.0 + Math.random() * (this.width - 2.0);
-                    this.people[i].position.y = Math.random() * this.height;
-                }
-            }
-            else if (i < (this.frac_population_normal + this.frac_population_doctors) * this.people.length) {
-                this.people[i].group = this.group_doctor;
-                this.people[i].position.x = 2.0 + Math.random() * (this.width - 2.0);
-                this.people[i].position.y = Math.random() * this.height;
             }
             else {
                 this.people[i].group = this.group_risk;
-                this.people[i].position.x = 2.0 + Math.random() * (this.width - 2.0);
-                this.people[i].position.y = Math.random() * this.height;
+            }
+
+            for (var j = 0; j < 10; j++) {
+                if (i < 20 + j * 20 && i >= 20 * j) {
+                    this.people[i].position.x = this.boxes[j].min_x + Math.random() * (this.boxes[j].max_x - this.boxes[j].min_x);
+                    this.people[i].position.y = this.boxes[j].min_y + Math.random() * (this.boxes[j].max_y - this.boxes[j].min_y);
+                }
             }
         }
-        this.people[0].state = "infected"
-        this.people[10].state = "infected"
-        this.people[20].state = "infected"
-        this.people[30].state = "infected"
-        this.people[40].state = "infected"
+
+        for (var j = 0; j < this.count_infected; j++) {
+            console.log(j)
+            let idx = Math.floor(Math.random() * this.people.length);
+            this.people[idx].state = "infected";
+        }
     }
 
     update(delta) {
