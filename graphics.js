@@ -16,13 +16,26 @@
             this.app = new PIXI.Application({
                 width: 800, height: 600, backgroundColor: 0xdddddd, antialias: true
             });
-            this.appendChild(this.app.view);           
+            this.appendChild(this.app.view);
 
-            var box = new IsolationBox(1, 4, 1, 4);
-            box.area_entry = { "Normal": 1.0, "Doctor": 0.0, "Risk": 0.0 };
-            box.area_escape = { "Normal": 0.5, "Doctor": 1.0, "Risk": 1.0 };
+            var sim_height = 6;
+            var sim_width = 8;
 
-            this.simulation.boxes.push(box);
+            let area_entry = { "Normal": 1.0, "Doctor": 0.0, "Risk": 0.0 };
+            let area_escape = { "Normal": 0.5, "Doctor": 1.0, "Risk": 1.0 };
+
+            var box1 = new IsolationBox(0.5, 1.5, 0.5, 1.25, area_entry, area_escape);
+            var box2 = new IsolationBox(0.5, 1.5, 1.5, 2.25, area_entry, area_escape);
+            var box3 = new IsolationBox(0.5, 1.5, 2.5, 3.25, area_entry, area_escape);
+            var box4 = new IsolationBox(0.5, 1.5, 3.5, 4.25, area_entry, area_escape);
+            var box5 = new IsolationBox(0.5, 1.5, 4.5, 5.25, area_entry, area_escape);
+
+            this.simulation.boxes.push(box1);
+            this.simulation.boxes.push(box2);
+            this.simulation.boxes.push(box3);
+            this.simulation.boxes.push(box4);
+            this.simulation.boxes.push(box5);
+
             this.simulation.initialize();
 
             this.filter = ["Normal", "Doctor", "Risk"];
@@ -78,7 +91,7 @@
             for (var i = 0; i < people.length; i++) {
                 this.containers[i].x = people[i].position.x * 100;
                 this.containers[i].y = people[i].position.y * 100;
-                
+
                 if (people[i].state != people[i].old_state || this.old_filter != this.filter) {
                     if (this.filter.includes(people[i].group.name)) {
                         switch (people[i].state) {
@@ -95,10 +108,10 @@
                                 this.updateCircle(this.containers[i], COLOR_HEALTHY);
                                 break;
                         }
-                    }else {
+                    } else {
                         this.updateCircle(this.containers[i], COLOR_HIDDEN, 0.15);
                     }
-                }                             
+                }
             }
             this.old_filter = this.filter;
         }
@@ -148,7 +161,7 @@
             this.data.push(new DataPoint(0, 10, 126, 64));
             this.data.push(new DataPoint(0, 0, 136, 64));*/
             this.app.ticker.maxFPS = 1;
-            this.app.ticker.add((delta) => { 
+            this.app.ticker.add((delta) => {
                 this.onTickerUpdate();
             });
 
@@ -235,13 +248,13 @@
         document.body.appendChild(divMain);
         document.body.appendChild(divCurves);
 
-        document.getElementById("normal").addEventListener("click", function(e) {
+        document.getElementById("normal").addEventListener("click", function (e) {
             simulation_view.filter = ["Normal"];
         });
-        document.getElementById("doctor").addEventListener("click", function(e) {
+        document.getElementById("doctor").addEventListener("click", function (e) {
             simulation_view.filter = ["Doctor"];
         });
-        document.getElementById("risk").addEventListener("click", function(e) {
+        document.getElementById("risk").addEventListener("click", function (e) {
             simulation_view.filter = ["Risk"];
         });
     }
