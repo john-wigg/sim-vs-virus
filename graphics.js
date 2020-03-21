@@ -1,37 +1,36 @@
 "use strict";
-(function() { 
+(function () {
 
     const COLOR_HEALTHY = 0x3E8EFF;
     const COLOR_INFECTED = 0xE71E3A;
     const COLOR_RECOVERED = 0x00F214;
     const COLOR_DEAD = 0x555555;
     const COLOR_BOX = 0xaaaaaa;
-    
+
     class SimulationView extends HTMLElement {
         constructor(persons) {
             super();
             this.app = new PIXI.Application({
                 width: 800, height: 600, backgroundColor: 0xdddddd, antialias: true
-            });       
+            });
             this.appendChild(this.app.view);
-            
+
             this.simulation = new Simulation(8, 6, persons);
 
-            this.boxes = new Array();
-            this.boxes.push(new IsolationBox(1,4,1,4));
+            this.simulation.boxes.push(new IsolationBox(1, 4, 1, 4));
 
-            for(var i=0; i<this.boxes.length; i++){
-                var box = this.boxes[i];
+            for (var i = 0; i < this.simulation.boxes.length; i++) {
+                var box = this.simulation.boxes[i];
 
                 const graphics = new PIXI.Graphics();
-                
+
                 graphics.lineStyle(0);
                 graphics.beginFill(COLOR_BOX, 1);
-                graphics.drawRect(box.min_x*100,box.min_y*100,(box.max_x-box.min_x)*100,(box.max_y-box.min_y)*100);
+                graphics.drawRect(box.min_x * 100, box.min_y * 100, (box.max_x - box.min_x) * 100, (box.max_y - box.min_y) * 100);
                 graphics.endFill();
                 this.app.stage.addChild(graphics);
             }
-            
+
             this.containers = new Array();
             for (var i = 0; i < persons; i++) {
                 const container = new PIXI.Container();
@@ -44,23 +43,23 @@
                 container.addChild(graphics);
 
                 this.containers.push(container)
-                this.app.stage.addChild(container);                
+                this.app.stage.addChild(container);
             }
 
 
-            this.app.ticker.add(() => {this.onTickerUpdate()});
+            this.app.ticker.add(() => { this.onTickerUpdate() });
         }
 
         onTickerUpdate() {
             var persons = this.simulation.update(this.app.ticker.deltaMS);
-            
+
             for (var i = 0; i < persons.length; i++) {
                 this.containers[i].x = persons[i].position.x * 100;
                 this.containers[i].y = persons[i].position.y * 100;
 
                 //console.log("State: " + persons[i].state + " " + i);
                 if (persons[i].state != persons[i].old_state) {
-                    switch(persons[i].state) {
+                    switch (persons[i].state) {
                         case "infected":
                             this.updateCircle(this.containers[i], COLOR_INFECTED);
                             break;
@@ -97,7 +96,7 @@
 
             this.app = new PIXI.Application({
                 width: 800, height: 200, backgroundColor: 0xdddddd, antialias: true
-            });       
+            });
             this.appendChild(this.app.view);
 
             this.data = new Array();
@@ -118,17 +117,8 @@
         }*/
     }
 
-    class IsolationBox {
-        constructor(min_x, max_x, min_y, max_y) {
-            this.min_x = min_x;
-            this.max_x = max_x;
-            this.min_y = min_y;
-            this.max_y = max_y;
-        }
-    }
-
     class DataPoint {
-        constructor(h,i,r,d) {
+        constructor(h, i, r, d) {
             this.healthy = h;
             this.infected = i;
             this.recovered = r;
@@ -142,13 +132,13 @@
         console.log("onLoad()");
         customElements.define("sim-view", SimulationView);
         customElements.define("curve-view", Curve);
-        
+
         var divMain = document.createElement("div");
         var divCurves = document.createElement("div");
 
         divMain.appendChild(new SimulationView(200));
         divCurves.appendChild(new Curve());
-        
+
         document.body.appendChild(divMain);
         document.body.appendChild(divCurves);
     }
