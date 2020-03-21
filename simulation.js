@@ -172,7 +172,7 @@ class Person {
         this.position = new Vector2(0.0, 0.0);
         this.state = "healthy" // states are "healthy", "infected"
         this.old_state = "healthy"
-        this.days_since_infection
+        this.days_since_infection = 0.0;
         this.group = new Group()
 
         this.next_position = new Vector2(0.0, 0.0)
@@ -180,6 +180,15 @@ class Person {
 
     is_in_box(box) {
         return (this.position.x < box.max_x && this.position.x > box.min_x && this.position.y < box.max_y && this.position.y > box.min_y)
+    }
+
+    get_inside_box(boxes) {
+        for (var i = 0; i < boxes.length; i++) {
+            if (this.is_in_box(boxes[i])) {
+                return boxes[i];
+            }
+        }
+        return null;
     }
 
     calculate_step(delta, simulation) {
@@ -201,7 +210,7 @@ class Person {
             }
             if (min_idx != -1) // "collision" has occured
             {
-                if (simulation.people[min_idx].state == "infected" && this.state == "healthy") {
+                if (simulation.people[min_idx].state == "infected" && this.state == "healthy" && simulation.people[min_idx].get_inside_box(simulation) === this.get_inside_box(simulation)) {
                     if (Math.random() < simulation.people[min_idx].group.infectivity * simulation.infection_prob(min_dist)) {
                         //TODO: Calculate infection probability
                         this.days_since_infection = 0.0;
