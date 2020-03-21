@@ -23,11 +23,12 @@ class Simulation {
             this.people.push(new Person())
             this.people[i].position.x = Math.random() * width;
             this.people[i].position.y = Math.random() * height;
-            this.people[i].velocity = 0.0001
+            this.people[i].velocity = 0.1
             let dir = new Vector2()
             dir.x = Math.random() * 2.0 - 1.0
             dir.y = Math.random() * 2.0 - 1.0
             this.people[i].direction = dir.normalized()
+            console.log(dir.normalized().length())
         }
     }
 
@@ -79,7 +80,7 @@ class Vector2 {
 
     // Return length of vector
     length() {
-        return this.x * this.x + this.y * this.y;
+        return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 
     // Return normalized vector
@@ -112,7 +113,7 @@ class Person {
         // Naive way of people bouncing off each other
         // get closest person
         // TODO: Predict collisions
-        var min_dist = 0.1; // people should only affect each other if at minimum distance
+        var min_dist = 0.1 * simulation.minimum_distance; // people should only affect each other if at minimum distance
         var min_idx = -1;
         for (var i = 0; i < simulation.people.length; i++) {
             if (simulation.people[i] === this) continue;
@@ -140,7 +141,7 @@ class Person {
             this.direction.y = -this.direction.y;
         }
 
-        this.position = this.position.add(this.direction.multiply(delta * this.velocity));
+        this.position = this.position.add(this.direction.multiply(delta / 1000.0 * this.velocity));
 
         // Update days since infection
         if (this.state == "infected") {
