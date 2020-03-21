@@ -34,7 +34,7 @@ class Simulation {
             dir.y = Math.random() * 2.0 - 1.0
             this.people[i].direction = dir.normalized()
         }
-        this.people[0].state == "infected"
+        this.people[0].state = "infected"
     }
 
     update(delta) {
