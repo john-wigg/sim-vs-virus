@@ -34,6 +34,7 @@
             this.simulation.boxes.push(box5);
 
             this.simulation.velocity = 1.2;
+            this.simulation.group_normal.velocity_multiplicator = 0.2;
             this.simulation.initialize();
 
             this.filter = ["Normal", "Doctor", "Risk"];
