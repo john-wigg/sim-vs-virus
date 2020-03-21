@@ -37,14 +37,30 @@ header {
     height: 40vh;
 }
 
-.arrow-right {
-    text-align: right;
+.small-virus {
+    margin-top: 2em;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /*width: 70%;*/
+    height: 30vh;
 }
 
-.arrow-right img {
-    width: 2.5em;
-    height: 2.5em;   
+.arrow-container {
+    height: 2.5em; 
+}
+
+.arrow-container img {
+    height: 2.5em;
     margin: 0 5%;
+}
+
+.arrow-left {
+    float: left;
+}
+
+.arrow-right {
+    float: right;
 }
 
 .seperator h4 {
@@ -58,6 +74,18 @@ header {
     text-align: center;
 }
 
+main {
+    padding: 3px;
+    margin: 15px 5%;
+    background-color: #eee;
+    max-height: 40vh;
+    overflow: auto;
+}
+
+main h4 {
+    margin-top: 0;
+}
+
 footer img {
     height: 11vh;
 }
@@ -67,4 +95,11 @@ footer img {
     position: fixed;
     display: block;
     bottom: 0;
+}
+
+.footer-controls{
+    width: 100%;
+    position: fixed;
+    display: block;
+    bottom: 1em;
 }
