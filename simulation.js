@@ -13,13 +13,14 @@ class Simulation {
         this.population = 500; // Number of people to simulate
         this.days_per_sec = 1.0; // Days per second in the simulation
 
-        this.people = new Array(new Person());// Array mit personen
+        this.people = [];// Array mit personen
 
         this.width = width;
         this.height = height;
 
         // randomly initialize Person positions
-        for (var i = 0; i < this.people.length; i++) {
+        for (var i = 0; i < num_people; i++) {
+            this.people.push(new Person())
             this.people[i].position.x = Math.random() * width;
             this.people[i].position.y = Math.random() * height;
             this.people[i].velocity = 0.01
