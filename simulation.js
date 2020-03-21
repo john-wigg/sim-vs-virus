@@ -43,14 +43,18 @@ class Vector2 {
 
     // Multiply vector with a scalar
     multiply(a) {
-        this.x *= a;
-        this.y *= a;
+        res = new Vector2()
+        res.x = this.x * a;
+        res.y = this.y * a;
+        return res
     }
 
     // Add vector to another vector
     add(b_vec) {
-        this.x += b_vec.x;
-        this.y += b_vec.y;
+        res = new Vector2()
+        res.x = this.x + b_vec.x;
+        res.y = this.y + b_vec.y;
+        return res
     }
 
     // Dot product with another vector
