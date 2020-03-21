@@ -13,16 +13,16 @@ class Simulation {
         this.population = 500; // Number of people to simulate
         this.days_per_sec = 1.0; // Days per second in the simulation
 
-        this.people = new Array(Person());// Array mit personen
+        this.people = new Array(new Person());// Array mit personen
 
         this.width = width;
         this.height = height;
 
         // randomly initialize Person positions
-        for (this.person in this.people) {
-            this.person.position.x = Math.random() * width;
-            this.person.position.y = Math.random() * height;
-            this.person.velocity = 0.01
+        for (var i = 0; i < this.people.length; i++) {
+            this.people[i].position.x = Math.random() * width;
+            this.people[i].position.y = Math.random() * height;
+            this.people[i].velocity = 0.01
         }
     }
 
@@ -73,8 +73,8 @@ class Vector2 {
 class Person {
     constructor() {
         this.velocity = 1.0;
-        this.directon = Vector2(1.0, 0.0);
-        this.position = Vector2(0.0, 0.0);
+        this.directon = new Vector2(1.0, 0.0);
+        this.position = new Vector2(0.0, 0.0);
     }
 
     step(delta) {
