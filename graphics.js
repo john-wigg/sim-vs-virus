@@ -16,9 +16,13 @@
             this.app = new PIXI.Application({
                 width: 800, height: 600, backgroundColor: 0xdddddd, antialias: true
             });
-            this.appendChild(this.app.view);           
+            this.appendChild(this.app.view);
 
-            this.simulation.boxes.push(new IsolationBox(1, 4, 1, 4));
+            var box = new IsolationBox(1, 4, 1, 4);
+            box.area_entry = { "Normal": 1.0, "Doctor": 0.0, "Risk": 0.0 };
+            box.area_escape = { "Normal": 0.5, "Doctor": 1.0, "Risk": 1.0 };
+
+            this.simulation.boxes.push(box);
             this.simulation.initialize();
 
             this.filter = ["Normal", "Doctor", "Risk"];
@@ -74,7 +78,7 @@
             for (var i = 0; i < people.length; i++) {
                 this.containers[i].x = people[i].position.x * 100;
                 this.containers[i].y = people[i].position.y * 100;
-                
+
                 if (people[i].state != people[i].old_state || this.old_filter != this.filter) {
                     if (this.filter.includes(people[i].group.name)) {
                         switch (people[i].state) {
@@ -91,10 +95,10 @@
                                 this.updateCircle(this.containers[i], COLOR_HEALTHY);
                                 break;
                         }
-                    }else {
+                    } else {
                         this.updateCircle(this.containers[i], COLOR_HIDDEN, 0.15);
                     }
-                }                             
+                }
             }
             this.old_filter = this.filter;
         }
@@ -203,6 +207,7 @@
 
         var simulation_view = new SimulationView(this.simulation);
         simulation_view.filter = ["Doctor"];
+
         divMain.appendChild(simulation_view);
         divCurves.appendChild(new Curve(this.simulation));
 
