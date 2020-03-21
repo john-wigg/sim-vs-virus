@@ -1,14 +1,14 @@
 class Simulation {
     constructor(width, height, num_people) {
         /* Simulation parameters */
-        this.infectivity_distance = 1.0; // Distance at which infection probability reaches 0.5
-        this.minimum_distance = 1.0; // Distance which people keep from each other at minimum
+        this.infection_distance = 0.2; // Distance at which infection probability reaches 0.5
+        this.minimum_distance = 0.1; // Distance which people keep from each other at minimum
 
         this.mortality = 0.02; // Mortality rate of the virus
         this.incubation_period = 14; // Incubation period (days)
         this.infection_duration = 10; // Duration of the infection until deatch or recovery (days)
 
-        this.infectiveness = 0.9; // Probability of getting infected when someone already carries the virus (e.g. on his hands, should be affected by personal hygiene)
+        this.infectivity = 0.9; // Probability of getting infected when someone already carries the virus (e.g. on his hands, should be affected by personal hygiene)
 
         this.population = 500; // Number of people to simulate
         this.velocity = 0.5 // Velocity of the people
@@ -60,12 +60,13 @@ class Simulation {
         }
         return count;
     }
-}
 
-function infection_prob(dist) {
-    return Math.exp(-dist);
+    // Infection probability as a function of distance
+    // Adjusted so that infectivity reaches 0.5 at infection_distance
+    infection_prob(dist) {
+        return Math.exp(-0.693147 * dist / this.infection_distance);
+    }
 }
-
 class Group {
     constructor() {
         // TODO
@@ -166,13 +167,13 @@ class Person {
             // Naive way of people bouncing off each other
             // get closest person
             // TODO: Predict collisions
-            var min_dist = 0.1 * simulation.minimum_distance; // people should only affect each other if at minimum distance
+            var min_dist = simulation.minimum_distance; // people should only affect each other if at minimum distance
             var min_idx = -1;
             for (var i = 0; i < simulation.people.length; i++) {
                 if (simulation.people[i] === this) continue;
                 // get closest person within minimum distance
                 let dist = this.position.dist(simulation.people[i].position);
-                if (dist < min_dist) {
+                if (dist < min_dist && simulation.people[i].state != "deceased") {
                     min_dist = dist;
                     min_idx = i;
                 }
@@ -180,15 +181,13 @@ class Person {
             if (min_idx != -1) // "collision" has occured
             {
                 if (simulation.people[min_idx].state == "infected" && this.state == "healthy") {
-                    if (Math.random() < simulation.infectiveness) {
+                    if (Math.random() < simulation.infectivity * simulation.infection_prob(min_dist)) {
                         //TODO: Calculate infection probability
                         this.days_since_infection = 0.0;
+                        this.state = "infected";
                     }
-                    this.state = "infected";
                 }
-                let new_direction = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction#
-                this.direction = new_direction;
-                //simulation.people[min_idx].direction = new_direction.multiply(-1.0);
+                this.direction = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction
             }
 
             // Bounce from walls
