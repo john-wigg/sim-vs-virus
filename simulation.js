@@ -21,9 +21,9 @@ class Simulation {
         this.width = width;
         this.height = height;
 
-        this.group_normal = new Group("Normal", 0.1, 0.5, 0.01, 0.1, 1.0);
-        this.group_doctor = new Group("Doctor", 0.15, 0.1, 0.01, 0.5, 1.0);
-        this.group_risk = new Group("Risk", 0.2, 0.9, 0.1, 0.2, 1.0);
+        this.group_normal = new Group("Normal", 0.5, 0.01, 0.1, 1.0, { "Normal": 0.1, "Doctor": 0.2, "Risk": 0.1 });
+        this.group_doctor = new Group("Doctor", 0.1, 0.01, 0.5, 1.0, { "Normal": 0.2, "Doctor": 0.2, "Risk": 0.1 });
+        this.group_risk = new Group("Risk", 0.9, 0.1, 0.2, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Normal": 0.2 });
 
         for (var i = 0; i < num_people; i++) {
             this.people.push(new Person())
@@ -99,13 +99,13 @@ class IsolationBox {
 }
 
 class Group {
-    constructor(name, minimum_distance, infectivity, mortality, area_escape, velocity_multiplicator) {
+    constructor(name, infectivity, mortality, area_escape, velocity_multiplicator, distance_to) {
         this.name = name;
-        this.minimum_distance = minimum_distance;
         this.infectivity = infectivity;
         this.mortality = mortality;
         this.area_escape = area_escape;
         this.velocity_multiplicator = velocity_multiplicator
+        this.distance_to = distance_to;
     }
 }
 
@@ -198,27 +198,28 @@ class Person {
             // Naive way of people bouncing off each other
             // get closest person
             // TODO: Predict collisions
-            var min_dist = simulation.minimum_distance; // people should only affect each other if at minimum distance
-            var min_idx = -1;
+            var col_idx = -1;
+            var col_dist = 0.0;
             for (var i = 0; i < simulation.people.length; i++) {
                 if (simulation.people[i] === this) continue;
                 // get closest person within minimum distance
                 let dist = this.position.dist(simulation.people[i].position);
-                if (dist < min_dist && simulation.people[i].state != "deceased") {
-                    min_dist = dist;
-                    min_idx = i;
+                if (dist < this.group.distance_to[simulation.people[i].group.name] && simulation.people[i].state != "deceased") {
+                    col_dist = dist
+                    col_idx = i;
+                    break;
                 }
             }
-            if (min_idx != -1) // "collision" has occured
+            if (col_idx != -1) // "collision" has occured
             {
-                if (simulation.people[min_idx].state == "infected" && this.state == "healthy" && simulation.people[min_idx].get_inside_box(simulation) === this.get_inside_box(simulation)) {
-                    if (Math.random() < simulation.people[min_idx].group.infectivity * simulation.infection_prob(min_dist)) {
+                if (simulation.people[col_idx].state == "infected" && this.state == "healthy" && simulation.people[col_idx].get_inside_box(simulation) === this.get_inside_box(simulation)) {
+                    if (Math.random() < simulation.people[col_idx].group.infectivity * simulation.infection_prob(col_dist)) {
                         //TODO: Calculate infection probability
                         this.days_since_infection = 0.0;
                         this.state = "infected";
                     }
                 }
-                this.direction = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction
+                this.direction = this.position.sub(simulation.people[col_idx].position).normalized(); // set new direction
             }
 
             // Bounce from walls
