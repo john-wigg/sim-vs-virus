@@ -157,10 +157,11 @@ class Person {
                 if (Math.random() < simulation.mortality) {
                     this.old_state = this.state;
                     this.state = "deceased";
+                    this.velocity = 0.0;
                 }
                 else {
                     this.old_state = this.state;
-                    this.state == "healthy";
+                    this.state == "recovered";
                 }
             }
         }
