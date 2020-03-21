@@ -1,0 +1,70 @@
+body {
+    margin: 0;
+}
+
+header h2 {
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+    text-align: center;
+}
+
+.logo {
+    width: 60%;
+    height: 100%;
+    margin-left: 5%;
+}
+
+.topOption {    
+    position: absolute;
+    right: 5%;
+    top: 1.25em;
+}
+
+header {
+    height: 4em;
+    text-align: center;
+    display: block;
+    background-color: #eee;
+}
+
+.big-virus {
+    margin-top: 2em;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /*width: 70%;*/
+    height: 40vh;
+}
+
+.arrow-right {
+    text-align: right;
+}
+
+.arrow-right img {
+    width: 2.5em;
+    height: 2.5em;   
+    margin: 0 5%;
+}
+
+.seperator h4 {
+    margin: 3px;
+}
+
+.seperator {
+    margin-top: 1em;
+    padding: 3px;
+    background-color: #eee;
+    text-align: center;
+}
+
+footer img {
+    height: 11vh;
+}
+
+.footer {
+    width: 100%;
+    position: fixed;
+    display: block;
+    bottom: 0;
+}
