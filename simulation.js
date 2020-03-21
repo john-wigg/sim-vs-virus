@@ -11,6 +11,7 @@ class Simulation {
         this.infectiveness = 0.9; // Probability of getting infected when someone already carries the virus (e.g. on his hands, should be affected by personal hygiene)
 
         this.population = 500; // Number of people to simulate
+        this.velocity = 0.1 // Velocity of the people
         this.days_per_sec = 1.0; // Days per second in the simulation
 
         this.people = [];// Array mit personen
@@ -23,7 +24,7 @@ class Simulation {
             this.people.push(new Person())
             this.people[i].position.x = Math.random() * width;
             this.people[i].position.y = Math.random() * height;
-            this.people[i].velocity = 0.1
+            this.people[i].velocity = this.velocity
             let dir = new Vector2()
             dir.x = Math.random() * 2.0 - 1.0
             dir.y = Math.random() * 2.0 - 1.0
@@ -126,10 +127,15 @@ class Person {
         if (min_idx != -1) // "collision" has occured
         {
             if (simulation.people[min_idx].state == "infected" && this.state == "healthy") {
-                this.days_since_infection = 0.0;
+                if (Math.random() < simulation.infectiveness) {
+                    //TODO: Calculate infection probability
+                    this.days_since_infection = 0.0;
+                }
                 this.state = "infected";
             }
-            this.direction = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction
+            let new_direction = this.position.sub(simulation.people[min_idx].position).normalized(); // set new direction#
+            this.direction = new_direction;
+            simulation.people[min_idx].direction = new_direction.multiply(-1.0);
         }
 
         // Bounce from walls
