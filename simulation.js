@@ -22,10 +22,12 @@ class Simulation {
         for (this.person in this.people) {
             this.person.position.x = Math.random() * width;
             this.person.position.y = Math.random() * height;
+            this.person.velocity = 0.01
         }
     }
 
     update(delta) {
+        // delta in milliseconds
         // TODO
         // Should return array of structs
         return this.people;
@@ -41,7 +43,7 @@ class Vector2 {
     // Multiply vector with a scalar
     multiply(a) {
         this.x *= a;
-        this.y *= y;
+        this.y *= a;
     }
 
     // Add vector to another vector
