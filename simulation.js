@@ -11,6 +11,9 @@ class Simulation {
         this.velocity = 0.5 // Velocity of the people
         this.days_per_sec = 1.0; // Days per second in the simulation
 
+        this.hospital_capacity = 0.1;
+        this.mortality_multiplier = 10.0;
+
         this.frac_population_normal = 0.8;
         this.frac_population_doctors = 0.1;
         this.frac_population_risk = 0.1;
@@ -23,7 +26,7 @@ class Simulation {
 
         this.group_normal = new Group("Normal", 0.5, 0.01, 1.0, { "Normal": 0.1, "Doctor": 0.2, "Risk": 0.1 });
         this.group_doctor = new Group("Doctor", 0.1, 0.01, 1.0, { "Normal": 0.2, "Doctor": 0.2, "Risk": 0.1 });
-        this.group_risk = new Group("Risk", 0.9, 0.1, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Normal": 0.2 });
+        this.group_risk = new Group("Risk", 0.9, 0.1, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Risk": 0.2 });
 
         for (var i = 0; i < num_people; i++) {
             this.people.push(new Person())
@@ -278,7 +281,12 @@ class Person {
             if (this.state == "infected") {
                 this.days_since_infection += delta * simulation.days_per_sec / 1000.0;
                 if (this.days_since_infection > simulation.infection_duration) {
-                    if (Math.random() < this.group.mortality) {
+                    let total_mortality = this.group.mortality;
+                    // If out of capacity, the mortality rate rises
+                    if (simulation.get_count("infected") > simulation.hospital_capacity * simulation.people.length) {
+                        total_mortality *= simulation.mortality_multiplier;
+                    }
+                    if (Math.random() < total_mortality) {
                         this.state = "deceased";
                     }
                     else {
