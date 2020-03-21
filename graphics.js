@@ -38,7 +38,7 @@
                 const graphics = new PIXI.Graphics();
 
                 graphics.lineStyle(0);
-                switch (persons[i].state) {
+                switch (this.simulation.people[i].state) {
                     case "infected":
                         graphics.beginFill(COLOR_INFECTED, 1);
                         break;
