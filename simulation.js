@@ -71,6 +71,7 @@ class Simulation {
         for (var j = 0; j < this.count_infected; j++) {
             let idx = Math.floor(Math.random() * this.people.length);
             this.people[idx].state = "infected";
+            this.people[idx].days_since_infection = 0.0;
         }
         this.stopped = false;
     }
