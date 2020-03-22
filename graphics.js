@@ -67,6 +67,70 @@ class SimulationView extends HTMLElement {
             this.app.stage.addChild(container);
         }
 
+        this.legend = new PIXI.Container();
+        var graphics = new PIXI.Graphics();
+        var legend_x = 0.5 * this.width - 100;
+        var legend_y = 0.98 * this.height - 100;
+        graphics.lineStyle(0);
+        graphics.beginFill(0xffffff, 0.90);
+        graphics.drawRect(legend_x, legend_y, 200, 100);
+        graphics.beginFill(COLOR_HEALTHY, 0.5);
+        graphics.drawCircle(legend_x + 20, legend_y + 15, 6);
+        graphics.beginFill(COLOR_INFECTED, 0.5);
+        graphics.drawCircle(legend_x + 20, legend_y + 40, 6);
+        graphics.beginFill(COLOR_RECOVERED, 0.5);
+        graphics.drawCircle(legend_x + 20, legend_y + 65, 6);
+        graphics.beginFill(COLOR_DEAD, 0.5);
+        graphics.drawCircle(legend_x + 20, legend_y + 90, 6);
+
+        var stringHealthy = "Healthy";
+        var stringInfected = "Infected";
+        var stringRecovered = "Recovered";
+        var stringDeceased = "Deceased";
+
+        const styleHealthy = new PIXI.TextStyle({
+            fill: COLOR_HEALTHY,
+            fontFamiliy: 'Roboto',
+            fontSize: 16,
+            fontWeight: "bold"
+        });
+        const styleInfected = new PIXI.TextStyle({
+            fill: COLOR_INFECTED,
+            fontFamiliy: 'Roboto',
+            fontSize: 16,
+            fontWeight: "bold"
+        });
+        const styleRecovered = new PIXI.TextStyle({
+            fill: COLOR_RECOVERED,
+            fontFamiliy: 'Roboto',
+            fontSize: 16,
+            fontWeight: "bold"
+        });
+        const styleDeceased = new PIXI.TextStyle({
+            fill: COLOR_DEAD,
+            fontFamiliy: 'Roboto',
+            fontSize: 16,
+            fontWeight: "bold"
+        });
+
+        this.labelHealthy = new PIXI.Text(stringHealthy, styleHealthy);
+        this.labelHealthy.x = legend_x + 35;
+        this.labelHealthy.y = legend_y + 6;
+        this.labelInfected = new PIXI.Text(stringInfected, styleInfected);
+        this.labelInfected.x = legend_x + 35;
+        this.labelInfected.y = legend_y + 31;
+        this.labelRecovered = new PIXI.Text(stringRecovered, styleRecovered);
+        this.labelRecovered.x = legend_x + 35;
+        this.labelRecovered.y = legend_y + 56;
+        this.labelDeceased = new PIXI.Text(stringDeceased, styleDeceased);
+        this.labelDeceased.x = legend_x + 35;
+        this.labelDeceased.y = legend_y + 81;
+        this.legend.addChild(graphics);
+        this.legend.addChild(this.labelHealthy);
+        this.legend.addChild(this.labelInfected);
+        this.legend.addChild(this.labelRecovered);
+        this.legend.addChild(this.labelDeceased);
+        this.app.stage.addChild(this.legend);
 
         this.app.ticker.add(() => { this.onTickerUpdate() });
     }
@@ -99,6 +163,28 @@ class SimulationView extends HTMLElement {
         }
     }
 
+    updateLegend() {
+        let count_healthy = 0;
+        let count_infected = 0;
+        let count_recovered = 0;
+        let count_deceased = 0;
+        let count_healthy_total = this.simulation.get_count("healthy");
+        let count_infected_total = this.simulation.get_count("infected");
+        let count_recovered_total = this.simulation.get_count("recovered");
+        let count_deceased_total = this.simulation.get_count("deceased");
+        for (var i = 0; i < this.filter.length; i++) {
+            count_healthy += count_healthy_total[this.filter[i]];
+            count_infected += count_infected_total[this.filter[i]];
+            count_recovered += count_recovered_total[this.filter[i]];
+            count_deceased += count_deceased_total[this.filter[i]];
+        }
+        this.labelHealthy.text = "Healthy: " + count_healthy;
+        this.labelInfected.text = "Infected: " + count_infected;
+        this.labelRecovered.text = "Recovered: " + count_recovered;
+        this.labelDeceased.text = "Deceased: " + count_deceased;
+        this.old_filter = Array.from(this.filter);
+    }
+
     onTickerUpdate() {
         var people = this.simulation.update(this.app.ticker.deltaMS);
 
@@ -125,9 +211,9 @@ class SimulationView extends HTMLElement {
                 } else {
                     this.updateCircle(this.containers[i], COLOR_HIDDEN, 0.15);
                 }
+                this.updateLegend();
             }
         }
-        this.old_filter = Array.from(this.filter);
     }
 
     updateCircle(container, color, alpha = 1.0) {
