@@ -205,21 +205,13 @@ function showLayoutSim() {
 
         <div class="group-options">      
             <div>
-                <input id="adults" type="checkbox">
+                <input id="adults" type="checkbox" checked>
                 <label for="adults" class="adults"></label> 
             </div>
             <div>
-                <input id="children" type="checkbox">
-                <label for="children" class="children"></label> 
-            </div>
-            <div>
-                <input id="elderly" type="checkbox">
+                <input id="elderly" type="checkbox" checked>
                 <label for="elderly" class="elderly"></label> 
-            </div>
-            <div>
-                <input id="sick" type="checkbox">
-                <label for="sick" class="sick"></label> 
-            </div>        
+            </div>     
         </div>
         <div class="sim-top-separator"></div>
         <div id="container">
@@ -227,10 +219,6 @@ function showLayoutSim() {
         </div>
         <div class="sim-bottom-separator"></div>
         <div class="group-options behavior">      
-            <div>
-                <input id="mask" type="checkbox">
-                <label for="mask" class="mask"></label> 
-            </div>
             <div>
                 <input id="wash-hands" type="checkbox">
                 <label for="wash-hands" class="wash-hands"></label> 
@@ -291,15 +279,7 @@ function showLayoutSim() {
             simulation_view.simulation.group_risk.velocity_multiplicator = 0.6;
         }
     });
-    var maskCheck = document.getElementById("mask");
-    maskCheck.addEventListener("change", function (e) {
-        console.log("mask: " + e.target.checked);
-        if (e.target.checked) {
 
-        } else {
-
-        }
-    });
     var washCheck = document.getElementById("wash-hands");
     washCheck.addEventListener("change", function (e) {
         console.log("wash: " + e.target.checked);
@@ -331,36 +311,18 @@ function showLayoutSim() {
     adultsFilter.addEventListener("change", function (e) {
         console.log("adults: " + e.target.checked);
         if (e.target.checked) {
-
+            simulation_view.filter.push("Normal"); // Add Normal to filter
         } else {
-
-        }
-    });
-    var childrenFilter = document.getElementById("children");
-    childrenFilter.addEventListener("change", function (e) {
-        console.log("children: " + e.target.checked);
-        if (e.target.checked) {
-
-        } else {
-
+            simulation_view.filter.splice(simulation_view.filter.indexOf("Normal"), 1); // Remove Normal from filte
         }
     });
     var elderlyFilter = document.getElementById("elderly");
     elderlyFilter.addEventListener("change", function (e) {
         console.log("elderly: " + e.target.checked);
         if (e.target.checked) {
-
+            simulation_view.filter.push("Risk");    // Add risk to filter
         } else {
-
-        }
-    });
-    var sickFilter = document.getElementById("sick");
-    sickFilter.addEventListener("change", function (e) {
-        console.log("sick: " + e.target.checked);
-        if (e.target.checked) {
-
-        } else {
-
+            simulation_view.filter.splice(simulation_view.filter.indexOf("Risk"), 1); // Remove risk from filter
         }
     });
 
