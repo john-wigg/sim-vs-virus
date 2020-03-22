@@ -20,6 +20,26 @@ git clone https://github.com/john-wigg/sim-vs-virus
 
 And open ```index.html``` in your browser!
 
+## Features
+
+- ** Currently the web app is still optimized for mobile devices. Mobile emulators can be accessed via ``Ctrl+Shift+M`` (Firefox) or ``Ctrl+Shift+I``, ``Ctrl+Shift+M`` (Google Chrome)**
+- A particle-based simulation of virus spread  based on user input from a questionnaire with 11 items. 
+    - Main mechanics simulated are:
+        - **likelihood of infection** upon contact. Factors that increase it are existing disease symptoms, recent visits to high-risk areas, contact with infected persons, lack of correct and consistent hand washing, and touching your face.
+        - **Social distancing** by the speed of the particles (the more thorough the distancing, the slower the particles). The speed decreases when it is stated that one keeps distance to other people and does not use public transport during the pandemic.
+        - The **degree of quarantine / self-isolation** by houses in which the particles start and a probability of the particles leaving the house when colliding with the edge. This becomes more likely if carelessness is indicated (corona = flu) and self-isolation is denied.
+    - The phases of the illness are color-coded with blue (healthy, not ill), red (ill), green (recovered), and black and motionless (dead).
+        - Some of the particles belong to the **risk group**, which has a higher risk of dying from the disease. The rest of the particles belong to the non-risk group. Both groups can be displayed individually using filters
+        - If the total number of patients exceeds the **ICU capacity** (here: if 15% are ill), mortality increases
+        - An **area chart** shows the development of the disease in the total population, as well as the ICU bed threshold.
+    - The simulation can be paused and restarted. The individual parameters can be changed live and the effects observed.
+- Optional: texts on health education in question-answer style in currently 3 languages (German, English, Italian)
+     - e.g. What is the "coronavirus"? Is COVID-19 like the seasonal flu? Why are the measures so strict?
+- Optional: Explanatory texts for the simulation in 3 languages (German, English, Italian).
+- Optional (not yet implemented): Several "sidestories" to show the users that behind the abstract numbers about the disease real people are hiding. The texts for this - and others - can be found in the attached PDF.
+
+Translated with www.DeepL.com/Translator (free version)
+
 ## Built With
 
 * [PixiJS](https://www.pixijs.com/) - Used for building the simulations
