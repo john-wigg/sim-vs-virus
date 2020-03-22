@@ -26,9 +26,8 @@ class Simulation {
         this.width = width;
         this.height = height;
 
-        this.group_normal = new Group("Normal", 0.5, 0.01, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Risk": 0.1 });
-        this.group_doctor = new Group("Doctor", 0.1, 0.01, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Risk": 0.1 });
-        this.group_risk = new Group("Risk", 0.9, 0.1, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Risk": 0.1 });
+        this.group_normal = new Group("Normal", 0.9, 0.01, 1.0);
+        this.group_risk = new Group("Risk", 0.5, 0.1, 1.0);
 
         for (var i = 0; i < num_people; i++) {
             this.people.push(new Person())
@@ -90,12 +89,6 @@ class Simulation {
         }
         return count;
     }
-
-    // Infection probability as a function of distance
-    // Adjusted so that infectivity reaches 0.5 at infection_distance
-    infection_prob(dist) {
-        return Math.exp(-0.693147 * (dist - 0.1) / this.infection_distance); // TODO: Not very pretty
-    }
 }
 
 class IsolationBox {
@@ -110,12 +103,11 @@ class IsolationBox {
 }
 
 class Group {
-    constructor(name, infectivity, mortality, velocity_multiplicator, distance_to) {
+    constructor(name, infectivity, mortality, velocity_multiplicator) {
         this.name = name;
         this.infectivity = infectivity;
         this.mortality = mortality;
         this.velocity_multiplicator = velocity_multiplicator
-        this.distance_to = distance_to;
     }
 }
 
@@ -214,8 +206,7 @@ class Person {
                 if (simulation.people[i] === this) continue;
                 // get closest person within minimum distance
                 let dist = this.position.dist(simulation.people[i].position);
-                if (dist < this.group.distance_to[simulation.people[i].group.name] && simulation.people[i].state != "deceased") {
-                    col_dist = dist
+                if (dist < simulation.minimum_distance && simulation.people[i].state != "deceased") {
                     col_idx = i;
                     break;
                 }
@@ -223,7 +214,7 @@ class Person {
             if (col_idx != -1) // "collision" has occured
             {
                 if (simulation.people[col_idx].state == "infected" && this.state == "healthy" && simulation.people[col_idx].get_inside_box(simulation) === this.get_inside_box(simulation)) {
-                    if (Math.random() < simulation.people[col_idx].group.infectivity * simulation.infection_prob(col_dist)) {
+                    if (Math.random() < simulation.people[col_idx].group.infectivity) {
                         //TODO: Calculate infection probability
                         this.days_since_infection = 0.0;
                         this.state = "infected";
