@@ -12,7 +12,7 @@ class Simulation {
         this.days_per_sec = 1.0; // Days per second in the simulation
 
         this.hospital_capacity = 0.15;
-        this.mortality_multiplier = 10.0;
+        this.mortality_multiplier = 7.5;
 
         this.frac_population_normal = 0.8;
         this.frac_population_doctors = 0.0;
@@ -30,7 +30,7 @@ class Simulation {
 
         this.stopped = true
 
-        this.group_normal = new Group("Normal", 0.9, 0.01, 1.0);
+        this.group_normal = new Group("Normal", 0.9, 0.02, 1.0);
         this.group_risk = new Group("Risk", 0.5, 0.1, 1.0);
 
         for (var i = 0; i < num_people; i++) {
