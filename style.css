@@ -167,7 +167,21 @@ input[type="checkbox"] {
     margin-left: 5px;
 }
 
-.question label {
+.mycheckbox input[type="checkbox"] + label {
+    display: table-cell;
+    background-image: url("assets/checkbox_unchecked.svg");
+    background-position: left center;
+    background-size: auto 100%;
+    width: 64px;
+    height: 40px;
+    background-repeat: no-repeat;
+ }
+
+ .mycheckbox input[type="checkbox"]:checked + label {
+    background-image: url("assets/checkbox_checked.svg");
+  }
+
+/*.checker + label {
     display: table-cell;
     background-image: url("assets/checkbox_unchecked.svg");
     background-position: left center;
@@ -179,7 +193,7 @@ input[type="checkbox"] {
 
 #trigger:checked + .checker {
     background-image: url("assets/checkbox_checked.svg");
-}
+}*/
 
 .question input[type="number"] {
     display: table-cell;

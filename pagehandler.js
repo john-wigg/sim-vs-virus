@@ -198,15 +198,14 @@ function showLayoutForm2() {
 function showLayoutSim() {
     document.body.innerHTML = `
         <header>
-        <img class="logo" src="assets/logo_simvsvirus.svg"/>
-        <!--<h2>SIM vs VIRUS</h2>-->
-        <img class="topOption" src="assets/share-24px.svg"/>     
+            <img class="logo" src="assets/logo_simvsvirus.svg"/>
+            <!--<h2>SIM vs VIRUS</h2>-->
+            <img class="topOption" src="assets/share-24px.svg"/>     
         </header>
 
         <h5 class="page-title-small">Your person group</h5>
 
-        <div class="group-options">
-            <div class="seperator"></div>
+        <div class="group-options">      
             <div>
                 <input id="adults" type="checkbox">
                 <label for="adults" class="adults"></label> 
@@ -222,17 +221,154 @@ function showLayoutSim() {
             <div>
                 <input id="sick" type="checkbox">
                 <label for="sick" class="sick"></label> 
-            </div>  
-                
+            </div>        
+        </div>
+        <div class="sim-top-separator"></div>
+        <div id="container">
+
+        </div>>
+        <div class="sim-bottom-separator"></div>
+        <div class="group-options behavior">      
+            <div>
+                <input id="mask" type="checkbox">
+                <label for="mask" class="mask"></label> 
+            </div>
+            <div>
+                <input id="wash-hands" type="checkbox">
+                <label for="wash-hands" class="wash-hands"></label> 
+            </div>
+            <div>
+                <button id="distance" class="distance"></button>
+            </div>
+            <div>
+                <input id="home-inside" type="checkbox">
+                <label for="home-inside" class="home-inside"></label> 
+            </div>        
+        </div>
+        <h6 class="page-title-small">Your behavior</h6>
+        <div class="sim-controls">
+            <img src="assets/icon_curves.svg" id="show-curves"> 
+            <select disabled>
+                <option>COVID-19</option>
+            </select>
+            <img src="assets/icon_repeat.svg" id="b-repeat"> 
+            <img src="assets/icon_pause.svg" id="b-pause"> 
         </div>
 
         <footer class="footer-controls">
             <div class="arrow-container">
-                <img id="prev_page" class="arrow-left" src="assets/arrow_left.svg">
-                <span class="disable-margin"></span>
-                <img id="next_page" class="arrow-right" src="assets/arrow_right.svg">
+                <img class="arrow-left" src="assets/arrow_left.svg">
+                <span class="disable-margin" id="pageCounter">1/6</span>
+                <img class="arrow-right" src="assets/arrow_right.svg">
             </div>
         </footer>
-        `
+        `;
+
+    /*
+        Behavior
+    */
+    var distanceButton = document.getElementById("distance");
+    distanceButton.addEventListener("click", function() {
+
+        console.log(distanceButton.style.backgroundImage);
+        if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_0.svg")') {
+            distanceButton.style.backgroundImage = "url(assets/icon_distance_05.svg)";
+        }else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_05.svg")') {
+            distanceButton.style.backgroundImage = 'url(assets/icon_distance_1.svg)';
+        }else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_1.svg")') {
+            distanceButton.style.backgroundImage = "url(assets/icon_distance_2.svg)";
+        }else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_2.svg")') {
+            distanceButton.style.backgroundImage = "url(assets/icon_distance_0.svg)";
+        }else{
+            distanceButton.style.backgroundImage = "url(assets/icon_distance_05.svg)";
+        }          
+    });
+    var maskCheck = document.getElementById("mask");      
+    maskCheck.addEventListener("change", function(e) {
+        console.log("mask: " + e.target.checked);
+        if (e.target.checked) {
+
+        }else{
+
+        }
+    });
+    var washCheck = document.getElementById("wash-hands");      
+    washCheck.addEventListener("change", function(e) {
+        console.log("wash: " + e.target.checked);
+        if (e.target.checked) {
+
+        }else{
+
+        }
+    });
+    var homeCheck = document.getElementById("home-inside");      
+    homeCheck.addEventListener("change", function(e) {
+        console.log("home-inside: " + e.target.checked);
+        if (e.target.checked) {
+
+        }else{
+
+        }
+    });
+    /*
+        Filter
+    */
+    var adultsFilter = document.getElementById("adults");      
+    adultsFilter.addEventListener("change", function(e) {
+        console.log("adults: " + e.target.checked);
+        if (e.target.checked) {
+
+        }else{
+
+        }
+    });
+    var childrenFilter = document.getElementById("children");      
+    childrenFilter.addEventListener("change", function(e) {
+        console.log("children: " + e.target.checked);
+        if (e.target.checked) {
+
+        }else{
+
+        }
+    });
+    var elderlyFilter = document.getElementById("elderly");      
+    elderlyFilter.addEventListener("change", function(e) {
+        console.log("elderly: " + e.target.checked);
+        if (e.target.checked) {
+
+        }else{
+
+        }
+    });
+    var sickFilter = document.getElementById("sick");      
+    sickFilter.addEventListener("change", function(e) {
+        console.log("sick: " + e.target.checked);
+        if (e.target.checked) {
+
+        }else{
+
+        }
+    });
+
+    var bCurve = document.getElementById("show-curves");      
+    bCurve.addEventListener("click", function(e) {
+        console.log("showCurve");
+    });
+    var bRepeat = document.getElementById("b-repeat");      
+    bRepeat.addEventListener("click", function(e) {
+        console.log("bRepeat");
+    });
+    var bPause = document.getElementById("b-pause");      
+    bPause.addEventListener("click", function(e) {
+        console.log("bPause");
+    });
+    document.getElementById("pageCounter").style.display = "none";
+
+    customElements.define('sim-view', SimulationView);
+
+    this.simulation = new Simulation(8,6,200);
+    var sim = new SimulationView(this.simulation, 800);
+    document.getElementById("container").appendChild(sim); 
+    
     document.getElementById("prev_page").addEventListener("click", showLayoutForm1);
 }
