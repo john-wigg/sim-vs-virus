@@ -76,6 +76,33 @@ function showLayoutInfo() {
 }
 
 function showLayoutForm1() {
+    var textBefore = "Before we start the Simulation, we need to ask some questions...";
+    var textFlu = "I think that COVID-19 is not much worse than the Flu.";
+    var textCough = "I have cough/fever/breathing problems.";
+    var textRisk = "I was in a high risk area in the past 14 day.s";
+    var textContact = "I was in contact with an COVID-19 infected individual in the past 14 days.";
+    var textRoommates = "Number of people I live with.";
+    var textMeet = "Number of people I meet outside per week.";
+
+    var userLang = navigator.language || navigator.userLanguage; 
+    if (userLang.includes("de-DE") || userLang.includes("de-AT") || userLang.includes("de-CH") || userLang.includes("de")) {
+        textBefore = "Bevor die Simulation startet, beantworte bitte einige Fragen:";
+        textFlu = "Ich glaube, dass COVID-19 nicht sehr viel schlimmer ist, als die Grippe.";
+        textCough = "Aktuell habe ich Husten, Fieber oder Atembeschwerden.";
+        textRisk = "In den letzten 14 Tagen war ich in einem Hochrisikogebiet.";
+        textContact = "In den letzten 14 Tagen hatte ich Kontakt zu einer Person, die mit COVID-19 infiziert war.";
+        textRoommates = "Anzahl der Menschen mit denen ich zusammen wohne?";
+        textMeet = "Mit wievielen Menschen triffst du dich pro Woche!";
+    }else if (userLang.includes("it-IT") || userLang.includes("it-CH") || userLang.includes("it")) {
+        textBefore = "Prima di cominciare la simulazione, dobbiamo fare qualche domanda.";
+        textFlu = "Penso che COVID-19 sia come l’influenza.";
+        textCough = "Ho la tosse/febbre/problemi a respirare.";
+        textRisk = "Sono stato in un’area a rischio nelle ultime due settimane.";
+        textContact = "Sono stato a contatto con una persona infetta nelle ultime due settimane.";
+        textRoommates = "Con quante persone vivi?";
+        textMeet = "Quante persone incontri ogni giorno?";
+    }
+
     document.body.innerHTML = `
         <header>
             <img class="logo" src="assets/logo_simvsvirus.svg"/>
@@ -83,43 +110,43 @@ function showLayoutForm1() {
             <img class="topOption" src="assets/share-24px.svg"/>     
         </header>
 
-        <h3 class="page-title">Before we starting simulation, we need some information from you...</h3>
+        <h3 class="page-title">` + textBefore + `</h3>
         <div class="question">       
-            <span>"I think, Corona is not mush worse than the flu."</span>     
+            <span>"` + textFlu + `"</span>     
             <div class="mycheckbox">
                 <input id="check-flu" type="checkbox">
                 <label for="check-flu"></label> 
             </div>  
         </div>
         <div class="question odd">       
-            <span>"I have caught/fever/breathing problems."</span>     
+            <span>"` + textCough + `"</span>     
             <div class="mycheckbox">
                 <input id="check-caught" type="checkbox">
                 <label for="check-caught" class="checker"></label> 
             </div>  
         </div>
         <div class="question">       
-            <span>"I was in a high risk area in the last 14 days."</span>     
+            <span>"`+ textRisk + `"</span>     
             <div class="mycheckbox">
                 <input id="check-risk-area" type="checkbox">
                 <label for="check-risk-area" class="checker"></label> 
             </div>   
         </div>
         <div class="question odd">       
-            <span>"I had contact to a corana infected person in the last 14 days."</span>   
+            <span>"`+ textContact + `"</span>   
             <div class="mycheckbox">
                 <input id="check-contact" type="checkbox">
                 <label for="check-contact" class="checker"></label> 
             </div>  
         </div>
         <div class="question">       
-            <span>Number of people i live with:</span>  
+            <span>`+ textRoommates + `</span>  
             <div class="input-container">
                 <input id="number-roommates" type="number" />
             </div>   
         </div>
         <div class="question">       
-            <span>Number of people outside:</span>  
+            <span>`+ textMeet + `</span>  
             <div class="input-container">
                 <input id="number-outside" type="number" />
             </div>
@@ -148,6 +175,34 @@ function showLayoutForm1() {
 }
 
 function showLayoutForm2() {
+    var textWashTime = "I wash my hands every time I come back home for at least 20 sec.";
+    var textWashHands = "I have a reminder to wash my hands frequently.";
+    var textFace = "I try not to touch my face frequently.";
+    var textContact = "I know who I have been in contact with in the past 14 days.";
+    var textTransport = "I avoid public transport during this pandemia.";
+    var textBehavior = "What is your current behavior?";
+    var textLetsSimulate = "Ok, let’s simulate the effects of your behaviour!";
+
+    var userLang = navigator.language || navigator.userLanguage; 
+    if (userLang.includes("de-DE") || userLang.includes("de-AT") || userLang.includes("de-CH") || userLang.includes("de")) {
+        textWashTime = "Ich wasche meine Hände immer wenn ich nach Hause komme für mind. 20 Sekunden.";
+        textWashHands = "Ich wasche regelmäßig meine Hände.";
+        textFace = "Ich versuche nicht ständig mein Gesicht zu berühren.";
+        textContact = "Ich weiß, mit welchen Personen ich in den letzten 14 Tagen Kontakt hatte.";
+        textTransport = "Ich vermeide öffentliche Verkehrsmittel während der Pandemie.";
+        textBehavior = "Wie verhälst du dich momentan?";
+        textLetsSimulate = "Ok, lass uns die Auswirkungen deines Verhaltens simulieren!"
+    }else if (userLang.includes("it-IT") || userLang.includes("it-CH") || userLang.includes("it")) {
+        textWashTime = "Mi lavo le mani ogni volta che torno a casa, per almeno 20 secondi.";
+        textWashHands = "Ho un promemoria per lavarmi le mani frequentemente.";
+        textFace = "Evito di toccarmi la faccia frequentemente.";
+        textContact = "So chi ho incontrato nelle ultime due settimane.";
+        textTransport = "Evito di usare i trasporti pubblici durante la pandemia.";
+        textBehavior = "Come va adesso?";
+        textLetsSimulate = "Ok, simuliamo gli effetti del tuo comportamento!";
+    }
+
+
     document.body.innerHTML = `
         <header>
             <img class="logo" src="assets/logo_simthinkact2.svg"/>
@@ -155,43 +210,43 @@ function showLayoutForm2() {
             <img class="topOption" src="assets/share-24px.svg"/>     
         </header>
 
-        <h3 class="page-title">What is your current behavior?</h3>
+        <h3 class="page-title">` + textBehavior + `</h3>
         <div class="question">       
-            <span>"I wash my hands every time i came home for at least 20 seconds."</span>     
+            <span>"` + textWashTime + `"</span>     
             <div class="mycheckbox">
                 <input id="check-wash-time" type="checkbox">
                 <label for="check-wash-time"></label> 
             </div>  
         </div>
         <div class="question odd">       
-            <span>"I remind me to wash my hands frequently."</span>     
+            <span>"` + textWashHands + `"</span>     
             <div class="mycheckbox">
                 <input id="check-wash-hands" type="checkbox">
                 <label for="check-wash-hands" class="checker"></label> 
             </div>  
         </div>
         <div class="question">       
-            <span>"I try not to touch in my face."</span>     
+            <span>"` + textFace + `"</span>     
             <div class="mycheckbox">
                 <input id="check-touch-face" type="checkbox">
                 <label for="check-touch-face" class="checker"></label> 
             </div>   
         </div>
         <div class="question odd">       
-            <span>"I know the persons i had contact in the last 14 days."</span>   
+            <span>"` + textContact + `"</span>   
             <div class="mycheckbox">
                 <input id="check-know-contact" type="checkbox">
                 <label for="check-know-contact" class="checker"></label> 
             </div>  
         </div>
         <div class="question">       
-            <span>"I don't use puplic transport during the pandemia."</span>     
+            <span>"` + textTransport + `"</span>     
             <div class="mycheckbox">
                 <input id="check-transport" type="checkbox">
                 <label for="check-transport" class="checker"></label> 
             </div>   
         </div>
-        <h3 class="page-title">Ok, let's simulate the effets your behavior?</h3>
+        <h3 class="page-title">` + textLetsSimulate + `</h3>
 
         <footer class="footer-controls">
             <div class="arrow-container">
