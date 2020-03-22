@@ -15,12 +15,12 @@ function showLayoutWelcome() {
         </div>
 
         <footer>
-            <div class="seperator">
+            <div class="separator">
                 <h4>OFFICIALLY SUPPORTED BY</h4>
             </div>
             <img src="assets/logo_rki.png" />
             <img src="assets/logo_bmg.png" />
-            <div class="seperator footer">
+            <div class="separator footer">
                 <h4>www.example.com</h4>
             </div>
         </footer>`;
