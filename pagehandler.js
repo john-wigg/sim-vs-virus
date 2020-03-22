@@ -86,28 +86,28 @@ function showLayoutForm1() {
         <h3 class="page-title">Before we starting simulation, we need some information from you...</h3>
         <div class="question">       
             <span>"I think, Corona is not mush worse than the flu."</span>     
-            <div>
+            <div class="mycheckbox">
                 <input id="trigger" type="checkbox">
                 <label for="trigger" class="checker"></label> 
             </div>  
         </div>
         <div class="question odd">       
             <span>"I have caught/fever/breathing problems."</span>     
-            <div>
+            <div class="mycheckbox">
                 <input id="trigger" type="checkbox">
                 <label for="trigger" class="checker"></label> 
             </div>  
         </div>
         <div class="question">       
             <span>"I was in a high risk area in the last 14 days."</span>     
-            <div>
+            <div class="mycheckbox">
                 <input id="trigger" type="checkbox">
                 <label for="trigger" class="checker"></label> 
             </div>   
         </div>
         <div class="question odd">       
             <span>"I had contact to a corana infected person in the last 14 days."</span>   
-            <div>
+            <div class="mycheckbox">
                 <input id="trigger" type="checkbox">
                 <label for="trigger" class="checker"></label> 
             </div>  
@@ -115,12 +115,14 @@ function showLayoutForm1() {
         <div class="question">       
             <span>Number of people i live with:</span>  
             <div class="input-container">
-                <input type="number" />
+                <input type="number" value="4" />
             </div>   
         </div>
         <div class="question">       
             <span>Number of people outside:</span>  
-            <input type="number" />
+            <div class="input-container">
+                <input type="number" value="4" />
+            </div>
         </div>
 
         <footer class="footer-controls">
@@ -236,7 +238,7 @@ function showLayoutSim() {
                 <label for="wash-hands" class="wash-hands"></label> 
             </div>
             <div>
-                <button id="distance" class="distance"></button>
+                <span id="distance" class="distance"></span>
             </div>
             <div>
                 <input id="home-inside" type="checkbox">

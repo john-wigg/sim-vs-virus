@@ -180,25 +180,15 @@ input[type="checkbox"] {
 
  .mycheckbox input[type="checkbox"]:checked + label {
     background-image: url("assets/checkbox_checked.svg");
-  }
-
-/*.checker + label {
-    display: table-cell;
-    background-image: url("assets/checkbox_unchecked.svg");
-    background-position: left center;
-    background-size: auto 100%;
-    width: 64px;
-    height: 40px;
-    background-repeat: no-repeat;
 }
 
-#trigger:checked + .checker {
-    background-image: url("assets/checkbox_checked.svg");
-}*/
+.input-container {
+    margin-right: 10% !important;
+}
 
 input[type="number"] {
     display: table-cell;
-    width: 40%;
+    width: 100%;
     height: 2em;
     background-color: rgb(115,115,115);
     border-radius: 5px;
@@ -208,7 +198,7 @@ input[type="number"] {
     padding: 0 1em;
     font-size: 1em;
     text-align: center;
-  }
+}
 
 .more-info {
     color: #FF646F;
