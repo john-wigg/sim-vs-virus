@@ -130,8 +130,13 @@ main {
 }
 
 .info-box {
+    text-align: justify;
     margin-top: 2vh;
     height: 73vh;
+}
+
+.welcome-box {
+    text-align: justify;
 }
 
 main h4 {
