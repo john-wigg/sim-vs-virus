@@ -230,8 +230,8 @@
         let area_escape = { "Normal": 0.1, "Doctor": 0.0, "Risk": 0.0 };
 
         for (var i = 0; i < 5; i++) {
-            this.simulation.boxes.push(new IsolationBox(0.1 * sim_width, 0.25 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
-            this.simulation.boxes.push(new IsolationBox(0.75 * sim_width, 0.9 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
+            this.simulation.boxes.push(new IsolationBox(0.05 * sim_width, 0.2 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
+            this.simulation.boxes.push(new IsolationBox(0.8 * sim_width, 0.95 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
         }
 
         this.simulation.group_risk.velocity_multiplicator = 0.2;
