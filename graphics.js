@@ -127,7 +127,7 @@ class SimulationView extends HTMLElement {
                 }
             }
         }
-        this.old_filter = this.filter;
+        this.old_filter = Array.from(this.filter);
     }
 
     updateCircle(container, color, alpha = 1.0) {
