@@ -71,6 +71,7 @@ class Simulation {
         for (var j = 0; j < this.count_infected; j++) {
             let idx = Math.floor(Math.random() * this.people.length);
             this.people[idx].state = "infected";
+            this.people[idx].days_since_infection = 0.0;
         }
         this.stopped = false;
     }
@@ -80,6 +81,9 @@ class Simulation {
             // delta in milliseconds
             // TODO
             // Should return array of structs
+            if (this.get_count("infected")["Normal"] + this.get_count("infected")["Risk"] == 0) {
+                this.stop();
+            }
             for (var i = 0; i < this.people.length; i++) {
                 this.people[i].calculate_step(delta, this);
             }
