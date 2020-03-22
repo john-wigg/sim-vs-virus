@@ -226,7 +226,7 @@ function showLayoutSim() {
         <div class="sim-top-separator"></div>
         <div id="container">
 
-        </div>>
+        </div>
         <div class="sim-bottom-separator"></div>
         <div class="group-options behavior">      
             <div>
@@ -361,10 +361,6 @@ function showLayoutSim() {
         }
     });
 
-    var bCurve = document.getElementById("show-curves");
-    bCurve.addEventListener("click", function (e) {
-        console.log("showCurve");
-    });
     var bRepeat = document.getElementById("b-repeat");
     bRepeat.addEventListener("click", function (e) {
         console.log("bRepeat");
@@ -403,7 +399,20 @@ function showLayoutSim() {
     this.simulation.initialize()
 
     var curve = new Curve(this.simulation, 800);
+    curve.style.display = "none";
     document.getElementById("container").appendChild(curve);
+
+    var bCurve = document.getElementById("show-curves");
+    bCurve.addEventListener("click", function (e) {
+        console.log("showCurve");
+        if (curve.style.display == "block") {
+            curve.style.display = "none";
+            simulation_view.style.display = "block";
+        }else{
+            curve.style.display = "block";
+            simulation_view.style.display = "none";
+        }
+    });
 
     document.getElementById("prev_page").addEventListener("click", showLayoutForm1);
 }

@@ -7,6 +7,20 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='style.css'>
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+
+    <script>
+        function onLoad() {
+            var checkFlu = document.getElementById("check-flu");
+            var checkCaught = document.getElementById("check-caught");
+            var checkRiskArea = document.getElementById("check-risk-area");
+            var checkContact = document.getElementById("check-contact");
+            var numRoomates = document.getElementById("number-roommates");
+            var numOutside = document.getElementById("number-outside");
+
+
+        }
+        window.addEventListener("load", onLoad);
+    </script>
 </head>
 <body>
     <header>
@@ -19,41 +33,41 @@
     <div class="question">       
         <span>"I think, Corona is not mush worse than the flu."</span>     
         <div class="mycheckbox">
-            <input id="trigger" type="checkbox">
-            <label for="trigger"></label> 
+            <input id="check-flu" type="checkbox">
+            <label for="check-flu"></label> 
         </div>  
     </div>
     <div class="question odd">       
         <span>"I have caught/fever/breathing problems."</span>     
         <div class="mycheckbox">
-            <input id="trigger2" type="checkbox">
-            <label for="trigger2" class="checker"></label> 
+            <input id="check-caught" type="checkbox">
+            <label for="check-caught" class="checker"></label> 
         </div>  
     </div>
     <div class="question">       
         <span>"I was in a high risk area in the last 14 days."</span>     
         <div class="mycheckbox">
-            <input id="trigger3" type="checkbox">
-            <label for="trigger3" class="checker"></label> 
+            <input id="check-risk-area" type="checkbox">
+            <label for="check-risk-area" class="checker"></label> 
         </div>   
     </div>
     <div class="question odd">       
         <span>"I had contact to a corana infected person in the last 14 days."</span>   
         <div class="mycheckbox">
-            <input id="trigger4" type="checkbox">
-            <label for="trigger4" class="checker"></label> 
+            <input id="check-contact" type="checkbox">
+            <label for="check-contact" class="checker"></label> 
         </div>  
     </div>
     <div class="question">       
         <span>Number of people i live with:</span>  
         <div class="input-container">
-            <input type="number" />
+            <input id="number-roommates" type="number" />
         </div>   
     </div>
     <div class="question">       
         <span>Number of people outside:</span>  
         <div class="input-container">
-            <input type="number" />
+            <input id="number-outside" type="number" />
         </div>
     </div>
 
