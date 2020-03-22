@@ -273,13 +273,13 @@ function showLayoutSim() {
         console.log(distanceButton.style.backgroundImage);
         if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_0.svg")') {
             distanceButton.style.backgroundImage = "url(assets/icon_distance_05.svg)";
-            simulation_view.simulation.group_normal.velocity_multiplicator = 0.6;
+            simulation_view.simulation.group_normal.velocity_multiplicator = 0.8;
         } else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_05.svg")') {
             distanceButton.style.backgroundImage = 'url(assets/icon_distance_1.svg)';
-            simulation_view.simulation.group_normal.velocity_multiplicator = 0.3;
+            simulation_view.simulation.group_normal.velocity_multiplicator = 0.5;
         } else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_1.svg")') {
             distanceButton.style.backgroundImage = "url(assets/icon_distance_2.svg)";
-            simulation_view.simulation.group_normal.velocity_multiplicator = 0.0;
+            simulation_view.simulation.group_normal.velocity_multiplicator = 0.2;
         } else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_2.svg")') {
             distanceButton.style.backgroundImage = "url(assets/icon_distance_0.svg)";
             simulation_view.simulation.group_normal.velocity_multiplicator = 1.0;
@@ -316,8 +316,8 @@ function showLayoutSim() {
             }
         } else {
             for (var i = 0; i < simulation_view.simulation.boxes.length; i++) {
-                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.0, "Risk": 0.0 };
-                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.0, "Risk": 0.0 };
+                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.1, "Risk": 0.0 };
+                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.1, "Risk": 0.0 };
             }
         }
     });
