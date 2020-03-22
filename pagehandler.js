@@ -11,6 +11,18 @@ var checkKnowContact = false;
 var checkTransport = false;
 
 function showLayoutWelcome() {
+    var textWelcome = "English";
+    //var textRoommates = "Number of people I live with.";
+    //var textMeet = "Number of people I meet outside per week.";
+
+    var userLang = navigator.language || navigator.userLanguage;
+    if (userLang.includes("de-DE") || userLang.includes("de-AT") || userLang.includes("de-CH") || userLang.includes("de")) {
+        textWelcome = "German"
+    } else if (userLang.includes("it-IT") || userLang.includes("it-CH") || userLang.includes("it")) {
+        textWelcome = "Italian"
+
+    }
+
     document.body.innerHTML = `
         <header>
         <img class="logo" src="assets/logo_simthinkact2.svg"/>
@@ -19,10 +31,9 @@ function showLayoutWelcome() {
         </header >
 
         <h3 class="greeting">WELCOME TO THE OFFICIAL VIRUS SPREAD SIMULATOR</h3>
-        <!--< img class="big-virus" src = "assets/virus.svg" /> -->
-
+        <main id="info">` + textWelcome + `</main>
         <div class="arrow-container">
-            <span>1/6</span>
+            <span></span>
             <img id="next_page" class="arrow-right" src="assets/arrow_right.svg">
         </div>
 
@@ -36,28 +47,28 @@ function showLayoutWelcome() {
                 <h4>www.example.com</h4>
             </div>
         </footer>`;
-    document.getElementById("next_page").addEventListener("click", showLayoutInfo);
+    document.getElementById("next_page").addEventListener("click", showLayoutForm1);
 }
 
 function showLayoutInfo() {
     function setInfo1() {
         document.getElementById("next_page").addEventListener("click", setInfo2);
-        document.getElementById("prev_page").addEventListener("click", showLayoutWelcome);
-        document.getElementById("page_num").innerHTML = "2/6";
+        document.getElementById("prev_page").addEventListener("click", showLayoutSim);
+        document.getElementById("page_num").innerHTML = "1/3";
         document.getElementById("info").innerHTML = "Info 1";
     }
 
     function setInfo2() {
         document.getElementById("next_page").addEventListener("click", setInfo3);
         document.getElementById("prev_page").addEventListener("click", setInfo1);
-        document.getElementById("page_num").innerHTML = "3/6";
+        document.getElementById("page_num").innerHTML = "2/3";
         document.getElementById("info").innerHTML = "Info 2";
     }
 
     function setInfo3() {
         document.getElementById("next_page").addEventListener("click", showLayoutForm1);
         document.getElementById("prev_page").addEventListener("click", setInfo2);
-        document.getElementById("page_num").innerHTML = "4/6";
+        document.getElementById("page_num").innerHTML = "3/3";
         document.getElementById("info").innerHTML = "Info 3";
     }
 
@@ -79,7 +90,7 @@ function showLayoutInfo() {
         <footer class="footer-controls">
             <div class="arrow-container">
                 <img id="prev_page" class="arrow-left" src="assets/arrow_left.svg">
-                <span id="page_num" class="disable-margin">1/6</span>
+                <span id="page_num" class="disable-margin">-</span>
                 <img id="next_page" class="arrow-right" src="assets/arrow_right.svg">
             </div>
         </footer>
@@ -88,6 +99,24 @@ function showLayoutInfo() {
 }
 
 function showLayoutForm1() {
+    function save_choices() {
+        checkFlu = document.getElementById("check-flu").checked;
+        checkCaugh = document.getElementById("check-caught").checked;
+        checkRiskArea = document.getElementById("check-risk-area").checked;
+        checkContact = document.getElementById("check-contact").checked;
+        checkKeepDistance = document.getElementById("check-keepdistance").checked;
+        checkSelfIsolation = document.getElementById("check-selfisolation").checked;
+    }
+
+    function go_to_next() {
+        save_choices();
+        showLayoutForm2();
+    }
+
+    function go_to_prev() {
+        save_choices();
+        showLayoutWelcome();
+    }
     var textBefore = "Before we start the Simulation, we need to ask some questions...";
     var textFlu = "I think that COVID-19 is not much worse than the Flu.";
     var textCough = "I have cough/fever/breathing problems.";
@@ -124,7 +153,7 @@ function showLayoutForm1() {
 
     document.body.innerHTML = `
         <header>
-            <img class="logo" src="assets/logo_simvsvirus.svg"/>
+            <img class="logo" src="assets/logo_simthinkact2.svg"/>
             <!--<h2>SIM vs VIRUS</h2>-->
             <img class="topOption" src="assets/share-24px.svg"/>     
         </header>
@@ -176,7 +205,7 @@ function showLayoutForm1() {
         <footer class="footer-controls">
             <div class="arrow-container">
                 <img id="prev_page" class="arrow-left" src="assets/arrow_left.svg">
-                <span class="disable-margin">5/6</span>
+                <span class="disable-margin">1/2</span>
                 <img id="next_page" class="arrow-right" src="assets/arrow_right.svg">
             </div>
         </footer>
@@ -190,18 +219,27 @@ function showLayoutForm1() {
     document.getElementById("check-keepdistance").checked = checkKeepDistance;
     document.getElementById("check-selfisolation").checked = checkSelfIsolation;
 
-    document.getElementById("prev_page").addEventListener("click", showLayoutInfo);
-    document.getElementById("next_page").addEventListener("click", showLayoutForm2);
+    document.getElementById("prev_page").addEventListener("click", go_to_prev);
+    document.getElementById("next_page").addEventListener("click", go_to_next);
 }
 
 function showLayoutForm2() {
-    /* Set parameters based on last checkboxes.*/
-    checkFlu = document.getElementById("check-flu").checked;
-    checkCaugh = document.getElementById("check-caught").checked;
-    checkRiskArea = document.getElementById("check-risk-area").checked;
-    checkContact = document.getElementById("check-contact").checked;
-    checkKeepDistance = document.getElementById("check-keepdistance").checked;
-    checkSelfIsolation = document.getElementById("check-selfisolation").checked;
+    function go_to_next() {
+        save_choices();
+        showLayoutSim();
+    }
+
+    function go_to_prev() {
+        save_choices();
+        showLayoutForm1();
+    }
+    function save_choices() {
+        checkWashTime = document.getElementById("check-wash-time").checked;
+        checkWashHands = document.getElementById("check-wash-hands").checked;
+        checkTouchFace = document.getElementById("check-touch-face").checked;
+        checkKnowContact = document.getElementById("check-know-contact").checked;
+        checkTransport = document.getElementById("check-transport").checked;
+    }
 
     var textWashTime = "I wash my hands every time I come back home for at least 20 sec.";
     var textWashHands = "I have a reminder to wash my hands frequently.";
@@ -279,7 +317,7 @@ function showLayoutForm2() {
         <footer class="footer-controls">
             <div class="arrow-container">
                 <img class="arrow-left" id="prev_page" src="assets/arrow_left.svg">
-                <span class="disable-margin">6/6</span>
+                <span class="disable-margin">2/2</span>
                 <img id="next_page" class="arrow-right" src="assets/arrow_right.svg">
             </div>
         </footer>
@@ -292,17 +330,11 @@ function showLayoutForm2() {
     document.getElementById("check-know-contact").checked = checkKnowContact;
     document.getElementById("check-transport").checked = checkTransport;
 
-    document.getElementById("prev_page").addEventListener("click", showLayoutForm1);
-    document.getElementById("next_page").addEventListener("click", showLayoutSim);
+    document.getElementById("prev_page").addEventListener("click", go_to_prev);
+    document.getElementById("next_page").addEventListener("click", go_to_next);
 }
 
 function showLayoutSim() {
-    checkWashTime = document.getElementById("check-wash-time").checked;
-    checkWashHands = document.getElementById("check-wash-hands").checked;
-    checkTouchFace = document.getElementById("check-touch-face").checked;
-    checkKnowContact = document.getElementById("check-know-contact").checked;
-    checkTransport = document.getElementById("check-transport").checked;
-
     document.body.innerHTML = `
         <header>
             <img class="logo" src="assets/logo_simthinkact2.svg"/>
@@ -340,7 +372,7 @@ function showLayoutSim() {
                 <label for="home-inside" class="home-inside"></label> 
             </div>        
         </div>
-        <h6 class="page-title-small">Change your behavior</h6>
+        <h6 class="page-title-small">Change your behavior<br>(Will override your previous choices)</h6>
         <div class="sim-controls">
             <img src="assets/icon_curves.svg" id="show-curves"> 
             <select disabled>
@@ -353,8 +385,8 @@ function showLayoutSim() {
         <footer class="footer-controls">
             <div class="arrow-container">
                 <img id="prev_page" class="arrow-left" src="assets/arrow_left.svg">
-                <span class="disable-margin" id="pageCounter">1/6</span>
-                <img class="arrow-right" src="assets/arrow_right.svg">
+                <span class="disable-margin" id="pageCounter">3/3</span>
+                <img id="next_page" class="arrow-right" src="assets/arrow_right.svg">
             </div>
         </footer>
         `;
@@ -553,4 +585,5 @@ function showLayoutSim() {
     });
 
     document.getElementById("prev_page").addEventListener("click", showLayoutForm1);
+    document.getElementById("next_page").addEventListener("click", showLayoutInfo);
 }
