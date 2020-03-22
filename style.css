@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
 header h2 {
@@ -37,6 +38,35 @@ header {
     height: 40vh;
 }
 
+.greeting {
+    color: #555;
+    margin-top: 2em;
+    display: block;
+    margin-left: 10%;
+    margin-right: 10%;
+    /*width: 70%;*/
+    height: 40vh;
+    text-align: center;
+}
+
+.page-title {
+    color: #000;
+    margin-top: 1.5em;
+    display: block;
+    margin-left: 10%;
+    margin-right: 10%;
+    /*width: 70%;*/
+    height: 10vh;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.page-title-small {
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
+}
+
 .small-virus {
     margin-top: 2em;
     display: block;
@@ -47,12 +77,28 @@ header {
 }
 
 .arrow-container {
+    text-align: center;
+    margin-left: 5%;
     height: 2.5em; 
 }
 
 .arrow-container img {
     height: 2.5em;
     margin: 0 5%;
+}
+
+.arrow-container span {
+    display: inline-block;
+    height: 2.5em;
+    color: #555;
+    font-weight: bold;
+    font-size: x-large;
+    margin-top: .3em;
+    margin-left: 2em;
+}
+
+.disable-margin {
+    margin-left: 0 !important;
 }
 
 .arrow-left {
@@ -75,15 +121,163 @@ header {
 }
 
 main {
-    padding: 3px;
-    margin: 15px 5%;
+    padding: 12px 5%;
     background-color: #eee;
-    max-height: 40vh;
+    height: 40vh;
     overflow: auto;
 }
 
 main h4 {
     margin-top: 0;
+}
+
+.question {
+    display: table;
+    text-transform: uppercase;
+    background: #e0e0e0;
+    padding: 2% 0;
+    margin-top: 4px;
+    width: 100%;
+}
+
+.odd {
+    background: #f7f7f7;
+}
+
+.question span {
+    display: table-cell;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 0;
+    width: 80%;
+    font-size: .9em;
+
+    font-weight: bold;
+    font-style: italic;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+.question > div {
+    padding: 0;
+    margin-right: 0;
+    margin-left: 5px;
+}
+
+.question label {
+    display: table-cell;
+    background-image: url("assets/checkbox_unchecked.svg");
+    background-position: left center;
+    background-size: auto 100%;
+    width: 64px;
+    height: 40px;
+    background-repeat: no-repeat;
+}
+
+#trigger:checked + .checker {
+    background-image: url("assets/checkbox_checked.svg");
+}
+
+.question input[type="number"] {
+    display: table-cell;
+    width: 40%;
+    height: 2em;
+    background-color: rgb(115,115,115);
+    border-radius: 5px;
+    border: 2px solid white;
+    color: white;
+    font-weight: bold;
+    padding: 0 1em;
+    font-size: 1em;
+    text-align: center;
+  }
+
+.more-info {
+    color: #FF646F;
+    text-decoration: underline;
+    text-transform: uppercase;
+    float: right;
+}
+
+/*
+    Group
+*/
+
+.group-options {
+    display: table;
+    margin: 0 auto;
+    height: 5vh;
+    z-index: 3;
+}
+
+.group-options > div {
+    display: table-cell;
+    
+}
+
+.group-options label {
+    display: table-cell;
+    width: 72px;
+    height: 72px;
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: auto 100%;  
+}
+
+.group-options .seperator {
+    margin-top: 4vh;
+    left: 0;
+    position: absolute;
+    width: calc(100vw - 7px);
+    height: 10vh;
+    background-color: lightgray;
+
+    z-index: 3;
+}
+
+.adults {
+    display: table-cell;
+    background-image: url("assets/icon_adults.svg");
+}
+
+#adults:checked + .adults {
+    background-image: url("assets/icon_adults_hover.svg");
+}
+
+.children {
+    display: table-cell;
+    background-image: url("assets/icon_children.svg");
+}
+
+#children:checked + .children {
+    background-image: url("assets/icon_children_hover.svg");
+}
+
+.elderly {
+    display: table-cell;
+    background-image: url("assets/icon_elderly.svg");
+}
+
+#elderly:checked + .elderly {
+    background-image: url("assets/icon_elderly_hover.svg");
+}
+
+.sick {
+    display: table-cell;
+    background-image: url("assets/icon_sick.svg");
+}
+
+#sick:checked + .sick {
+    background-image: url("assets/icon_sick_hover.svg");
+}
+
+/*
+    Footer
+*/
+footer h4 {
+    text-decoration: underline;
 }
 
 footer img {
