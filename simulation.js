@@ -335,7 +335,6 @@ class Person {
                     let total_mortality = this.group.mortality;
                     // If out of capacity, the mortality rate rises
                     if (simulation.get_total_count("infected") > simulation.hospital_capacity * simulation.people.length) {
-                        console.log("test")
                         total_mortality *= simulation.mortality_multiplier;
                     }
                     if (Math.random() < total_mortality) {
