@@ -52,25 +52,39 @@ function showLayoutWelcome() {
 }
 
 function showLayoutInfo() {
+    function removeEventListeners() {
+        var old_element = document.getElementById("next_page");
+        var new_element = old_element.cloneNode(true);
+        old_element.parentNode.replaceChild(new_element, old_element);
+        old_element = document.getElementById("prev_page");
+        new_element = old_element.cloneNode(true);
+        old_element.parentNode.replaceChild(new_element, old_element);
+    }
+    var textInfo1 = `<b>The Simulation</b><p>Simulations like this one are intended to show a real world effect in an easy way. That is, the numbers in the following do not mirror the reality, but are set to show the intended effects in the simulation. The simulation is intended to show how the course of the corona pandemic changes when everyone behaves like the interviewed. This means that the majority of the simulated persons will behave according to the answers given by the user (including the probability of being infected by corona, the number of household members and the physical distance that is maintained). These persons are assigned a mortality probability of xx%. However, 20% of the points represent persons at risk, for whom the simulation assigns an increased mortality rate of xx%. If the percentage of infected individuals goes above xx%, the overall mortality raises, representing the effect of the overload of the healthcare system.<p><b>Physical distance</b><p>This parameter is influenced by the number of people I meet outside my household and whether I can avoid public transport. In the simulation, this factor affects the speed at which the points move: faster movement means less physical distance.`
+    var textInfo2 = `<b>Isolation factor</b><p>We assume that very few people live completely cut off from the outside world. Therefore, in the simulation the isolation factor never takes the value zero. But of course it varies depending on how you behave. The main factor here is whether you meet people outside your own household. However, within the same household infections are hard to avoide. Since we assume that nobody lives in absolute isolation, more household members automatically increase the probability of getting infected themselves or infecting others. The isolation factor affects the probability with which the points leave their "own" box.<p><b>Infectivity</b>How infectious someone is, i.e. the  probability they will infect others, depends on how high their probability is of being already infected by COVID-19. Existing disease symptoms, recent visits to high-risk areas and contact with patients increase this probability. What is more, one's own behaviour also plays a role, i.e. washing one's hands correctly and consistently and not touching one's face reduces the infectivity.`;
+    var textInfo3 = `<b>Comparison with influenza</b><p>The statement that Corona is as dangerous as the flu is - briefly spoken - completely wrong. We will go into this in more detail here (LINK). For the simulation we assume that people who tick this box have a small social distance and do not worry about their infectiousness. In the simulation, therefore, corresponding points break out of their boxes quickly and are very likely to infect other points.<p><b>Knowing people that you had contact with</b><p>In the long run, once we overcome the current phase of massive numbers of infections (see also LINK), life will carefully go back to a less restricted stage. However, the virus will not be stopped completely. In this time, it should be everybody’s main concern to early detect infections, isolate oneself and everybody one had contact with. That is, knowing with whom you had contact during the last two weeks is essential for controlling the virus as much as possible.`;
     function setInfo1() {
+        removeEventListeners();
         document.getElementById("next_page").addEventListener("click", setInfo2);
         document.getElementById("prev_page").addEventListener("click", showLayoutSim);
         document.getElementById("page_num").innerHTML = "1/3";
-        document.getElementById("info").innerHTML = "Info 1";
+        document.getElementById("info").innerHTML = textInfo1;
     }
 
     function setInfo2() {
+        removeEventListeners();
         document.getElementById("next_page").addEventListener("click", setInfo3);
         document.getElementById("prev_page").addEventListener("click", setInfo1);
         document.getElementById("page_num").innerHTML = "2/3";
-        document.getElementById("info").innerHTML = "Info 2";
+        document.getElementById("info").innerHTML = textInfo2;
     }
 
     function setInfo3() {
+        removeEventListeners();
         document.getElementById("next_page").addEventListener("click", showLayoutForm1);
         document.getElementById("prev_page").addEventListener("click", setInfo2);
         document.getElementById("page_num").innerHTML = "3/3";
-        document.getElementById("info").innerHTML = "Info 3";
+        document.getElementById("info").innerHTML = textInfo3;
     }
 
     document.body.innerHTML = `
@@ -80,12 +94,8 @@ function showLayoutInfo() {
         <img class="topOption" src="assets/share-24px.svg"/>     
         </header>
 
-        <img class="small-virus" src="assets/virus.svg"/>
+        <main class="info-box" id="info">
 
-        <main id="info">
-            <h4 style="text-align: center; text-transform: uppercase;">What is the corona-virus?</h4>     
-            <p>Test</p>          
-            <a class="more-info" href="">More information...</a>   
         </main>
 
         <footer class="footer-controls">
