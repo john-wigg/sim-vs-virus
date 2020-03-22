@@ -1,3 +1,15 @@
+var checkFlu = false;
+var checkCaugh = false;
+var checkRiskArea = false;
+var checkContact = false;
+var checkKeepDistance = false;
+var checkSelfIsolation = false;
+var checkWashTime = false;
+var checkWashHands = false;
+var checkTouchFace = false;
+var checkKnowContact = false;
+var checkTransport = false;
+
 function showLayoutWelcome() {
     document.body.innerHTML = `
         <header>
@@ -81,10 +93,12 @@ function showLayoutForm1() {
     var textCough = "I have cough/fever/breathing problems.";
     var textRisk = "I was in a high risk area in the past 14 day.s";
     var textContact = "I was in contact with an COVID-19 infected individual in the past 14 days.";
-    var textRoommates = "Number of people I live with.";
-    var textMeet = "Number of people I meet outside per week.";
+    var textKeepDistance = "I keep more than 2 m distance from other people."
+    var textSelfIsolation = "My household is self-isolating."
+    //var textRoommates = "Number of people I live with.";
+    //var textMeet = "Number of people I meet outside per week.";
 
-    var userLang = navigator.language || navigator.userLanguage; 
+    var userLang = navigator.language || navigator.userLanguage;
     if (userLang.includes("de-DE") || userLang.includes("de-AT") || userLang.includes("de-CH") || userLang.includes("de")) {
         textBefore = "Bevor die Simulation startet, beantworte bitte einige Fragen:";
         textFlu = "Ich glaube, dass COVID-19 nicht sehr viel schlimmer ist, als die Grippe.";
@@ -93,7 +107,9 @@ function showLayoutForm1() {
         textContact = "In den letzten 14 Tagen hatte ich Kontakt zu einer Person, die mit COVID-19 infiziert war.";
         textRoommates = "Anzahl der Menschen mit denen ich zusammen wohne?";
         textMeet = "Mit wievielen Menschen triffst du dich pro Woche!";
-    }else if (userLang.includes("it-IT") || userLang.includes("it-CH") || userLang.includes("it")) {
+        textKeepDistance = "Ich halte einen Abstand von mindestens 2 m zu anderen Personen ein."
+        textSelfIsolation = "Mein Haushalt ist in Selbstisolation."
+    } else if (userLang.includes("it-IT") || userLang.includes("it-CH") || userLang.includes("it")) {
         textBefore = "Prima di cominciare la simulazione, dobbiamo fare qualche domanda.";
         textFlu = "Penso che COVID-19 sia come l’influenza.";
         textCough = "Ho la tosse/febbre/problemi a respirare.";
@@ -101,6 +117,9 @@ function showLayoutForm1() {
         textContact = "Sono stato a contatto con una persona infetta nelle ultime due settimane.";
         textRoommates = "Con quante persone vivi?";
         textMeet = "Quante persone incontri ogni giorno?";
+        textKeepDistance = "textKeepDistance";
+        textSelfIsolation = "textSelfIsolation";
+
     }
 
     document.body.innerHTML = `
@@ -139,17 +158,19 @@ function showLayoutForm1() {
                 <label for="check-contact" class="checker"></label> 
             </div>  
         </div>
-        <div class="question">       
-            <span>`+ textRoommates + `</span>  
-            <div class="input-container">
-                <input id="number-roommates" type="number" />
-            </div>   
+        <div class="question odd">       
+        <span>"`+ textKeepDistance + `"</span>   
+            <div class="mycheckbox">
+                <input id="check-keepdistance" type="checkbox">
+                <label for="check-keepdistance" class="checker"></label> 
+            </div>  
         </div>
-        <div class="question">       
-            <span>`+ textMeet + `</span>  
-            <div class="input-container">
-                <input id="number-outside" type="number" />
-            </div>
+        <div class="question odd">       
+        <span>"`+ textSelfIsolation + `"</span>   
+            <div class="mycheckbox">
+                <input id="check-selfisolation" type="checkbox">
+                <label for="check-selfisolation" class="checker"></label> 
+            </div>  
         </div>
 
         <footer class="footer-controls">
@@ -161,20 +182,27 @@ function showLayoutForm1() {
         </footer>
         `;
 
+    /* Set checkboxes based on currently active parameters */
+    document.getElementById("check-flu").checked = checkFlu;
+    document.getElementById("check-caught").checked = checkCaugh;
+    document.getElementById("check-risk-area").checked = checkRiskArea;
+    document.getElementById("check-contact").checked = checkContact;
+    document.getElementById("check-keepdistance").checked = checkKeepDistance;
+    document.getElementById("check-selfisolation").checked = checkSelfIsolation;
+
     document.getElementById("prev_page").addEventListener("click", showLayoutInfo);
     document.getElementById("next_page").addEventListener("click", showLayoutForm2);
-
-    var checkFlu = document.getElementById("check-flu");
-    var checkCaught = document.getElementById("check-caught");
-    var checkRiskArea = document.getElementById("check-risk-area");
-    var checkContact = document.getElementById("check-contact");
-    var numRoomates = document.getElementById("number-roommates");
-    var numOutside = document.getElementById("number-outside");
-
-    console.log("Flu: " + checkFlu.checked)
 }
 
 function showLayoutForm2() {
+    /* Set parameters based on last checkboxes.*/
+    checkFlu = document.getElementById("check-flu").checked;
+    checkCaugh = document.getElementById("check-caught").checked;
+    checkRiskArea = document.getElementById("check-risk-area").checked;
+    checkContact = document.getElementById("check-contact").checked;
+    checkKeepDistance = document.getElementById("check-keepdistance").checked;
+    checkSelfIsolation = document.getElementById("check-selfisolation").checked;
+
     var textWashTime = "I wash my hands every time I come back home for at least 20 sec.";
     var textWashHands = "I have a reminder to wash my hands frequently.";
     var textFace = "I try not to touch my face frequently.";
@@ -183,7 +211,7 @@ function showLayoutForm2() {
     var textBehavior = "What is your current behavior?";
     var textLetsSimulate = "Ok, let’s simulate the effects of your behaviour!";
 
-    var userLang = navigator.language || navigator.userLanguage; 
+    var userLang = navigator.language || navigator.userLanguage;
     if (userLang.includes("de-DE") || userLang.includes("de-AT") || userLang.includes("de-CH") || userLang.includes("de")) {
         textWashTime = "Ich wasche meine Hände immer wenn ich nach Hause komme für mind. 20 Sekunden.";
         textWashHands = "Ich wasche regelmäßig meine Hände.";
@@ -192,7 +220,7 @@ function showLayoutForm2() {
         textTransport = "Ich vermeide öffentliche Verkehrsmittel während der Pandemie.";
         textBehavior = "Wie verhälst du dich momentan?";
         textLetsSimulate = "Ok, lass uns die Auswirkungen deines Verhaltens simulieren!"
-    }else if (userLang.includes("it-IT") || userLang.includes("it-CH") || userLang.includes("it")) {
+    } else if (userLang.includes("it-IT") || userLang.includes("it-CH") || userLang.includes("it")) {
         textWashTime = "Mi lavo le mani ogni volta che torno a casa, per almeno 20 secondi.";
         textWashHands = "Ho un promemoria per lavarmi le mani frequentemente.";
         textFace = "Evito di toccarmi la faccia frequentemente.";
@@ -256,19 +284,25 @@ function showLayoutForm2() {
             </div>
         </footer>
         `
+
+    /* Set check boxes based on currently chosen parameters. */
+    document.getElementById("check-wash-time").checked = checkWashTime;
+    document.getElementById("check-wash-hands").checked = checkWashHands;
+    document.getElementById("check-touch-face").checked = checkTouchFace;
+    document.getElementById("check-know-contact").checked = checkKnowContact;
+    document.getElementById("check-transport").checked = checkTransport;
+
     document.getElementById("prev_page").addEventListener("click", showLayoutForm1);
     document.getElementById("next_page").addEventListener("click", showLayoutSim);
-
-    var checkWashTime = document.getElementById("check-wash-time");
-    var checkWashHands = document.getElementById("check-wash-hands");
-    var checkTouchFace = document.getElementById("check-touch-face");
-    var checkKnowContact = document.getElementById("check-know-contact");
-    var checkTransport = document.getElementById("check-transport");
-
-    console.log("WashHands:" + checkWashHands.checked);
 }
 
 function showLayoutSim() {
+    checkWashTime = document.getElementById("check-wash-time").checked;
+    checkWashHands = document.getElementById("check-wash-hands").checked;
+    checkTouchFace = document.getElementById("check-touch-face").checked;
+    checkKnowContact = document.getElementById("check-know-contact").checked;
+    checkTransport = document.getElementById("check-transport").checked;
+
     document.body.innerHTML = `
         <header>
             <img class="logo" src="assets/logo_simthinkact2.svg"/>
@@ -276,7 +310,7 @@ function showLayoutSim() {
             <img class="topOption" src="assets/share-24px.svg"/>     
         </header>
 
-        <h5 class="page-title-small">Your person group</h5>
+        <h5 class="page-title-small">Filter by person group</h5>
 
         <div class="group-options">      
             <div>
@@ -306,7 +340,7 @@ function showLayoutSim() {
                 <label for="home-inside" class="home-inside"></label> 
             </div>        
         </div>
-        <h6 class="page-title-small">Your behavior</h6>
+        <h6 class="page-title-small">Change your behavior</h6>
         <div class="sim-controls">
             <img src="assets/icon_curves.svg" id="show-curves"> 
             <select disabled>
@@ -432,6 +466,67 @@ function showLayoutSim() {
     for (var i = 0; i < 5; i++) {
         this.simulation.boxes.push(new IsolationBox(0.05 * sim_width, 0.2 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
         this.simulation.boxes.push(new IsolationBox(0.8 * sim_width, 0.95 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
+    }
+
+    /* Set simulation parameters from questionaire */
+    let infectivity = 0.8;
+    let area_mobility = 0.6;
+    let velocity_multiplicator = 0.8;
+    let num_infected_initial = 1;
+
+    if (checkFlu) {
+        infectivity += 0.2;
+        area_mobility += 0.2;
+        velocity_multiplicator += 0.2;
+    }
+
+    if (checkCaugh) {
+        num_infected_initial += 1;
+    }
+
+    if (checkRiskArea) {
+        num_infected_initial += 1;
+    }
+
+    if (checkContact) {
+        num_infected_initial += 1;
+    }
+
+    if (checkKeepDistance) {
+        velocity_multiplicator -= 0.2;
+    }
+
+    if (checkSelfIsolation) {
+        area_mobility -= 0.5;
+    }
+
+    if (checkWashTime) {
+        infectivity -= 0.1;
+    }
+
+    if (checkWashHands) {
+        infectivity -= 0.1;
+    }
+
+    if (checkTouchFace) {
+        infectivity -= 0.1;
+    }
+
+    if (checkKnowContact) {
+        velocity_multiplicator -= 0.2;
+    }
+
+    if (checkTransport) {
+        velocity_multiplicator -= 0.2;
+    }
+
+    this.simulation.group_normal.infectivity = infectivity;
+    this.simulation.group_risk.infectivity = infectivity;
+    this.simulation.group_normal.velocity_multiplicator = velocity_multiplicator;
+    this.simulation.group_risk.velocity_multiplicator = velocity_multiplicator;
+    for (var i = 0; i < this.simulation.boxes.length; i++) {
+        this.simulation.boxes[i].area_escape = { "Normal": area_mobility, "Risk": area_mobility };
+        this.simulation.boxes[i].area_escape = { "Normal": area_mobility, "Risk": area_mobility };
     }
 
     this.simulation.max_days = 80.0;
