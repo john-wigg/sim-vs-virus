@@ -145,24 +145,26 @@
         }
 
         onTickerUpdate() {
-            //var people = this.simulation.people;
-            var now = Date.now();
-            if (now - this.lastData > 100) {
-                this.lastData = now;
-                console.log("länge: " + this.data.length);
+            if (!this.simulation.stopped) {
+                //var people = this.simulation.people;
+                var now = Date.now();
+                if (now - this.lastData > 100) {
+                    this.lastData = now;
+                    console.log("länge: " + this.data.length);
 
-                this.data.push(new DataPoint(this.simulation.get_count("healthy", this.filterValue),
-                    this.simulation.get_count("infected", this.filterValue),
-                    this.simulation.get_count("recovered", this.filterValue),
-                    this.simulation.get_count("deceased", this.filterValue)));
+                    this.data.push(new DataPoint(this.simulation.get_count("healthy", this.filterValue),
+                        this.simulation.get_count("infected", this.filterValue),
+                        this.simulation.get_count("recovered", this.filterValue),
+                        this.simulation.get_count("deceased", this.filterValue)));
 
-                console.log(this.simulation.get_count("infected", this.filterValue));
+                    console.log(this.simulation.get_count("infected", this.filterValue));
 
-                if (this.data.length > this.maxData) {
-                    this.data.shift();
+                    if (this.data.length > this.maxData) {
+                        this.data.shift();
+                    }
+                    //this.data.push(new DataPoint(, 0, 0, 0));
+                    this.drawCurve();
                 }
-                //this.data.push(new DataPoint(, 0, 0, 0));
-                this.drawCurve();
             }
         }
 

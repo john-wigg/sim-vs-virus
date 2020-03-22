@@ -18,13 +18,18 @@ class Simulation {
         this.frac_population_doctors = 0.0;
         this.frac_population_risk = 0.2;
 
-        this.count_infected = 4;
+        this.count_infected = 1;
 
         this.people = [];// Array mit personen
         this.boxes = [];
 
         this.width = width;
         this.height = height;
+
+        this.time_days = 0.0;
+        this.max_days = 100.0;
+
+        this.stopped = true
 
         this.group_normal = new Group("Normal", 0.9, 0.01, 1.0);
         this.group_risk = new Group("Risk", 0.5, 0.1, 1.0);
@@ -35,6 +40,7 @@ class Simulation {
     }
 
     initialize() {
+        this.stopped = false;
         // randomly initialize Person positions
         for (var i = 0; i < this.people.length; i++) {
             // Start all inside a box
@@ -67,16 +73,30 @@ class Simulation {
     }
 
     update(delta) {
-        // delta in milliseconds
-        // TODO
-        // Should return array of structs
-        for (var i = 0; i < this.people.length; i++) {
-            this.people[i].calculate_step(delta, this);
+        if (!this.stopped) {
+            // delta in milliseconds
+            // TODO
+            // Should return array of structs
+            for (var i = 0; i < this.people.length; i++) {
+                this.people[i].calculate_step(delta, this);
+            }
+            for (var i = 0; i < this.people.length; i++) {
+                this.people[i].move();
+            }
+            this.time_days += delta / 1000.0 * this.days_per_sec;
+            if (this.time_days > this.max_days) {
+                this.stop();
+            }
+            return this.people;
         }
-        for (var i = 0; i < this.people.length; i++) {
-            this.people[i].move();
-        }
-        return this.people;
+    }
+
+    stop() {
+        this.stopped = true;
+    }
+
+    resume() {
+        this.stopped = false;
     }
 
     // Returns count of people in state
