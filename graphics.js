@@ -375,11 +375,13 @@ class Curve extends HTMLElement {
         var cI = new PIXI.Graphics();
         var cR = new PIXI.Graphics();
         var cD = new PIXI.Graphics();
+        var hLine = new PIXI.Graphics();
 
         cH.y = 30;
         cI.y = 30;
         cR.y = 30;
         cD.y = 30;
+        hLine.y = 30;
 
         var width = this.width / this.data.length;
         var height = this.height - 30;
@@ -449,8 +451,8 @@ class Curve extends HTMLElement {
         cD.endFill();
 
         // Draw horizontal line
-        const hLine = new PIXI.Graphics();
-        hLine.lineStyle(2, "#000000", 1);
+        hLine.lineStyle(2);
+        console.log(this.simulation.hospital_capacity);
         hLine.moveTo(0, (1.0 - this.simulation.hospital_capacity) * height);
         hLine.lineTo(this.width, (1.0 - this.simulation.hospital_capacity) * height);
 
