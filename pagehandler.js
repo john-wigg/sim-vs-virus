@@ -19,7 +19,8 @@ function showLayoutWelcome() {
     if (userLang.includes("de-DE") || userLang.includes("de-AT") || userLang.includes("de-CH") || userLang.includes("de")) {
         textWelcome = `Unsere Gesellschaft durchleben gerade eine Krise, die unsere Lebensweise bedroht. Aufgrund des Pandemieausbruchs von COVID-19, der durch das Coronavirus SARS-CoV-2 verursacht wird, werden wir zunehmend aufgefordert, viele Sicherheitsmaßnahmen zu beachten, wie z.B. "social Distancing", Selbstisolierung und erhöhte Handhygiene. Aber wird dies ausreichen? Werden diese Maßnahmen wirklich eine Wirkung haben? Inspiriert durch <a href="https://www.washingtonpost.com/graphics/2020/world/corona-simulator/">diesen Artikel der Washington Post</a> haben wir einen interaktiven Simulator entwickelt, der Ihnen auf einfache und verständliche Weise zeigt, wie wichtig es ist, diese Maßnahmen zu befolgen. Lassen Sie uns beginnen!`
     } else if (userLang.includes("it-IT") || userLang.includes("it-CH") || userLang.includes("it")) {
-        textWelcome = "Italian"
+        textWelcome = `Le nostre comunità stanno attraversando una crisi che mette in pericolo il nostro stile di vita. A causa della pandemia di COVID-19, causata dal Coronavirus SARS-CoV-2, ci viene chiesto di aderire a numerose misure di sicurezza, come distanziamento sociale, autoisolamento, e igiene personale più accurata. Ma tutto ciò sarà sufficiente? Queste misure avranno un impatto reale sulla diffusione della malattia?
+        Ci siamo ispirati a questo articolo del Washington Post per mettere a punto <a href="https://www.washingtonpost.com/graphics/2020/world/corona-simulator/">questo</a> simulatore interattivo che possa mostrarvi l’importanza di seguire queste misure in maniera semplice e comprensibile. Cominciamo!`
 
     }
 
