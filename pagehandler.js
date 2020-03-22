@@ -274,18 +274,23 @@ function showLayoutSim() {
         if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_0.svg")') {
             distanceButton.style.backgroundImage = "url(assets/icon_distance_05.svg)";
             simulation_view.simulation.group_normal.velocity_multiplicator = 0.8;
+            simulation_view.simulation.group_risk.velocity_multiplicator = 0.8;
         } else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_05.svg")') {
             distanceButton.style.backgroundImage = 'url(assets/icon_distance_1.svg)';
             simulation_view.simulation.group_normal.velocity_multiplicator = 0.5;
+            simulation_view.simulation.group_risk.velocity_multiplicator = 0.5;
         } else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_1.svg")') {
             distanceButton.style.backgroundImage = "url(assets/icon_distance_2.svg)";
             simulation_view.simulation.group_normal.velocity_multiplicator = 0.2;
+            simulation_view.simulation.group_risk.velocity_multiplicator = 0.2;
         } else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_2.svg")') {
             distanceButton.style.backgroundImage = "url(assets/icon_distance_0.svg)";
             simulation_view.simulation.group_normal.velocity_multiplicator = 1.0;
+            simulation_view.simulation.group_risk.velocity_multiplicator = 1.0;
         } else {
             distanceButton.style.backgroundImage = "url(assets/icon_distance_05.svg)";
             simulation_view.simulation.group_normal.velocity_multiplicator = 0.6;
+            simulation_view.simulation.group_risk.velocity_multiplicator = 0.6;
         }
     });
     var maskCheck = document.getElementById("mask");
@@ -311,13 +316,13 @@ function showLayoutSim() {
         console.log("home-inside: " + e.target.checked);
         if (e.target.checked) {
             for (var i = 0; i < simulation_view.simulation.boxes.length; i++) {
-                simulation_view.simulation.boxes[i].area_escape = { "Normal": 1.0, "Risk": 0.0 };
-                simulation_view.simulation.boxes[i].area_entry = { "Normal": 1.0, "Risk": 0.0 };
+                simulation_view.simulation.boxes[i].area_escape = { "Normal": 1.0, "Risk": 1.0 };
+                simulation_view.simulation.boxes[i].area_entry = { "Normal": 1.0, "Risk": 1.0 };
             }
         } else {
             for (var i = 0; i < simulation_view.simulation.boxes.length; i++) {
-                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.1, "Risk": 0.0 };
-                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.1, "Risk": 0.0 };
+                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.1, "Risk": 0.1 };
+                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.1, "Risk": 0.1 };
             }
         }
     });
@@ -379,8 +384,8 @@ function showLayoutSim() {
     });
     document.getElementById("pageCounter").style.display = "none";
 
-    var sim_width = 10;
-    var sim_height = 5;
+    var sim_width = 8;
+    var sim_height = 4;
     this.simulation = new Simulation(sim_width, sim_height, 200);
     var area_entry = { "Normal": 0.0, "Risk": 0.0 };
     var area_escape = { "Normal": 0.0, "Risk": 0.0 };
@@ -390,7 +395,6 @@ function showLayoutSim() {
         this.simulation.boxes.push(new IsolationBox(0.8 * sim_width, 0.95 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
     }
 
-    this.simulation.group_risk.velocity_multiplicator = 0.2;
     this.simulation.max_days = 80.0;
     this.simulation.group_normal.infectivity = 1.0;
 
