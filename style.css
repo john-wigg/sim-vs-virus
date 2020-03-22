@@ -63,6 +63,7 @@ header {
 
 .page-title-small {
     margin-top: 1vh;
+    margin-bottom: 1vh;
     text-transform: uppercase;
     font-weight: bold;
     text-align: center;
@@ -362,7 +363,7 @@ select {
 }
 
 .sim-controls img {
-    margin: 0 1em;
+    margin: 0 4%;
     display: inline-block;
     width: 32px;
     height: 32px;
