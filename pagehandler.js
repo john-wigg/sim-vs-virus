@@ -312,10 +312,12 @@ function showLayoutSim() {
         if (e.target.checked) {
             for (var i = 0; i < simulation_view.simulation.boxes.length; i++) {
                 simulation_view.simulation.boxes[i].area_escape = { "Normal": 1.0, "Risk": 0.0 };
+                simulation_view.simulation.boxes[i].area_entry = { "Normal": 1.0, "Risk": 0.0 };
             }
         } else {
             for (var i = 0; i < simulation_view.simulation.boxes.length; i++) {
                 simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.0, "Risk": 0.0 };
+                simulation_view.simulation.boxes[i].area_escape = { "Normal": 1.0, "Risk": 0.0 };
             }
         }
     });
@@ -387,7 +389,7 @@ function showLayoutSim() {
     var sim_width = 10;
     var sim_height = 5;
     this.simulation = new Simulation(sim_width, sim_height, 200);
-    var area_entry = { "Normal": 0.1, "Risk": 0.0 };
+    var area_entry = { "Normal": 0.0, "Risk": 0.0 };
     var area_escape = { "Normal": 0.0, "Risk": 0.0 };
 
     for (var i = 0; i < 5; i++) {
