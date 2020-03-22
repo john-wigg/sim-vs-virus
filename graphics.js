@@ -307,10 +307,6 @@
             simulation_view.filter = ["Normal"];
             curve.filter = ["Normal"];
         });
-        document.getElementById("doctor").addEventListener("click", function (e) {
-            simulation_view.filter = ["Doctor"];
-            curve.filter = ["Doctor"];
-        });
         document.getElementById("risk").addEventListener("click", function (e) {
             simulation_view.filter = ["Risk"];
             curve.filter = ["Risk"];
@@ -318,6 +314,12 @@
         document.getElementById("reset").addEventListener("click", function (e) {
             simulation_view.filter = ["Normal", "Doctor", "Risk"];
             curve.filter = ["Normal", "Doctor", "Risk"];
+        });
+        document.getElementById("stop").addEventListener("click", function (e) {
+            simulation_view.simulation.stop();
+        });
+        document.getElementById("resume").addEventListener("click", function (e) {
+            simulation_view.simulation.resume();
         });
     }
 

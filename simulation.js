@@ -87,8 +87,8 @@ class Simulation {
             if (this.time_days > this.max_days) {
                 this.stop();
             }
-            return this.people;
         }
+        return this.people;
     }
 
     stop() {
