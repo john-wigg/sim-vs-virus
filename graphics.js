@@ -385,7 +385,6 @@
             simulation_view.simulation.resume();
         });
         document.getElementById("reset_sim").addEventListener("click", function (e) {
-            console.log("reset");
             simulation_view.simulation.initialize();
             simulation_view.redrawAllCircles();
             curve.data = new Array();
