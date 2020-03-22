@@ -24,8 +24,6 @@ class SimulationView extends HTMLElement {
         });
         this.appendChild(this.app.view);
 
-        this.simulation.initialize();
-
         this.filter = ["Normal", "Risk"];
         this.old_filter = ["Normal", "Risk"];
 

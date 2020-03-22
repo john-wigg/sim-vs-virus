@@ -118,7 +118,7 @@ class Simulation {
         return count;
     }
 
-    get_people_number(filter = ["Normal", "Doctor", "Risk"]) {
+    get_people_number(filter = ["Normal", "Risk"]) {
         let count = 0;
         for (var i = 0; i < this.people.length; i++) {
             if (filter.includes(this.people[i].group.name)) {

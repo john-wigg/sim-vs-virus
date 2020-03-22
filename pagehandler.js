@@ -268,107 +268,143 @@ function showLayoutSim() {
         Behavior
     */
     var distanceButton = document.getElementById("distance");
-    distanceButton.addEventListener("click", function() {
+    distanceButton.addEventListener("click", function () {
 
         console.log(distanceButton.style.backgroundImage);
         if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_0.svg")') {
             distanceButton.style.backgroundImage = "url(assets/icon_distance_05.svg)";
-        }else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_05.svg")') {
+            simulation_view.simulation.group_normal.velocity_multiplicator = 0.6;
+        } else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_05.svg")') {
             distanceButton.style.backgroundImage = 'url(assets/icon_distance_1.svg)';
-        }else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_1.svg")') {
+            simulation_view.simulation.group_normal.velocity_multiplicator = 0.3;
+        } else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_1.svg")') {
             distanceButton.style.backgroundImage = "url(assets/icon_distance_2.svg)";
-        }else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_2.svg")') {
+            simulation_view.simulation.group_normal.velocity_multiplicator = 0.0;
+        } else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_2.svg")') {
             distanceButton.style.backgroundImage = "url(assets/icon_distance_0.svg)";
-        }else{
+            simulation_view.simulation.group_normal.velocity_multiplicator = 1.0;
+        } else {
             distanceButton.style.backgroundImage = "url(assets/icon_distance_05.svg)";
-        }          
+            simulation_view.simulation.group_normal.velocity_multiplicator = 0.6;
+        }
     });
-    var maskCheck = document.getElementById("mask");      
-    maskCheck.addEventListener("change", function(e) {
+    var maskCheck = document.getElementById("mask");
+    maskCheck.addEventListener("change", function (e) {
         console.log("mask: " + e.target.checked);
         if (e.target.checked) {
 
-        }else{
+        } else {
 
         }
     });
-    var washCheck = document.getElementById("wash-hands");      
-    washCheck.addEventListener("change", function(e) {
+    var washCheck = document.getElementById("wash-hands");
+    washCheck.addEventListener("change", function (e) {
         console.log("wash: " + e.target.checked);
         if (e.target.checked) {
-
-        }else{
-
+            this.simulation_view.simulation.group_normal.infectivity -= 0.4;
+        } else {
+            this.simulation_view.simulation.group_normal.infectivity += 0.4;
         }
     });
-    var homeCheck = document.getElementById("home-inside");      
-    homeCheck.addEventListener("change", function(e) {
+    var homeCheck = document.getElementById("home-inside");
+    homeCheck.addEventListener("change", function (e) {
         console.log("home-inside: " + e.target.checked);
         if (e.target.checked) {
-
-        }else{
-
+            for (var i = 0; i < simulation_view.simulation.boxes.length; i++) {
+                simulation_view.simulation.boxes[i].area_escape = { "Normal": 1.0, "Risk": 0.0 };
+            }
+        } else {
+            for (var i = 0; i < simulation_view.simulation.boxes.length; i++) {
+                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.0, "Risk": 0.0 };
+            }
         }
     });
     /*
         Filter
     */
-    var adultsFilter = document.getElementById("adults");      
-    adultsFilter.addEventListener("change", function(e) {
+    var adultsFilter = document.getElementById("adults");
+    adultsFilter.addEventListener("change", function (e) {
         console.log("adults: " + e.target.checked);
         if (e.target.checked) {
 
-        }else{
+        } else {
 
         }
     });
-    var childrenFilter = document.getElementById("children");      
-    childrenFilter.addEventListener("change", function(e) {
+    var childrenFilter = document.getElementById("children");
+    childrenFilter.addEventListener("change", function (e) {
         console.log("children: " + e.target.checked);
         if (e.target.checked) {
 
-        }else{
+        } else {
 
         }
     });
-    var elderlyFilter = document.getElementById("elderly");      
-    elderlyFilter.addEventListener("change", function(e) {
+    var elderlyFilter = document.getElementById("elderly");
+    elderlyFilter.addEventListener("change", function (e) {
         console.log("elderly: " + e.target.checked);
         if (e.target.checked) {
 
-        }else{
+        } else {
 
         }
     });
-    var sickFilter = document.getElementById("sick");      
-    sickFilter.addEventListener("change", function(e) {
+    var sickFilter = document.getElementById("sick");
+    sickFilter.addEventListener("change", function (e) {
         console.log("sick: " + e.target.checked);
         if (e.target.checked) {
 
-        }else{
+        } else {
 
         }
     });
 
-    var bCurve = document.getElementById("show-curves");      
-    bCurve.addEventListener("click", function(e) {
+    var bCurve = document.getElementById("show-curves");
+    bCurve.addEventListener("click", function (e) {
         console.log("showCurve");
     });
-    var bRepeat = document.getElementById("b-repeat");      
-    bRepeat.addEventListener("click", function(e) {
+    var bRepeat = document.getElementById("b-repeat");
+    bRepeat.addEventListener("click", function (e) {
         console.log("bRepeat");
+        simulation_view.simulation.initialize();
+        simulation_view.redrawAllCircles();
+        curve.data = new Array();
     });
-    var bPause = document.getElementById("b-pause");      
-    bPause.addEventListener("click", function(e) {
+    var bPause = document.getElementById("b-pause");
+    bPause.addEventListener("click", function (e) {
         console.log("bPause");
+        if (simulation_view.simulation.stopped) {
+            simulation_view.simulation.resume();
+        } else {
+            simulation_view.simulation.stop();
+        }
     });
     document.getElementById("pageCounter").style.display = "none";
 
+    customElements.define('curve-view', Curve);
     customElements.define('sim-view', SimulationView);
 
-    this.simulation = new Simulation(8,6,200);
-    var sim = new SimulationView(this.simulation, 800);
-    document.getElementById("container").appendChild(sim); 
-    
+    var sim_width = 10;
+    var sim_height = 5;
+    this.simulation = new Simulation(sim_width, sim_height, 200);
+    var area_entry = { "Normal": 0.1, "Risk": 0.0 };
+    var area_escape = { "Normal": 0.0, "Risk": 0.0 };
+
+    for (var i = 0; i < 5; i++) {
+        this.simulation.boxes.push(new IsolationBox(0.05 * sim_width, 0.2 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
+        this.simulation.boxes.push(new IsolationBox(0.8 * sim_width, 0.95 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
+    }
+
+    this.simulation.group_risk.velocity_multiplicator = 0.2;
+    this.simulation.max_days = 80.0;
+    this.simulation.group_normal.infectivity = 1.0;
+
+    var simulation_view = new SimulationView(this.simulation, 800);
+    document.getElementById("container").appendChild(simulation_view);
+    this.simulation.initialize()
+
+    var curve = new Curve(this.simulation, 800);
+    document.getElementById("container").appendChild(curve);
+
     document.getElementById("prev_page").addEventListener("click", showLayoutForm1);
 }
