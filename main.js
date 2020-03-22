@@ -3,8 +3,7 @@
 
     function onLoad() {
         console.log("onLoad()");
-        var page_handler = new PageHandler();
-        page_handler.showLayoutWelcome();
+        showLayoutWelcome();
     }
 
     window.addEventListener("load", onLoad);
