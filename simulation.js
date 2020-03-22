@@ -206,14 +206,14 @@ class Person {
                 if (simulation.people[i] === this) continue;
                 // get closest person within minimum distance
                 let dist = this.position.dist(simulation.people[i].position);
-                if (dist < simulation.minimum_distance && simulation.people[i].state != "deceased") {
+                if (dist < simulation.minimum_distance && simulation.people[i].state != "deceased" && simulation.people[i].get_inside_box(simulation.boxes) === this.get_inside_box(simulation.boxes)) {
                     col_idx = i;
                     break;
                 }
             }
             if (col_idx != -1) // "collision" has occured
             {
-                if (simulation.people[col_idx].state == "infected" && this.state == "healthy" && simulation.people[col_idx].get_inside_box(simulation) === this.get_inside_box(simulation)) {
+                if (simulation.people[col_idx].state == "infected" && this.state == "healthy") {
                     if (Math.random() < simulation.people[col_idx].group.infectivity) {
                         //TODO: Calculate infection probability
                         this.days_since_infection = 0.0;
