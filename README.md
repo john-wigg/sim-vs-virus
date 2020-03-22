@@ -58,9 +58,3 @@ See also the list of [contributors](https://github.com/john-wigg/sim-vs-virus/co
 ## License
 
 This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
