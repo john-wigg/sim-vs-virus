@@ -1,4 +1,4 @@
-# sim-vs-virus
+# #SimThinkAct
 
 The novel coronavirus SARS-CoV-2 is spreading through the world, scientists advise to #stayathome, and governments increasingly impose restrictions on freedom of movement. But why should I care?
 
