@@ -129,6 +129,11 @@ main {
     overflow: auto;
 }
 
+.info-box {
+    margin-top: 2vh;
+    height: 73vh;
+}
+
 main h4 {
     margin-top: 0;
 }
