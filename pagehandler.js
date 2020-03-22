@@ -301,9 +301,9 @@ function showLayoutSim() {
     washCheck.addEventListener("change", function (e) {
         console.log("wash: " + e.target.checked);
         if (e.target.checked) {
-            this.simulation_view.simulation.group_normal.infectivity -= 0.4;
-        } else {
             this.simulation_view.simulation.group_normal.infectivity += 0.4;
+        } else {
+            this.simulation_view.simulation.group_normal.infectivity -= 0.4;
         }
     });
     var homeCheck = document.getElementById("home-inside");
@@ -408,7 +408,7 @@ function showLayoutSim() {
         if (curve.style.display == "block") {
             curve.style.display = "none";
             simulation_view.style.display = "block";
-        }else{
+        } else {
             curve.style.display = "block";
             simulation_view.style.display = "none";
         }
