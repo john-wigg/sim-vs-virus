@@ -1,7 +1,7 @@
 function showLayoutWelcome() {
     document.body.innerHTML = `
         <header>
-        <img class="logo" src = "assets/logo_simvsvirus.svg" />
+        <img class="logo" src="assets/logo_simthinkact2.svg"/>
         <!--< h2 > SIM vs VIRUS</h2 > -->
         <img class="topOption" src="assets/share-24px.svg" />     
         </header >
@@ -51,7 +51,7 @@ function showLayoutInfo() {
 
     document.body.innerHTML = `
         <header>
-        <img class="logo" src="assets/logo_simvsvirus.svg"/>
+        <img class="logo" src="assets/logo_simthinkact2.svg"/>
         <!--<h2>SIM vs VIRUS</h2>-->
         <img class="topOption" src="assets/share-24px.svg"/>     
         </header>
@@ -78,7 +78,7 @@ function showLayoutInfo() {
 function showLayoutForm1() {
     document.body.innerHTML = `
         <header>
-        <img class="logo" src="assets/logo_simvsvirus.svg"/>
+        <img class="logo" src="assets/logo_simthinkact2.svg"/>
         <!--<h2>SIM vs VIRUS</h2>-->
         <img class="topOption" src="assets/share-24px.svg"/>     
         </header>
@@ -138,56 +138,54 @@ function showLayoutForm1() {
 function showLayoutForm2() {
     document.body.innerHTML = `
         <header>
-        <img class="logo" src="assets/logo_simvsvirus.svg"/>
-        <!--<h2>SIM vs VIRUS</h2>-->
-        <img class="topOption" src="assets/share-24px.svg"/>     
+            <img class="logo" src="assets/logo_simthinkact2.svg"/>
+            <!--<h2>SIM vs VIRUS</h2>-->
+            <img class="topOption" src="assets/share-24px.svg"/>     
         </header>
 
-        <h3 class="page-title">Before we starting simulation, we need some information from you...</h3>
+        <h3 class="page-title">What is your current behavior?</h3>
         <div class="question">       
-            <span>"I think, Corona is not mush worse than the flu."</span>     
-            <div>
-                <input id="trigger" type="checkbox">
-                <label for="trigger" class="checker"></label> 
+            <span>"I wash my hands every time i came home for at least 20 seconds."</span>     
+            <div class="mycheckbox">
+                <input id="check-wash-time" type="checkbox">
+                <label for="check-wash-time"></label> 
             </div>  
         </div>
         <div class="question odd">       
-            <span>"I have caught/fever/breathing problems."</span>     
-            <div>
-                <input id="trigger" type="checkbox">
-                <label for="trigger" class="checker"></label> 
+            <span>"I remind me to wash my hands frequently."</span>     
+            <div class="mycheckbox">
+                <input id="check-wash-hands" type="checkbox">
+                <label for="check-wash-hands" class="checker"></label> 
             </div>  
         </div>
         <div class="question">       
-            <span>"I was in a high risk area in the last 14 days."</span>     
-            <div>
-                <input id="trigger" type="checkbox">
-                <label for="trigger" class="checker"></label> 
+            <span>"I try not to touch in my face."</span>     
+            <div class="mycheckbox">
+                <input id="check-touch-face" type="checkbox">
+                <label for="check-touch-face" class="checker"></label> 
             </div>   
         </div>
         <div class="question odd">       
-            <span>"I had contact to a corana infected person in the last 14 days."</span>   
-            <div>
-                <input id="trigger" type="checkbox">
-                <label for="trigger" class="checker"></label> 
+            <span>"I know the persons i had contact in the last 14 days."</span>   
+            <div class="mycheckbox">
+                <input id="check-know-contact" type="checkbox">
+                <label for="check-know-contact" class="checker"></label> 
             </div>  
         </div>
         <div class="question">       
-            <span>Number of people i live with:</span>  
-            <div class="input-container">
-                <input type="number" />
+            <span>"I don't use puplic transport during the pandemia."</span>     
+            <div class="mycheckbox">
+                <input id="check-transport" type="checkbox">
+                <label for="check-transport" class="checker"></label> 
             </div>   
         </div>
-        <div class="question">       
-            <span>Number of people outside:</span>  
-            <input type="number" />
-        </div>
+        <h3 class="page-title">Ok, let's simulate the effets your behavior?</h3>
 
         <footer class="footer-controls">
             <div class="arrow-container">
-                <img id="prev_page" class="arrow-left" src="assets/arrow_left.svg">
+                <img class="arrow-left" id="prev_page" src="assets/arrow_left.svg">
                 <span class="disable-margin">6/6</span>
-                <img id="next_page" class="arrow-right" src="assets/arrow_right.svg">
+                <img class="arrow-right" id="next_page" src="assets/arrow_right.svg">
             </div>
         </footer>
         `
@@ -198,7 +196,7 @@ function showLayoutForm2() {
 function showLayoutSim() {
     document.body.innerHTML = `
         <header>
-            <img class="logo" src="assets/logo_simvsvirus.svg"/>
+            <img class="logo" src="assets/logo_simthinkact2.svg"/>
             <!--<h2>SIM vs VIRUS</h2>-->
             <img class="topOption" src="assets/share-24px.svg"/>     
         </header>

@@ -196,7 +196,7 @@ input[type="checkbox"] {
     background-image: url("assets/checkbox_checked.svg");
 }*/
 
-.question input[type="number"] {
+input[type="number"] {
     display: table-cell;
     width: 40%;
     height: 2em;
@@ -389,6 +389,7 @@ footer img {
 }
 
 .footer-controls{
+    background-color: white;
     width: 100%;
     position: fixed;
     display: block;
