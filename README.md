@@ -22,7 +22,7 @@ And open ```index.html``` in your browser!
 
 ## Features
 
-- ** Currently the web app is still optimized for mobile devices. Mobile emulators can be accessed via ``Ctrl+Shift+M`` (Firefox) or ``Ctrl+Shift+I``, ``Ctrl+Shift+M`` (Google Chrome)**
+- **Currently the web app is still optimized for mobile devices. Mobile emulators can be accessed via ```Ctrl+Shift+M``` (Firefox) or ```Ctrl+Shift+I```, ```Ctrl+Shift+M``` (Google Chrome)**
 - A particle-based simulation of virus spread  based on user input from a questionnaire with 11 items. 
     - Main mechanics simulated are:
         - **likelihood of infection** upon contact. Factors that increase it are existing disease symptoms, recent visits to high-risk areas, contact with infected persons, lack of correct and consistent hand washing, and touching your face.
