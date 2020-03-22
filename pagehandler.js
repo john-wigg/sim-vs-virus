@@ -53,14 +53,14 @@ class PageHandler {
 
         <footer class="footer-controls">
             <div class="arrow-container">
-                <img id="next_page2" class="arrow-left" src="assets/arrow_left.svg">
+                <img id="next_page" class="arrow-left" src="assets/arrow_left.svg">
                 <span class="disable-margin">1/6</span>
-                <img id="prev_page2" class="arrow-right" src="assets/arrow_right.svg">
+                <img id="prev_page" class="arrow-right" src="assets/arrow_right.svg">
             </div>
         </footer>
         `;
-        document.getElementById("next_page2").addEventListener("click", this.showLayoutWelcome);
-        document.getElementById("prev_page2").addEventListener("click", this.showLayoutWelcome);
+        document.getElementById("next_page").addEventListener("click", this.showLayoutWelcome);
+        document.getElementById("prev_page").addEventListener("click", this.showLayoutWelcome);
     }
 
     showLayoutSim() {
