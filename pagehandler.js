@@ -304,9 +304,9 @@ function showLayoutSim() {
     washCheck.addEventListener("change", function (e) {
         console.log("wash: " + e.target.checked);
         if (e.target.checked) {
-            this.simulation_view.simulation.group_normal.infectivity += 0.4;
+            simulation_view.simulation.group_normal.infectivity += 0.4;
         } else {
-            this.simulation_view.simulation.group_normal.infectivity -= 0.4;
+            simulation_view.simulation.group_normal.infectivity -= 0.4;
         }
     });
     var homeCheck = document.getElementById("home-inside");
@@ -332,8 +332,10 @@ function showLayoutSim() {
         console.log("adults: " + e.target.checked);
         if (e.target.checked) {
             simulation_view.filter.push("Normal"); // Add Normal to filter
+            curve.filter.push("Normal");
         } else {
             simulation_view.filter.splice(simulation_view.filter.indexOf("Normal"), 1); // Remove Normal from filte
+            curve.filter.splice(curve.filter.indexOf("Normal"), 1);
         }
     });
     var elderlyFilter = document.getElementById("elderly");
@@ -341,8 +343,10 @@ function showLayoutSim() {
         console.log("elderly: " + e.target.checked);
         if (e.target.checked) {
             simulation_view.filter.push("Risk");    // Add risk to filter
+            curve.filter.push("Risk");
         } else {
             simulation_view.filter.splice(simulation_view.filter.indexOf("Risk"), 1); // Remove risk from filter
+            curve.filter.splice(curve.filter.indexOf("Risk"), 1);
         }
     });
 

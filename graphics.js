@@ -173,8 +173,13 @@ class Curve extends HTMLElement {
     }
 
     set filter(filter) {
+
         this.filterValue = filter;
         this.people = this.simulation.get_people_number(filter);
+    }
+
+    get filter() {
+        return this.filterValue;
     }
 
     onTickerUpdate() {
