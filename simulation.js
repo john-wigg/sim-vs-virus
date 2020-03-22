@@ -122,6 +122,16 @@ class Simulation {
         return count;
     }
 
+    get_total_count(state) {
+        let count = 0;
+        for (var i = 0; i < this.people.length; i++) {
+            if (this.people[i].state == state) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     get_people_number(filter = ["Normal", "Risk"]) {
         let count = 0;
         for (var i = 0; i < this.people.length; i++) {
@@ -324,7 +334,8 @@ class Person {
                 if (this.days_since_infection > simulation.infection_duration) {
                     let total_mortality = this.group.mortality;
                     // If out of capacity, the mortality rate rises
-                    if (simulation.get_count("infected") > simulation.hospital_capacity * simulation.people.length) {
+                    if (simulation.get_total_count("infected") > simulation.hospital_capacity * simulation.people.length) {
+                        console.log("test")
                         total_mortality *= simulation.mortality_multiplier;
                     }
                     if (Math.random() < total_mortality) {
