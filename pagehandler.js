@@ -257,7 +257,7 @@ function showLayoutSim() {
 
         <footer class="footer-controls">
             <div class="arrow-container">
-                <img class="arrow-left" src="assets/arrow_left.svg">
+                <img id="prev_page" class="arrow-left" src="assets/arrow_left.svg">
                 <span class="disable-margin" id="pageCounter">1/6</span>
                 <img class="arrow-right" src="assets/arrow_right.svg">
             </div>
@@ -317,7 +317,7 @@ function showLayoutSim() {
         } else {
             for (var i = 0; i < simulation_view.simulation.boxes.length; i++) {
                 simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.0, "Risk": 0.0 };
-                simulation_view.simulation.boxes[i].area_escape = { "Normal": 1.0, "Risk": 0.0 };
+                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.0, "Risk": 0.0 };
             }
         }
     });
@@ -382,9 +382,6 @@ function showLayoutSim() {
         }
     });
     document.getElementById("pageCounter").style.display = "none";
-
-    customElements.define('curve-view', Curve);
-    customElements.define('sim-view', SimulationView);
 
     var sim_width = 10;
     var sim_height = 5;
