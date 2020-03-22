@@ -20,8 +20,8 @@
 
             this.simulation.initialize();
 
-            this.filter = ["Normal", "Doctor", "Risk"];
-            this.old_filter = ["Normal", "Doctor", "Risk"];
+            this.filter = ["Normal", "Risk"];
+            this.old_filter = ["Normal", "Risk"];
 
             for (var i = 0; i < this.simulation.boxes.length; i++) {
                 var box = this.simulation.boxes[i];
@@ -65,6 +65,34 @@
 
 
             this.app.ticker.add(() => { this.onTickerUpdate() });
+        }
+
+        redrawAllCircles() {
+            var people = this.simulation.people;
+            for (var i = 0; i < people.length; i++) {
+                this.containers[i].x = people[i].position.x * 100;
+                this.containers[i].y = people[i].position.y * 100;
+
+                if (this.filter.includes(people[i].group.name)) {
+                    switch (people[i].state) {
+                        case "infected":
+                            this.updateCircle(this.containers[i], COLOR_INFECTED);
+                            break;
+                        case "recovered":
+                            this.updateCircle(this.containers[i], COLOR_RECOVERED);
+                            break;
+                        case "deceased":
+                            this.updateCircle(this.containers[i], COLOR_DEAD);
+                            break;
+                        default:
+                            this.updateCircle(this.containers[i], COLOR_HEALTHY);
+                            break;
+                    }
+                } else {
+                    this.updateCircle(this.containers[i], COLOR_HIDDEN, 0.15);
+                }
+
+            }
         }
 
         onTickerUpdate() {
@@ -347,6 +375,12 @@
         });
         document.getElementById("resume").addEventListener("click", function (e) {
             simulation_view.simulation.resume();
+        });
+        document.getElementById("reset_sim").addEventListener("click", function (e) {
+            console.log("reset");
+            simulation_view.simulation.initialize();
+            simulation_view.redrawAllCircles();
+            curve.data = new Array();
         });
     }
 

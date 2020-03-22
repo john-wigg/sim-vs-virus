@@ -26,7 +26,6 @@ class Simulation {
         this.width = width;
         this.height = height;
 
-        this.time_days = 0.0;
         this.max_days = 100.0;
 
         this.stopped = true
@@ -40,7 +39,7 @@ class Simulation {
     }
 
     initialize() {
-        this.stopped = false;
+        this.time_days = 0.0;
         // randomly initialize Person positions
         for (var i = 0; i < this.people.length; i++) {
             // Start all inside a box
@@ -65,11 +64,15 @@ class Simulation {
             }
         }
 
+        for (var j = 0; j < this.people.length; j++) {
+            this.people[j].state = "healthy";
+        }
+
         for (var j = 0; j < this.count_infected; j++) {
-            console.log(j)
             let idx = Math.floor(Math.random() * this.people.length);
             this.people[idx].state = "infected";
         }
+        this.stopped = false;
     }
 
     update(delta) {
