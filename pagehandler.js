@@ -78,50 +78,50 @@ function showLayoutInfo() {
 function showLayoutForm1() {
     document.body.innerHTML = `
         <header>
-        <img class="logo" src="assets/logo_simthinkact2.svg"/>
-        <!--<h2>SIM vs VIRUS</h2>-->
-        <img class="topOption" src="assets/share-24px.svg"/>     
+            <img class="logo" src="assets/logo_simvsvirus.svg"/>
+            <!--<h2>SIM vs VIRUS</h2>-->
+            <img class="topOption" src="assets/share-24px.svg"/>     
         </header>
 
         <h3 class="page-title">Before we starting simulation, we need some information from you...</h3>
         <div class="question">       
             <span>"I think, Corona is not mush worse than the flu."</span>     
             <div class="mycheckbox">
-                <input id="trigger" type="checkbox">
-                <label for="trigger" class="checker"></label> 
+                <input id="check-flu" type="checkbox">
+                <label for="check-flu"></label> 
             </div>  
         </div>
         <div class="question odd">       
             <span>"I have caught/fever/breathing problems."</span>     
             <div class="mycheckbox">
-                <input id="trigger" type="checkbox">
-                <label for="trigger" class="checker"></label> 
+                <input id="check-caught" type="checkbox">
+                <label for="check-caught" class="checker"></label> 
             </div>  
         </div>
         <div class="question">       
             <span>"I was in a high risk area in the last 14 days."</span>     
             <div class="mycheckbox">
-                <input id="trigger" type="checkbox">
-                <label for="trigger" class="checker"></label> 
+                <input id="check-risk-area" type="checkbox">
+                <label for="check-risk-area" class="checker"></label> 
             </div>   
         </div>
         <div class="question odd">       
             <span>"I had contact to a corana infected person in the last 14 days."</span>   
             <div class="mycheckbox">
-                <input id="trigger" type="checkbox">
-                <label for="trigger" class="checker"></label> 
+                <input id="check-contact" type="checkbox">
+                <label for="check-contact" class="checker"></label> 
             </div>  
         </div>
         <div class="question">       
             <span>Number of people i live with:</span>  
             <div class="input-container">
-                <input type="number" value="4" />
+                <input id="number-roommates" type="number" />
             </div>   
         </div>
         <div class="question">       
             <span>Number of people outside:</span>  
             <div class="input-container">
-                <input type="number" value="4" />
+                <input id="number-outside" type="number" />
             </div>
         </div>
 
@@ -132,9 +132,19 @@ function showLayoutForm1() {
                 <img id="next_page" class="arrow-right" src="assets/arrow_right.svg">
             </div>
         </footer>
-        `
+        `;
+
     document.getElementById("prev_page").addEventListener("click", showLayoutInfo);
     document.getElementById("next_page").addEventListener("click", showLayoutForm2);
+
+    var checkFlu = document.getElementById("check-flu");
+    var checkCaught = document.getElementById("check-caught");
+    var checkRiskArea = document.getElementById("check-risk-area");
+    var checkContact = document.getElementById("check-contact");
+    var numRoomates = document.getElementById("number-roommates");
+    var numOutside = document.getElementById("number-outside");
+
+    console.log("Flu: " + checkFlu.checked)
 }
 
 function showLayoutForm2() {
@@ -187,12 +197,20 @@ function showLayoutForm2() {
             <div class="arrow-container">
                 <img class="arrow-left" id="prev_page" src="assets/arrow_left.svg">
                 <span class="disable-margin">6/6</span>
-                <img class="arrow-right" id="next_page" src="assets/arrow_right.svg">
+                <img id="next_page" class="arrow-right" src="assets/arrow_right.svg">
             </div>
         </footer>
         `
     document.getElementById("prev_page").addEventListener("click", showLayoutForm1);
     document.getElementById("next_page").addEventListener("click", showLayoutSim);
+
+    var checkWashTime = document.getElementById("check-wash-time");
+    var checkWashHands = document.getElementById("check-wash-hands");
+    var checkTouchFace = document.getElementById("check-touch-face");
+    var checkKnowContact = document.getElementById("check-know-contact");
+    var checkTransport = document.getElementById("check-transport");
+
+    console.log("WashHands:" + checkWashHands.checked);
 }
 
 function showLayoutSim() {
