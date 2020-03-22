@@ -16,6 +16,12 @@ header h2 {
     margin-left: 5%;
 }
 
+.topBack {    
+    position: absolute;
+    left: 5%;
+    top: 1.25em;
+}
+
 .topOption {    
     position: absolute;
     right: 5%;

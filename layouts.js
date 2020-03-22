@@ -377,9 +377,10 @@ function showLayoutInfo() {
 
     document.body.innerHTML = `
         <header>
-        <img class="logo" src="assets/logo_simthinkact2.svg"/>
-        <!--<h2>SIM vs VIRUS</h2>-->
-        <img class="topOption" src="assets/share-24px.svg"/>     
+            <a href="index.html"><img id="b-back" class="topBack" src="assets/arrow_back-24px.svg"/></a>
+            <img class="logo" src="assets/logo_simthinkact2.svg"/>
+            <!--<h2>SIM vs VIRUS</h2>-->
+            <img class="topOption" src="assets/share-24px.svg"/>     
         </header>
 
         <!--<img class="small-virus" src="assets/virus.svg"/>-->
@@ -397,7 +398,9 @@ function showLayoutInfo() {
                 <img id="next_page" class="arrow-right" src="assets/arrow_right.svg">
             </div>
         </footer>
-        `
+        `;
+
+    //document.getElementById("b-back").addEventListener("click", () => { location.href = "index.html"; location.reload(); });
     setInfo1();
 }
 
