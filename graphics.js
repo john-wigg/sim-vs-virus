@@ -126,7 +126,7 @@
 
             this.data = new Array();
             this.maxData = 9999999;
-            this.filter = ["Normal", "Doctor", "Risk"];
+            this.filter = ["Normal", "Risk"];
 
             this.app.ticker.maxFPS = 1;
             this.app.ticker.minFPS = 1;
@@ -140,35 +140,30 @@
 
         set filter(filter) {
             this.filterValue = filter;
-            this.data = new Array();
             this.people = this.simulation.get_people_number(filter);
         }
 
         onTickerUpdate() {
-            if (!this.simulation.stopped) {
-                //var people = this.simulation.people;
-                var now = Date.now();
-                if (now - this.lastData > 100) {
-                    this.lastData = now;
-                    console.log("länge: " + this.data.length);
-
-                    this.data.push(new DataPoint(this.simulation.get_count("healthy", this.filterValue),
-                        this.simulation.get_count("infected", this.filterValue),
-                        this.simulation.get_count("recovered", this.filterValue),
-                        this.simulation.get_count("deceased", this.filterValue)));
-
-                    console.log(this.simulation.get_count("infected", this.filterValue));
-
-                    if (this.data.length > this.maxData) {
-                        this.data.shift();
-                    }
-                    //this.data.push(new DataPoint(, 0, 0, 0));
-                    this.drawCurve();
+            //var people = this.simulation.people;
+            var now = Date.now();
+            if (now - this.lastData > 100) {
+                this.lastData = now;
+                if (!this.simulation.stopped) {
+                    this.data.push(new DataPoint(this.simulation.get_count("healthy"),
+                        this.simulation.get_count("infected"),
+                        this.simulation.get_count("recovered"),
+                        this.simulation.get_count("deceased")));
                 }
+                if (this.data.length > this.maxData) {
+                    this.data.shift();
+                }
+                //this.data.push(new DataPoint(, 0, 0, 0));
+                this.drawCurve(this.filterValue);
+
             }
         }
 
-        drawCurve() {
+        drawCurve(filter) {
             this.app.stage.removeChildren();
 
             const cH = new PIXI.Graphics();
@@ -178,9 +173,9 @@
 
             var width = 800 / this.data.length;
 
-            var y11 = this.data[0].deceased / this.people * this.height;
-            var y21 = this.data[0].recovered / this.people * this.height + y11;
-            var y31 = this.data[0].healthy / this.people * this.height + y21;
+            var y11 = this.data[0].get_count_deceased(filter) / this.people * this.height;
+            var y21 = this.data[0].get_count_recovered(filter) / this.people * this.height + y11;
+            var y31 = this.data[0].get_count_healthy(filter) / this.people * this.height + y21;
 
             cH.lineStyle(2, COLOR_HEALTHY, 1);
             cH.beginFill(COLOR_HEALTHY);
@@ -200,18 +195,18 @@
 
 
             for (var i = 0; i < this.data.length; i++) {
-                var y1 = this.data[i].deceased / this.people * this.height;
-                var y2 = this.data[i].recovered / this.people * this.height + y1;
-                var y3 = this.data[i].healthy / this.people * this.height + y2;
+                var y1 = this.data[i].get_count_deceased(filter) / this.people * this.height;
+                var y2 = this.data[i].get_count_recovered(filter) / this.people * this.height + y1;
+                var y3 = this.data[i].get_count_healthy(filter) / this.people * this.height + y2;
 
                 cI.lineTo(width * (i), y3);
                 cR.lineTo(width * (i + 1), y1);
                 cH.lineTo(width * (i + 1), y2);
             }
 
-            var y12 = this.data[this.data.length - 1].deceased / this.people * this.height;
-            var y22 = this.data[this.data.length - 1].recovered / this.people * this.height + y12;
-            var y32 = this.data[this.data.length - 1].healthy / this.people * this.height + y22;
+            var y12 = this.data[this.data.length - 1].get_count_deceased(filter) / this.people * this.height;
+            var y22 = this.data[this.data.length - 1].get_count_recovered(filter) / this.people * this.height + y12;
+            var y32 = this.data[this.data.length - 1].get_count_healthy(filter) / this.people * this.height + y22;
 
             cD.lineTo(800, 0);
             cD.lineTo(800, y12);
@@ -221,9 +216,9 @@
             cH.lineTo(800, y32);
 
             for (var i = this.data.length - 1; i >= 0; i--) {
-                var y1 = this.data[i].deceased / this.people * this.height;
-                var y2 = this.data[i].recovered / this.people * this.height + y1;
-                var y3 = this.data[i].healthy / this.people * this.height + y2;
+                var y1 = this.data[i].get_count_deceased(filter) / this.people * this.height;
+                var y2 = this.data[i].get_count_recovered(filter) / this.people * this.height + y1;
+                var y3 = this.data[i].get_count_healthy(filter) / this.people * this.height + y2;
 
                 cD.lineTo(width * i, y1);
                 cR.lineTo(width * i, y2);
@@ -264,6 +259,38 @@
             this.recovered = r;
             this.deceased = d;
         }
+
+        get_count_healthy(filter = ["Normal", "Risk"]) {
+            var count = 0;
+            for (var i = 0; i < filter.length; i++) {
+                count += this.healthy[filter[i]]
+            }
+            return count;
+        }
+
+        get_count_infected(filter = ["Normal", "Risk"]) {
+            var count = 0;
+            for (var i = 0; i < filter.length; i++) {
+                count += this.infected[filter[i]]
+            }
+            return count;
+        }
+
+        get_count_recovered(filter = ["Normal", "Risk"]) {
+            var count = 0;
+            for (var i = 0; i < filter.length; i++) {
+                count += this.recovered[filter[i]]
+            }
+            return count;
+        }
+
+        get_count_deceased(filter = ["Normal", "Risk"]) {
+            var count = 0;
+            for (var i = 0; i < filter.length; i++) {
+                count += this.deceased[filter[i]]
+            }
+            return count;
+        }
     }
 
 
@@ -281,8 +308,8 @@
 
         this.simulation = new Simulation(sim_width, sim_height, 200);
 
-        var area_entry = { "Normal": 0.05, "Doctor": 0.0, "Risk": 0.0 };
-        var area_escape = { "Normal": 0.05, "Doctor": 0.0, "Risk": 0.0 };
+        var area_entry = { "Normal": 0.05, "Risk": 0.0 };
+        var area_escape = { "Normal": 0.05, "Risk": 0.0 };
 
         for (var i = 0; i < 5; i++) {
             this.simulation.boxes.push(new IsolationBox(0.05 * sim_width, 0.2 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
@@ -290,6 +317,7 @@
         }
 
         this.simulation.group_risk.velocity_multiplicator = 0.2;
+        this.simulation.max_days = 80.0;
 
         var simulation_view = new SimulationView(this.simulation);
         //simulation_view.filter = ["Doctor"];
@@ -311,8 +339,8 @@
             curve.filter = ["Risk"];
         });
         document.getElementById("reset").addEventListener("click", function (e) {
-            simulation_view.filter = ["Normal", "Doctor", "Risk"];
-            curve.filter = ["Normal", "Doctor", "Risk"];
+            simulation_view.filter = ["Normal", "Risk"];
+            curve.filter = ["Normal", "Risk"];
         });
         document.getElementById("stop").addEventListener("click", function (e) {
             simulation_view.simulation.stop();

@@ -100,11 +100,16 @@ class Simulation {
     }
 
     // Returns count of people in state
-    get_count(state, filter = ["Normal", "Doctor", "Risk"]) {
-        let count = 0;
+    get_count(state) {
+        let count = { "Normal": 0, "Risk": 0 };
         for (var i = 0; i < this.people.length; i++) {
-            if (this.people[i].state == state && filter.includes(this.people[i].group.name)) {
-                count++;
+            if (this.people[i].state == state) {
+                if (this.people[i].group.name == "Normal") {
+                    count["Normal"]++;
+                }
+                else if (this.people[i].group.name == "Risk") {
+                    count["Risk"]++;
+                }
             }
         }
         return count;
