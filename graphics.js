@@ -8,6 +8,37 @@ const COLOR_DEAD = 0x555555;
 const COLOR_BOX = 0xaaaaaa;
 const COLOR_HIDDEN = 0x000000;
 
+const styleHealthy = new PIXI.TextStyle({
+    fill: COLOR_HEALTHY,
+    fontFamiliy: 'Roboto',
+    fontSize: 16,
+    fontWeight: "bold"
+});
+const styleInfected = new PIXI.TextStyle({
+    fill: COLOR_INFECTED,
+    fontFamiliy: 'Roboto',
+    fontSize: 16,
+    fontWeight: "bold"
+});
+const styleRecovered = new PIXI.TextStyle({
+    fill: COLOR_RECOVERED,
+    fontFamiliy: 'Roboto',
+    fontSize: 16,
+    fontWeight: "bold"
+});
+const styleDeceased = new PIXI.TextStyle({
+    fill: COLOR_DEAD,
+    fontFamiliy: 'Roboto',
+    fontSize: 16,
+    fontWeight: "bold"
+});
+const styleBlack = new PIXI.TextStyle({
+    fill: 0x000000,
+    fontFamiliy: 'Roboto',
+    fontSize: 16,
+    fontWeight: "bold"
+});
+
 class SimulationView extends HTMLElement {
     constructor(simulation, width = 800) {
         super();
@@ -72,13 +103,13 @@ class SimulationView extends HTMLElement {
         var legend_x = 0.5 * this.width - 100;
         var legend_y = 0.98 * this.height - 100;
         graphics.lineStyle(0);
-        graphics.beginFill(0xffffff, 0.90);
+        graphics.beginFill(0xffffff, 0.85);
         graphics.drawRect(legend_x, legend_y, 200, 100);
-        graphics.beginFill(COLOR_HEALTHY, 0.5);
+        graphics.beginFill(COLOR_HEALTHY, 1.0);
         graphics.drawCircle(legend_x + 20, legend_y + 15, 6);
-        graphics.beginFill(COLOR_INFECTED, 0.5);
+        graphics.beginFill(COLOR_INFECTED, 1.0);
         graphics.drawCircle(legend_x + 20, legend_y + 40, 6);
-        graphics.beginFill(COLOR_RECOVERED, 0.5);
+        graphics.beginFill(COLOR_RECOVERED, 1.0);
         graphics.drawCircle(legend_x + 20, legend_y + 65, 6);
         graphics.beginFill(COLOR_DEAD, 0.5);
         graphics.drawCircle(legend_x + 20, legend_y + 90, 6);
@@ -87,31 +118,6 @@ class SimulationView extends HTMLElement {
         var stringInfected = "Infected";
         var stringRecovered = "Recovered";
         var stringDeceased = "Deceased";
-
-        const styleHealthy = new PIXI.TextStyle({
-            fill: COLOR_HEALTHY,
-            fontFamiliy: 'Roboto',
-            fontSize: 16,
-            fontWeight: "bold"
-        });
-        const styleInfected = new PIXI.TextStyle({
-            fill: COLOR_INFECTED,
-            fontFamiliy: 'Roboto',
-            fontSize: 16,
-            fontWeight: "bold"
-        });
-        const styleRecovered = new PIXI.TextStyle({
-            fill: COLOR_RECOVERED,
-            fontFamiliy: 'Roboto',
-            fontSize: 16,
-            fontWeight: "bold"
-        });
-        const styleDeceased = new PIXI.TextStyle({
-            fill: COLOR_DEAD,
-            fontFamiliy: 'Roboto',
-            fontSize: 16,
-            fontWeight: "bold"
-        });
 
         this.labelHealthy = new PIXI.Text(stringHealthy, styleHealthy);
         this.labelHealthy.x = legend_x + 35;
@@ -235,7 +241,7 @@ class Curve extends HTMLElement {
         this.simulation = simulation;
 
         this.width = width;
-        this.height = 0.15 * this.width;
+        this.height = 0.15 * this.width + 30;
 
         this.app = new PIXI.Application({
             width: this.width, height: this.height, backgroundColor: 0xdddddd, antialias: true
@@ -256,6 +262,58 @@ class Curve extends HTMLElement {
 
         //this.drawCurve();
         this.lastData = Date.now();
+
+        this.graph = new PIXI.Container();
+
+
+        this.legend = new PIXI.Container();
+        var graphics = new PIXI.Graphics();
+        var legend_x = 0.0;
+        var legend_y = 0.0;
+        graphics.lineStyle(0);
+        graphics.beginFill(0xffffff, 0.85);
+        graphics.drawRect(legend_x, legend_y, this.width, 30);
+        graphics.beginFill(COLOR_HEALTHY, 1.0);
+        graphics.drawCircle(legend_x + 20, legend_y + 15, 6);
+        graphics.beginFill(COLOR_INFECTED, 1.0);
+        graphics.drawCircle(legend_x + 170, legend_y + 15, 6);
+        graphics.beginFill(COLOR_RECOVERED, 1.0);
+        graphics.drawCircle(legend_x + 320, legend_y + 15, 6);
+        graphics.beginFill(COLOR_DEAD, 0.5);
+        graphics.drawCircle(legend_x + 470, legend_y + 15, 6);
+        graphics.lineStyle(3);
+        graphics.beginFill(0x000000, 1.0);
+        graphics.moveTo(legend_x + 602, legend_y + 15);
+        graphics.lineTo(legend_x + 618, legend_y + 15);
+
+        var stringHealthy = "Healthy";
+        var stringInfected = "Infected";
+        var stringRecovered = "Recovered";
+        var stringDeceased = "Deceased";
+
+        this.labelHealthy = new PIXI.Text(stringHealthy, styleHealthy);
+        this.labelHealthy.x = legend_x + 35;
+        this.labelHealthy.y = legend_y + 6;
+        this.labelInfected = new PIXI.Text(stringInfected, styleInfected);
+        this.labelInfected.x = legend_x + 185;
+        this.labelInfected.y = legend_y + 6;
+        this.labelRecovered = new PIXI.Text(stringRecovered, styleRecovered);
+        this.labelRecovered.x = legend_x + 335;
+        this.labelRecovered.y = legend_y + 6;
+        this.labelDeceased = new PIXI.Text(stringDeceased, styleDeceased);
+        this.labelDeceased.x = legend_x + 485;
+        this.labelDeceased.y = legend_y + 6;
+        this.labelCapacity = new PIXI.Text("Hospital Capacity", styleBlack)
+        this.labelCapacity.x = legend_x + 635;
+        this.labelCapacity.y = legend_y + 6;
+        this.legend.addChild(graphics);
+        this.legend.addChild(this.labelHealthy);
+        this.legend.addChild(this.labelInfected);
+        this.legend.addChild(this.labelRecovered);
+        this.legend.addChild(this.labelDeceased);
+        this.legend.addChild(this.labelCapacity);
+        this.app.stage.addChild(this.legend);
+        this.app.stage.addChild(this.graph)
     }
 
     set filter(filter) {
@@ -266,6 +324,28 @@ class Curve extends HTMLElement {
 
     get filter() {
         return this.filterValue;
+    }
+
+    updateLegend() {
+        let count_healthy = 0;
+        let count_infected = 0;
+        let count_recovered = 0;
+        let count_deceased = 0;
+        let count_healthy_total = this.simulation.get_count("healthy");
+        let count_infected_total = this.simulation.get_count("infected");
+        let count_recovered_total = this.simulation.get_count("recovered");
+        let count_deceased_total = this.simulation.get_count("deceased");
+        for (var i = 0; i < this.filter.length; i++) {
+            count_healthy += count_healthy_total[this.filter[i]];
+            count_infected += count_infected_total[this.filter[i]];
+            count_recovered += count_recovered_total[this.filter[i]];
+            count_deceased += count_deceased_total[this.filter[i]];
+        }
+        this.labelHealthy.text = "Healthy: " + count_healthy;
+        this.labelInfected.text = "Infected: " + count_infected;
+        this.labelRecovered.text = "Recovered: " + count_recovered;
+        this.labelDeceased.text = "Deceased: " + count_deceased;
+        this.old_filter = Array.from(this.filter);
     }
 
     onTickerUpdate() {
@@ -284,23 +364,29 @@ class Curve extends HTMLElement {
             }
             //this.data.push(new DataPoint(, 0, 0, 0));
             this.drawCurve(this.filterValue);
-
+            this.updateLegend();
         }
     }
 
     drawCurve(filter) {
-        this.app.stage.removeChildren();
+        this.graph.removeChildren();
 
-        const cH = new PIXI.Graphics();
-        const cI = new PIXI.Graphics();
-        const cR = new PIXI.Graphics();
-        const cD = new PIXI.Graphics();
+        var cH = new PIXI.Graphics();
+        var cI = new PIXI.Graphics();
+        var cR = new PIXI.Graphics();
+        var cD = new PIXI.Graphics();
+
+        cH.y = 30;
+        cI.y = 30;
+        cR.y = 30;
+        cD.y = 30;
 
         var width = this.width / this.data.length;
+        var height = this.height - 30;
 
-        var y11 = this.data[0].get_count_deceased(filter) / this.people * this.height;
-        var y21 = this.data[0].get_count_recovered(filter) / this.people * this.height + y11;
-        var y31 = this.data[0].get_count_healthy(filter) / this.people * this.height + y21;
+        var y11 = this.data[0].get_count_deceased(filter) / this.people * height;
+        var y21 = this.data[0].get_count_recovered(filter) / this.people * height + y11;
+        var y31 = this.data[0].get_count_healthy(filter) / this.people * height + y21;
 
         cH.lineStyle(2, COLOR_HEALTHY, 1);
         cH.beginFill(COLOR_HEALTHY);
@@ -320,30 +406,30 @@ class Curve extends HTMLElement {
 
 
         for (var i = 0; i < this.data.length; i++) {
-            var y1 = this.data[i].get_count_deceased(filter) / this.people * this.height;
-            var y2 = this.data[i].get_count_recovered(filter) / this.people * this.height + y1;
-            var y3 = this.data[i].get_count_healthy(filter) / this.people * this.height + y2;
+            var y1 = this.data[i].get_count_deceased(filter) / this.people * height;
+            var y2 = this.data[i].get_count_recovered(filter) / this.people * height + y1;
+            var y3 = this.data[i].get_count_healthy(filter) / this.people * height + y2;
 
             cI.lineTo(width * (i), y3);
             cR.lineTo(width * (i + 1), y1);
             cH.lineTo(width * (i + 1), y2);
         }
 
-        var y12 = this.data[this.data.length - 1].get_count_deceased(filter) / this.people * this.height;
-        var y22 = this.data[this.data.length - 1].get_count_recovered(filter) / this.people * this.height + y12;
-        var y32 = this.data[this.data.length - 1].get_count_healthy(filter) / this.people * this.height + y22;
+        var y12 = this.data[this.data.length - 1].get_count_deceased(filter) / this.people * height;
+        var y22 = this.data[this.data.length - 1].get_count_recovered(filter) / this.people * height + y12;
+        var y32 = this.data[this.data.length - 1].get_count_healthy(filter) / this.people * height + y22;
 
         cD.lineTo(this.width, 0);
         cD.lineTo(this.width, y12);
         cI.lineTo(this.width, y32);
-        cI.lineTo(this.width, this.height);
+        cI.lineTo(this.width, height);
         cR.lineTo(this.width, y22);
         cH.lineTo(this.width, y32);
 
         for (var i = this.data.length - 1; i >= 0; i--) {
-            var y1 = this.data[i].get_count_deceased(filter) / this.people * this.height;
-            var y2 = this.data[i].get_count_recovered(filter) / this.people * this.height + y1;
-            var y3 = this.data[i].get_count_healthy(filter) / this.people * this.height + y2;
+            var y1 = this.data[i].get_count_deceased(filter) / this.people * height;
+            var y2 = this.data[i].get_count_recovered(filter) / this.people * height + y1;
+            var y3 = this.data[i].get_count_healthy(filter) / this.people * height + y2;
 
             cD.lineTo(width * i, y1);
             cR.lineTo(width * i, y2);
@@ -351,7 +437,7 @@ class Curve extends HTMLElement {
         }
 
         cD.lineTo(0, 0);
-        cI.lineTo(0, this.height);
+        cI.lineTo(0, height);
         cI.lineTo(0, y31);
         cR.lineTo(0, y11);
         cH.lineTo(0, y21);
@@ -365,14 +451,14 @@ class Curve extends HTMLElement {
         // Draw horizontal line
         const hLine = new PIXI.Graphics();
         hLine.lineStyle(2, "#000000", 1);
-        hLine.moveTo(0, (1.0 - this.simulation.hospital_capacity) * this.height);
-        hLine.lineTo(this.width, (1.0 - this.simulation.hospital_capacity) * this.height);
+        hLine.moveTo(0, (1.0 - this.simulation.hospital_capacity) * height);
+        hLine.lineTo(this.width, (1.0 - this.simulation.hospital_capacity) * height);
 
-        this.app.stage.addChild(cI);
-        this.app.stage.addChild(cR);
-        this.app.stage.addChild(cH);
-        this.app.stage.addChild(cD);
-        this.app.stage.addChild(hLine);
+        this.graph.addChild(cI);
+        this.graph.addChild(cR);
+        this.graph.addChild(cH);
+        this.graph.addChild(cD);
+        this.graph.addChild(hLine);
     }
 
 }
