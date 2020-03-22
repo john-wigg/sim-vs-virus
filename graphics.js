@@ -9,12 +9,18 @@
     const COLOR_HIDDEN = 0x000000;
 
     class SimulationView extends HTMLElement {
-        constructor(simulation) {
+        constructor(simulation, width = 800) {
             super();
 
             this.simulation = simulation;
+            this.scale = width / this.simulation.width;
+
+            this.width = width;
+            this.height = simulation.height * this.scale;
+            this.circle_radius = this.simulation.minimum_distance * this.scale / 2.0;
+
             this.app = new PIXI.Application({
-                width: 800, height: 600, backgroundColor: 0xdddddd, antialias: true
+                width: this.width, height: this.height, backgroundColor: 0xdddddd, antialias: true
             });
             this.appendChild(this.app.view);
 
@@ -30,7 +36,7 @@
 
                 graphics.lineStyle(0);
                 graphics.beginFill(COLOR_BOX, 1);
-                graphics.drawRect(box.min_x * 100, box.min_y * 100, (box.max_x - box.min_x) * 100, (box.max_y - box.min_y) * 100);
+                graphics.drawRect(box.min_x * this.scale, box.min_y * this.scale, (box.max_x - box.min_x) * this.scale, (box.max_y - box.min_y) * this.scale);
                 graphics.endFill();
                 this.app.stage.addChild(graphics);
             }
@@ -55,7 +61,7 @@
                         graphics.beginFill(COLOR_HEALTHY, 1);
                         break;
                 }
-                graphics.drawCircle(0, 0, 6, 6);
+                graphics.drawCircle(0, 0, this.circle_radius);
                 graphics.endFill();
                 container.addChild(graphics);
 
@@ -70,8 +76,8 @@
         redrawAllCircles() {
             var people = this.simulation.people;
             for (var i = 0; i < people.length; i++) {
-                this.containers[i].x = people[i].position.x * 100;
-                this.containers[i].y = people[i].position.y * 100;
+                this.containers[i].x = people[i].position.x * this.scale;
+                this.containers[i].y = people[i].position.y * this.scale;
 
                 if (this.filter.includes(people[i].group.name)) {
                     switch (people[i].state) {
@@ -99,8 +105,8 @@
             var people = this.simulation.update(this.app.ticker.deltaMS);
 
             for (var i = 0; i < people.length; i++) {
-                this.containers[i].x = people[i].position.x * 100;
-                this.containers[i].y = people[i].position.y * 100;
+                this.containers[i].x = people[i].position.x * this.scale;
+                this.containers[i].y = people[i].position.y * this.scale;
 
                 if (people[i].state != people[i].old_state || this.old_filter != this.filter) {
                     if (this.filter.includes(people[i].group.name)) {
@@ -132,24 +138,26 @@
                 container.children[i].clear();
                 container.children[i].lineStyle(0);
                 container.children[i].beginFill(color, alpha);
-                container.children[i].drawCircle(0, 0, 6, 6);
+                container.children[i].drawCircle(0, 0, this.circle_radius);
                 container.children[i].endFill();
             }
         }
     }
 
     class Curve extends HTMLElement {
-        constructor() {
+        constructor(simulation, width = 800) {
             super(simulation);
 
             this.simulation = simulation;
 
+            this.width = width;
+            this.height = 0.15 * this.width;
+
             this.app = new PIXI.Application({
-                width: 800, height: 200, backgroundColor: 0xdddddd, antialias: true
+                width: this.width, height: this.height, backgroundColor: 0xdddddd, antialias: true
             });
             this.appendChild(this.app.view);
 
-            this.height = 200;
             this.people = this.simulation.people.length;
 
             this.data = new Array();
@@ -199,7 +207,7 @@
             const cR = new PIXI.Graphics();
             const cD = new PIXI.Graphics();
 
-            var width = 800 / this.data.length;
+            var width = this.width / this.data.length;
 
             var y11 = this.data[0].get_count_deceased(filter) / this.people * this.height;
             var y21 = this.data[0].get_count_recovered(filter) / this.people * this.height + y11;
@@ -236,12 +244,12 @@
             var y22 = this.data[this.data.length - 1].get_count_recovered(filter) / this.people * this.height + y12;
             var y32 = this.data[this.data.length - 1].get_count_healthy(filter) / this.people * this.height + y22;
 
-            cD.lineTo(800, 0);
-            cD.lineTo(800, y12);
-            cI.lineTo(800, y32);
-            cI.lineTo(800, this.height);
-            cR.lineTo(800, y22);
-            cH.lineTo(800, y32);
+            cD.lineTo(this.width, 0);
+            cD.lineTo(this.width, y12);
+            cI.lineTo(this.width, y32);
+            cI.lineTo(this.width, this.height);
+            cR.lineTo(this.width, y22);
+            cH.lineTo(this.width, y32);
 
             for (var i = this.data.length - 1; i >= 0; i--) {
                 var y1 = this.data[i].get_count_deceased(filter) / this.people * this.height;
@@ -268,8 +276,8 @@
             // Draw horizontal line
             const hLine = new PIXI.Graphics();
             hLine.lineStyle(2, "#000000", 1);
-            hLine.moveTo(0, (1.0 - this.simulation.hospital_capacity) * 200);
-            hLine.lineTo(800, (1.0 - this.simulation.hospital_capacity) * 200);
+            hLine.moveTo(0, (1.0 - this.simulation.hospital_capacity) * this.height);
+            hLine.lineTo(this.width, (1.0 - this.simulation.hospital_capacity) * this.height);
 
             this.app.stage.addChild(cI);
             this.app.stage.addChild(cR);
@@ -347,12 +355,12 @@
         this.simulation.group_risk.velocity_multiplicator = 0.2;
         this.simulation.max_days = 80.0;
 
-        var simulation_view = new SimulationView(this.simulation);
-        //simulation_view.filter = ["Doctor"];
+        var simulation_view = new SimulationView(this.simulation, 600);
+
         divMain.appendChild(simulation_view);
 
 
-        var curve = new Curve(this.simulation);
+        var curve = new Curve(this.simulation, 600);
         divCurves.appendChild(curve);
 
         document.body.appendChild(divMain);
@@ -377,7 +385,6 @@
             simulation_view.simulation.resume();
         });
         document.getElementById("reset_sim").addEventListener("click", function (e) {
-            console.log("reset");
             simulation_view.simulation.initialize();
             simulation_view.redrawAllCircles();
             curve.data = new Array();
