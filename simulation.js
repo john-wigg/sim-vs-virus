@@ -11,12 +11,14 @@ class Simulation {
         this.velocity = 0.5 // Velocity of the people
         this.days_per_sec = 1.0; // Days per second in the simulation
 
-        this.hospital_capacity = 0.1;
+        this.hospital_capacity = 0.15;
         this.mortality_multiplier = 10.0;
 
         this.frac_population_normal = 0.8;
-        this.frac_population_doctors = 0.1;
-        this.frac_population_risk = 0.1;
+        this.frac_population_doctors = 0.0;
+        this.frac_population_risk = 0.2;
+
+        this.count_infected = 1;
 
         this.people = [];// Array mit personen
         this.boxes = [];
@@ -24,9 +26,12 @@ class Simulation {
         this.width = width;
         this.height = height;
 
-        this.group_normal = new Group("Normal", 0.5, 0.01, 1.0, { "Normal": 0.1, "Doctor": 0.2, "Risk": 0.1 });
-        this.group_doctor = new Group("Doctor", 0.1, 0.01, 1.0, { "Normal": 0.2, "Doctor": 0.2, "Risk": 0.1 });
-        this.group_risk = new Group("Risk", 0.9, 0.1, 1.0, { "Normal": 0.1, "Doctor": 0.1, "Risk": 0.2 });
+        this.max_days = 100.0;
+
+        this.stopped = true
+
+        this.group_normal = new Group("Normal", 0.9, 0.01, 1.0);
+        this.group_risk = new Group("Risk", 0.5, 0.1, 1.0);
 
         for (var i = 0; i < num_people; i++) {
             this.people.push(new Person())
@@ -34,61 +39,93 @@ class Simulation {
     }
 
     initialize() {
+        this.time_days = 0.0;
         // randomly initialize Person positions
         for (var i = 0; i < this.people.length; i++) {
             // Start all inside a box
-            var box = this.boxes[0];
-            this.people[i].position.x = box.min_x + Math.random() * (box.max_x - box.min_x);
-            this.people[i].position.y = box.min_y + Math.random() * (box.max_y - box.min_y);
-            //this.people[i].position.x = Math.random() * width;
-            //this.people[i].position.y = Math.random() * height;
             this.people[i].velocity = this.velocity
             let dir = new Vector2()
-            dir.x = Math.random() * 2.0 - 1.0
-            dir.y = Math.random() * 2.0 - 1.0
+            dir.x = Math.sin(Math.random() * 2 * Math.PI);
+            dir.y = Math.cos(Math.random() * 2 * Math.PI);
             this.people[i].direction = dir.normalized()
 
-            if (i < this.frac_population_normal * this.people.length) {
+            if (Math.random() < this.frac_population_normal) {
                 this.people[i].group = this.group_normal;
-            }
-            else if (i < (this.frac_population_normal + this.frac_population_doctors) * this.people.length) {
-                this.people[i].group = this.group_doctor;
             }
             else {
                 this.people[i].group = this.group_risk;
             }
+
+            for (var j = 0; j < 10; j++) {
+                if (i < 20 + j * 20 && i >= 20 * j) {
+                    this.people[i].position.x = this.boxes[j].min_x + Math.random() * (this.boxes[j].max_x - this.boxes[j].min_x);
+                    this.people[i].position.y = this.boxes[j].min_y + Math.random() * (this.boxes[j].max_y - this.boxes[j].min_y);
+                }
+            }
         }
-        this.people[0].state = "infected"
+
+        for (var j = 0; j < this.people.length; j++) {
+            this.people[j].state = "healthy";
+        }
+
+        for (var j = 0; j < this.count_infected; j++) {
+            let idx = Math.floor(Math.random() * this.people.length);
+            this.people[idx].state = "infected";
+        }
+        this.stopped = false;
     }
 
     update(delta) {
-        // delta in milliseconds
-        // TODO
-        // Should return array of structs
-        for (var i = 0; i < this.people.length; i++) {
-            this.people[i].calculate_step(delta, this);
-        }
-        for (var i = 0; i < this.people.length; i++) {
-            this.people[i].move();
+        if (!this.stopped) {
+            // delta in milliseconds
+            // TODO
+            // Should return array of structs
+            for (var i = 0; i < this.people.length; i++) {
+                this.people[i].calculate_step(delta, this);
+            }
+            for (var i = 0; i < this.people.length; i++) {
+                this.people[i].move();
+            }
+            this.time_days += delta / 1000.0 * this.days_per_sec;
+            if (this.time_days > this.max_days) {
+                this.stop();
+            }
         }
         return this.people;
     }
 
+    stop() {
+        this.stopped = true;
+    }
+
+    resume() {
+        this.stopped = false;
+    }
+
     // Returns count of people in state
     get_count(state) {
-        let count = 0;
+        let count = { "Normal": 0, "Risk": 0 };
         for (var i = 0; i < this.people.length; i++) {
             if (this.people[i].state == state) {
-                count++;
+                if (this.people[i].group.name == "Normal") {
+                    count["Normal"]++;
+                }
+                else if (this.people[i].group.name == "Risk") {
+                    count["Risk"]++;
+                }
             }
         }
         return count;
     }
 
-    // Infection probability as a function of distance
-    // Adjusted so that infectivity reaches 0.5 at infection_distance
-    infection_prob(dist) {
-        return Math.exp(-0.693147 * (dist - 0.1) / this.infection_distance); // TODO: Not very pretty
+    get_people_number(filter = ["Normal", "Doctor", "Risk"]) {
+        let count = 0;
+        for (var i = 0; i < this.people.length; i++) {
+            if (filter.includes(this.people[i].group.name)) {
+                count++;
+            }
+        }
+        return count;
     }
 }
 
@@ -104,12 +141,11 @@ class IsolationBox {
 }
 
 class Group {
-    constructor(name, infectivity, mortality, velocity_multiplicator, distance_to) {
+    constructor(name, infectivity, mortality, velocity_multiplicator) {
         this.name = name;
         this.infectivity = infectivity;
         this.mortality = mortality;
         this.velocity_multiplicator = velocity_multiplicator
-        this.distance_to = distance_to;
     }
 }
 
@@ -208,16 +244,15 @@ class Person {
                 if (simulation.people[i] === this) continue;
                 // get closest person within minimum distance
                 let dist = this.position.dist(simulation.people[i].position);
-                if (dist < this.group.distance_to[simulation.people[i].group.name] && simulation.people[i].state != "deceased") {
-                    col_dist = dist
+                if (dist < simulation.minimum_distance && simulation.people[i].state != "deceased" && simulation.people[i].get_inside_box(simulation.boxes) === this.get_inside_box(simulation.boxes)) {
                     col_idx = i;
                     break;
                 }
             }
             if (col_idx != -1) // "collision" has occured
             {
-                if (simulation.people[col_idx].state == "infected" && this.state == "healthy" && simulation.people[col_idx].get_inside_box(simulation) === this.get_inside_box(simulation)) {
-                    if (Math.random() < simulation.people[col_idx].group.infectivity * simulation.infection_prob(col_dist)) {
+                if (simulation.people[col_idx].state == "infected" && this.state == "healthy") {
+                    if (Math.random() < simulation.people[col_idx].group.infectivity) {
                         //TODO: Calculate infection probability
                         this.days_since_infection = 0.0;
                         this.state = "infected";
@@ -255,15 +290,17 @@ class Person {
 
             for (var i = 0; i < simulation.boxes.length; i++) {
                 if (!this.is_in_box(simulation.boxes[i])) {
-                    // People 
-                    if (Math.random() >= simulation.boxes[i].area_entry[this.group.name]) {
-                        if (next_position.x > simulation.boxes[i].min_x && next_position.x < simulation.boxes[i].max_x) {
-                            this.direction.x = -this.direction.x;
-                            direction_changed = true
-                        }
-                        if (next_position.y > simulation.boxes[i].min_y && next_position.y < simulation.boxes[i].max_y) {
-                            this.direction.y = -this.direction.y;
-                            direction_changed = true
+                    if (next_position.x > simulation.boxes[i].min_x && next_position.x < simulation.boxes[i].max_x && next_position.y > simulation.boxes[i].min_y && next_position.y < simulation.boxes[i].max_y) {
+                        // People 
+                        if (Math.random() >= simulation.boxes[i].area_entry[this.group.name]) {
+                            if (this.position.x > simulation.boxes[i].max_x || this.position.x < simulation.boxes[i].min_x) {
+                                this.direction.x = -this.direction.x;
+                                direction_changed = true
+                            }
+                            if (this.position.y > simulation.boxes[i].max_y || this.position.y < simulation.boxes[i].min_y) {
+                                this.direction.y = -this.direction.y;
+                                direction_changed = true
+                            }
                         }
                     }
                 }

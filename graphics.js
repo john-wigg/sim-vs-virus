@@ -16,17 +16,12 @@
             this.app = new PIXI.Application({
                 width: 800, height: 600, backgroundColor: 0xdddddd, antialias: true
             });
-            this.appendChild(this.app.view);           
+            this.appendChild(this.app.view);
 
-            var box = new IsolationBox(1, 4, 1, 4);
-            box.area_entry = { "Normal": 1.0, "Doctor": 0.0, "Risk": 0.0 };
-            box.area_escape = { "Normal": 0.5, "Doctor": 1.0, "Risk": 1.0 };
-
-            this.simulation.boxes.push(box);
             this.simulation.initialize();
 
-            this.filter = ["Normal", "Doctor", "Risk"];
-            this.old_filter = ["Normal", "Doctor", "Risk"];
+            this.filter = ["Normal", "Risk"];
+            this.old_filter = ["Normal", "Risk"];
 
             for (var i = 0; i < this.simulation.boxes.length; i++) {
                 var box = this.simulation.boxes[i];
@@ -72,13 +67,41 @@
             this.app.ticker.add(() => { this.onTickerUpdate() });
         }
 
+        redrawAllCircles() {
+            var people = this.simulation.people;
+            for (var i = 0; i < people.length; i++) {
+                this.containers[i].x = people[i].position.x * 100;
+                this.containers[i].y = people[i].position.y * 100;
+
+                if (this.filter.includes(people[i].group.name)) {
+                    switch (people[i].state) {
+                        case "infected":
+                            this.updateCircle(this.containers[i], COLOR_INFECTED);
+                            break;
+                        case "recovered":
+                            this.updateCircle(this.containers[i], COLOR_RECOVERED);
+                            break;
+                        case "deceased":
+                            this.updateCircle(this.containers[i], COLOR_DEAD);
+                            break;
+                        default:
+                            this.updateCircle(this.containers[i], COLOR_HEALTHY);
+                            break;
+                    }
+                } else {
+                    this.updateCircle(this.containers[i], COLOR_HIDDEN, 0.15);
+                }
+
+            }
+        }
+
         onTickerUpdate() {
             var people = this.simulation.update(this.app.ticker.deltaMS);
 
             for (var i = 0; i < people.length; i++) {
                 this.containers[i].x = people[i].position.x * 100;
                 this.containers[i].y = people[i].position.y * 100;
-                
+
                 if (people[i].state != people[i].old_state || this.old_filter != this.filter) {
                     if (this.filter.includes(people[i].group.name)) {
                         switch (people[i].state) {
@@ -95,10 +118,10 @@
                                 this.updateCircle(this.containers[i], COLOR_HEALTHY);
                                 break;
                         }
-                    }else {
+                    } else {
                         this.updateCircle(this.containers[i], COLOR_HIDDEN, 0.15);
                     }
-                }                             
+                }
             }
             this.old_filter = this.filter;
         }
@@ -130,25 +153,12 @@
             this.people = this.simulation.people.length;
 
             this.data = new Array();
-            this.maxData = 130;
-            /*this.data.push(new DataPoint(199, 1, 0, 0));
-            this.data.push(new DataPoint(195, 5, 0, 0));
-            this.data.push(new DataPoint(170, 30, 0, 0));
-            this.data.push(new DataPoint(134, 60, 5, 1));
-            this.data.push(new DataPoint(58, 130, 10, 2));
-            this.data.push(new DataPoint(18, 170, 10, 2));
-            this.data.push(new DataPoint(3, 180, 15, 2));
-            this.data.push(new DataPoint(2, 160, 33, 5));
-            this.data.push(new DataPoint(1, 150, 33, 16));
-            this.data.push(new DataPoint(0, 130, 45, 25));
-            this.data.push(new DataPoint(0, 100, 60, 40));
-            this.data.push(new DataPoint(0, 80, 77, 43));
-            this.data.push(new DataPoint(0, 50, 100, 50));
-            this.data.push(new DataPoint(0, 30, 110, 60));
-            this.data.push(new DataPoint(0, 10, 126, 64));
-            this.data.push(new DataPoint(0, 0, 136, 64));*/
+            this.maxData = 9999999;
+            this.filter = ["Normal", "Risk"];
+
             this.app.ticker.maxFPS = 1;
-            this.app.ticker.add((delta) => { 
+            this.app.ticker.minFPS = 1;
+            this.app.ticker.add((delta) => {
                 this.onTickerUpdate();
             });
 
@@ -156,54 +166,118 @@
             this.lastData = Date.now();
         }
 
+        set filter(filter) {
+            this.filterValue = filter;
+            this.people = this.simulation.get_people_number(filter);
+        }
+
         onTickerUpdate() {
             //var people = this.simulation.people;
             var now = Date.now();
-            if (now - this.lastData > 250) {
+            if (now - this.lastData > 100) {
                 this.lastData = now;
-                console.log("länge: " + this.data.length);
-
-                this.data.push(new DataPoint(this.simulation.get_count("healthy"), this.simulation.get_count("infected"), this.simulation.get_count("recovered"), this.simulation.get_count("deceased")));
-
+                if (!this.simulation.stopped) {
+                    this.data.push(new DataPoint(this.simulation.get_count("healthy"),
+                        this.simulation.get_count("infected"),
+                        this.simulation.get_count("recovered"),
+                        this.simulation.get_count("deceased")));
+                }
                 if (this.data.length > this.maxData) {
                     this.data.shift();
                 }
                 //this.data.push(new DataPoint(, 0, 0, 0));
-                this.drawCurve();
+                this.drawCurve(this.filterValue);
+
             }
         }
 
-        drawCurve() {
+        drawCurve(filter) {
+            this.app.stage.removeChildren();
+
+            const cH = new PIXI.Graphics();
+            const cI = new PIXI.Graphics();
+            const cR = new PIXI.Graphics();
+            const cD = new PIXI.Graphics();
+
             var width = 800 / this.data.length;
+
+            var y11 = this.data[0].get_count_deceased(filter) / this.people * this.height;
+            var y21 = this.data[0].get_count_recovered(filter) / this.people * this.height + y11;
+            var y31 = this.data[0].get_count_healthy(filter) / this.people * this.height + y21;
+
+            cH.lineStyle(2, COLOR_HEALTHY, 1);
+            cH.beginFill(COLOR_HEALTHY);
+            cH.moveTo(0, y21);
+
+            cI.lineStyle(2, COLOR_INFECTED, 1);
+            cI.beginFill(COLOR_INFECTED);
+            cI.moveTo(0, y31);
+
+            cR.lineStyle(2, COLOR_RECOVERED, 1);
+            cR.beginFill(COLOR_RECOVERED);
+            cR.moveTo(0, y11);
+
+            cD.lineStyle(2, COLOR_DEAD, 1);
+            cD.beginFill(COLOR_DEAD);
+            cD.moveTo(0, 0);
+
+
             for (var i = 0; i < this.data.length; i++) {
-                this.drawPoint(this.data[i], width * i, width * (i + 1));
+                var y1 = this.data[i].get_count_deceased(filter) / this.people * this.height;
+                var y2 = this.data[i].get_count_recovered(filter) / this.people * this.height + y1;
+                var y3 = this.data[i].get_count_healthy(filter) / this.people * this.height + y2;
+
+                cI.lineTo(width * (i), y3);
+                cR.lineTo(width * (i + 1), y1);
+                cH.lineTo(width * (i + 1), y2);
             }
-        }
 
-        drawPoint(dataPoint, x, x1) {
-            var y1 = dataPoint.deceased / this.people * this.height;
-            var y2 = dataPoint.recovered / this.people * this.height + y1;
-            var y3 = dataPoint.healthy / this.people * this.height + y2;
-            this.drawBar(x, x1, 0, y1, COLOR_DEAD);
-            this.drawBar(x, x1, y1, y2, COLOR_RECOVERED);
-            this.drawBar(x, x1, y2, y3, COLOR_HEALTHY);
-            this.drawBar(x, x1, y3, this.height, COLOR_INFECTED);
-        }
+            var y12 = this.data[this.data.length - 1].get_count_deceased(filter) / this.people * this.height;
+            var y22 = this.data[this.data.length - 1].get_count_recovered(filter) / this.people * this.height + y12;
+            var y32 = this.data[this.data.length - 1].get_count_healthy(filter) / this.people * this.height + y22;
 
-        drawBar(x1, x2, y1, y2, color) {
-            const graphics = new PIXI.Graphics();
+            cD.lineTo(800, 0);
+            cD.lineTo(800, y12);
+            cI.lineTo(800, y32);
+            cI.lineTo(800, this.height);
+            cR.lineTo(800, y22);
+            cH.lineTo(800, y32);
 
-            graphics.lineStyle(0);
-            graphics.beginFill(color, 1);
-            graphics.drawRect(x1, y1, x2, y2);
-            graphics.endFill();
-            this.app.stage.addChild(graphics);
+            for (var i = this.data.length - 1; i >= 0; i--) {
+                var y1 = this.data[i].get_count_deceased(filter) / this.people * this.height;
+                var y2 = this.data[i].get_count_recovered(filter) / this.people * this.height + y1;
+                var y3 = this.data[i].get_count_healthy(filter) / this.people * this.height + y2;
 
-            if (this.app.stage.children.length > this.maxData * 4) {
-                this.app.stage.children.shift();
-                //console.log("children: " + this.app.stage.children.length);
+                cD.lineTo(width * i, y1);
+                cR.lineTo(width * i, y2);
+                cH.lineTo(width * i, y3);
             }
+
+            cD.lineTo(0, 0);
+            cI.lineTo(0, this.height);
+            cI.lineTo(0, y31);
+            cR.lineTo(0, y11);
+            cH.lineTo(0, y21);
+
+
+            cH.endFill();
+            cI.endFill();
+            cR.endFill();
+            cD.endFill();
+
+            // Draw horizontal line
+            const hLine = new PIXI.Graphics();
+            hLine.lineStyle(2, "#000000", 1);
+            hLine.moveTo(0, (1.0 - this.simulation.hospital_capacity) * 200);
+            hLine.lineTo(800, (1.0 - this.simulation.hospital_capacity) * 200);
+
+            this.app.stage.addChild(cI);
+            this.app.stage.addChild(cR);
+            this.app.stage.addChild(cH);
+            this.app.stage.addChild(cD);
+            this.app.stage.addChild(hLine);
         }
+
     }
 
     class DataPoint {
@@ -212,6 +286,38 @@
             this.infected = i;
             this.recovered = r;
             this.deceased = d;
+        }
+
+        get_count_healthy(filter = ["Normal", "Risk"]) {
+            var count = 0;
+            for (var i = 0; i < filter.length; i++) {
+                count += this.healthy[filter[i]]
+            }
+            return count;
+        }
+
+        get_count_infected(filter = ["Normal", "Risk"]) {
+            var count = 0;
+            for (var i = 0; i < filter.length; i++) {
+                count += this.infected[filter[i]]
+            }
+            return count;
+        }
+
+        get_count_recovered(filter = ["Normal", "Risk"]) {
+            var count = 0;
+            for (var i = 0; i < filter.length; i++) {
+                count += this.recovered[filter[i]]
+            }
+            return count;
+        }
+
+        get_count_deceased(filter = ["Normal", "Risk"]) {
+            var count = 0;
+            for (var i = 0; i < filter.length; i++) {
+                count += this.deceased[filter[i]]
+            }
+            return count;
         }
     }
 
@@ -225,24 +331,56 @@
         var divMain = document.createElement("div");
         var divCurves = document.createElement("div");
 
-        this.simulation = new Simulation(8, 6, 200);
+        var sim_height = 6;
+        var sim_width = 8;
+
+        this.simulation = new Simulation(sim_width, sim_height, 200);
+
+        var area_entry = { "Normal": 0.05, "Risk": 0.0 };
+        var area_escape = { "Normal": 0.05, "Risk": 0.0 };
+
+        for (var i = 0; i < 5; i++) {
+            this.simulation.boxes.push(new IsolationBox(0.05 * sim_width, 0.2 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
+            this.simulation.boxes.push(new IsolationBox(0.8 * sim_width, 0.95 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
+        }
+
+        this.simulation.group_risk.velocity_multiplicator = 0.2;
+        this.simulation.max_days = 80.0;
 
         var simulation_view = new SimulationView(this.simulation);
         //simulation_view.filter = ["Doctor"];
         divMain.appendChild(simulation_view);
-        divCurves.appendChild(new Curve(this.simulation));
+
+
+        var curve = new Curve(this.simulation);
+        divCurves.appendChild(curve);
 
         document.body.appendChild(divMain);
         document.body.appendChild(divCurves);
 
-        document.getElementById("normal").addEventListener("click", function(e) {
+        document.getElementById("normal").addEventListener("click", function (e) {
             simulation_view.filter = ["Normal"];
+            curve.filter = ["Normal"];
         });
-        document.getElementById("doctor").addEventListener("click", function(e) {
-            simulation_view.filter = ["Doctor"];
-        });
-        document.getElementById("risk").addEventListener("click", function(e) {
+        document.getElementById("risk").addEventListener("click", function (e) {
             simulation_view.filter = ["Risk"];
+            curve.filter = ["Risk"];
+        });
+        document.getElementById("reset").addEventListener("click", function (e) {
+            simulation_view.filter = ["Normal", "Risk"];
+            curve.filter = ["Normal", "Risk"];
+        });
+        document.getElementById("stop").addEventListener("click", function (e) {
+            simulation_view.simulation.stop();
+        });
+        document.getElementById("resume").addEventListener("click", function (e) {
+            simulation_view.simulation.resume();
+        });
+        document.getElementById("reset_sim").addEventListener("click", function (e) {
+            console.log("reset");
+            simulation_view.simulation.initialize();
+            simulation_view.redrawAllCircles();
+            curve.data = new Array();
         });
     }
 
