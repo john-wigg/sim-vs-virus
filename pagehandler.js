@@ -21,7 +21,6 @@ function showLayoutWelcome() {
     } else if (userLang.includes("it-IT") || userLang.includes("it-CH") || userLang.includes("it")) {
         textWelcome = `Le nostre comunità stanno attraversando una crisi che mette in pericolo il nostro stile di vita. A causa della pandemia di COVID-19, causata dal Coronavirus SARS-CoV-2, ci viene chiesto di aderire a numerose misure di sicurezza, come distanziamento sociale, autoisolamento, e igiene personale più accurata. Ma tutto ciò sarà sufficiente? Queste misure avranno un impatto reale sulla diffusione della malattia?
         Ci siamo ispirati a questo articolo del Washington Post per mettere a punto <a href="https://www.washingtonpost.com/graphics/2020/world/corona-simulator/">questo</a> simulatore interattivo che possa mostrarvi l’importanza di seguire queste misure in maniera semplice e comprensibile. Cominciamo!<p><a class="more-info" href="https://www.youtube.com/watch?v=5mWXZCuTJE0">Our video for #WirvsVirusHack</a><a class="more-info" href="info.html">Maggiori informazioni</a>`
-
     }
 
     document.body.innerHTML = `
@@ -416,27 +415,32 @@ function showLayoutSim() {
     /*
         Behavior
     */
+    var distanceValue = 0;
     var distanceButton = document.getElementById("distance");
     distanceButton.addEventListener("click", function () {
-
-        console.log(distanceButton.style.backgroundImage);
-        if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_0.svg")') {
+        console.log(distanceValue);
+        if (distanceValue == 0) {
+            distanceValue = 0.5;
             distanceButton.style.backgroundImage = "url(assets/icon_distance_05.svg)";
             simulation_view.simulation.group_normal.velocity_multiplicator = 0.8;
             simulation_view.simulation.group_risk.velocity_multiplicator = 0.8;
-        } else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_05.svg")') {
+        } else if (distanceValue == 0.5) {
+            distanceValue = 1;
             distanceButton.style.backgroundImage = 'url(assets/icon_distance_1.svg)';
             simulation_view.simulation.group_normal.velocity_multiplicator = 0.5;
             simulation_view.simulation.group_risk.velocity_multiplicator = 0.5;
-        } else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_1.svg")') {
+        } else if (distanceValue == 1) {
+            distanceValue = 2;
             distanceButton.style.backgroundImage = "url(assets/icon_distance_2.svg)";
             simulation_view.simulation.group_normal.velocity_multiplicator = 0.2;
             simulation_view.simulation.group_risk.velocity_multiplicator = 0.2;
-        } else if (distanceButton.style.backgroundImage == 'url("assets/icon_distance_2.svg")') {
+        } else if (distanceValue == 2) {
+            distanceValue = 0;
             distanceButton.style.backgroundImage = "url(assets/icon_distance_0.svg)";
             simulation_view.simulation.group_normal.velocity_multiplicator = 1.0;
             simulation_view.simulation.group_risk.velocity_multiplicator = 1.0;
         } else {
+            distanceValue = 0.5;
             distanceButton.style.backgroundImage = "url(assets/icon_distance_05.svg)";
             simulation_view.simulation.group_normal.velocity_multiplicator = 0.6;
             simulation_view.simulation.group_risk.velocity_multiplicator = 0.6;
