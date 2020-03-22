@@ -11,7 +11,7 @@ class Simulation {
         this.velocity = 0.5 // Velocity of the people
         this.days_per_sec = 1.0; // Days per second in the simulation
 
-        this.hospital_capacity = 0.1;
+        this.hospital_capacity = 0.15;
         this.mortality_multiplier = 10.0;
 
         this.frac_population_normal = 0.8;
