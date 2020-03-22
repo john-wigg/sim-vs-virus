@@ -81,6 +81,9 @@ class Simulation {
             // delta in milliseconds
             // TODO
             // Should return array of structs
+            if (this.get_count("infected")["Normal"] + this.get_count("infected")["Risk"] == 0) {
+                this.stop();
+            }
             for (var i = 0; i < this.people.length; i++) {
                 this.people[i].calculate_step(delta, this);
             }
