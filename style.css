@@ -129,6 +129,16 @@ main {
     overflow: auto;
 }
 
+main img {
+    width: 80%;
+}
+
+main .figure {
+    display: block;
+    font-size: .7em;
+    font-style: italic;
+}
+
 .info-box {
     text-align: justify;
     margin-top: 2vh;
