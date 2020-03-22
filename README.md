@@ -38,8 +38,6 @@ And open ```index.html``` in your browser!
 - Optional: Explanatory texts for the simulation in 3 languages (German, English, Italian).
 - Optional (not yet implemented): Several "sidestories" to show the users that behind the abstract numbers about the disease real people are hiding. The texts for this - and others - can be found in the attached PDF.
 
-Translated with www.DeepL.com/Translator (free version)
-
 ## Built With
 
 * [PixiJS](https://www.pixijs.com/) - Used for building the simulations
