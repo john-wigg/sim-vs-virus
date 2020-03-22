@@ -321,8 +321,8 @@ function showLayoutSim() {
             }
         } else {
             for (var i = 0; i < simulation_view.simulation.boxes.length; i++) {
-                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.1, "Risk": 0.1 };
-                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.1, "Risk": 0.1 };
+                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.05, "Risk": 0.1 };
+                simulation_view.simulation.boxes[i].area_escape = { "Normal": 0.05, "Risk": 0.1 };
             }
         }
     });
@@ -387,8 +387,8 @@ function showLayoutSim() {
     var sim_width = 8;
     var sim_height = 4;
     this.simulation = new Simulation(sim_width, sim_height, 200);
-    var area_entry = { "Normal": 0.1, "Risk": 0.0 };
-    var area_escape = { "Normal": 0.1, "Risk": 0.0 };
+    var area_entry = { "Normal": 0.05, "Risk": 0.0 };
+    var area_escape = { "Normal": 0.05, "Risk": 0.0 };
 
     for (var i = 0; i < 5; i++) {
         this.simulation.boxes.push(new IsolationBox(0.05 * sim_width, 0.2 * sim_width, (i + 0.1) * sim_height / 5.0, (i + 0.9) * sim_height / 5.0, area_escape, area_entry));
